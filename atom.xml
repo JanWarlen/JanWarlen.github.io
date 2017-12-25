@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://janwarlen.com/"/>
-  <updated>2017-12-09T21:41:47.491Z</updated>
+  <updated>2017-12-06T18:22:35.032Z</updated>
   <id>http://janwarlen.com/</id>
   
   <author>
@@ -15,50 +15,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>test</title>
-    <link href="http://janwarlen.com/2017/12/10/test/"/>
-    <id>http://janwarlen.com/2017/12/10/test/</id>
-    <published>2017-12-09T21:36:38.000Z</published>
-    <updated>2017-12-09T21:41:47.491Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-      <category term="math" scheme="http://janwarlen.com/categories/math/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>first-post</title>
-    <link href="http://janwarlen.com/2017/12/07/first-post-1/"/>
-    <id>http://janwarlen.com/2017/12/07/first-post-1/</id>
-    <published>2017-12-07T15:49:42.000Z</published>
-    <updated>2017-12-07T15:53:52.735Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>first-post</title>
-    <link href="http://janwarlen.com/2017/12/07/first-post/"/>
-    <id>http://janwarlen.com/2017/12/07/first-post/</id>
-    <published>2017-12-07T15:49:42.000Z</published>
-    <updated>2017-12-07T15:49:42.706Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-  </entry>
   
   <entry>
     <title>Hello World</title>
