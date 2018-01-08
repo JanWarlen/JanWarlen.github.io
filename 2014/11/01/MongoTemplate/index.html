@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="mongo,Spring Boot,Java," />
 
 
 
@@ -81,16 +81,31 @@
 
 
 
-<meta name="description" content="Record learning process">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Janwarlen">
-<meta property="og:url" content="http://janwarlen.com/index.html">
+<meta name="description" content="1. 环境准备1.1 pom依赖1234&amp;lt;dependency&amp;gt;	&amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;	&amp;lt;artifactId&amp;gt;spring-boot-starter-data-mongodb&amp;lt;/artifactId&amp;gt;&amp;lt;/dependency&amp;gt;  SpringBoot 依赖12">
+<meta name="keywords" content="mongo,Spring Boot,Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MongoTemplate_SpringBoot">
+<meta property="og:url" content="http://janwarlen.com/2014/11/01/MongoTemplate/index.html">
 <meta property="og:site_name" content="Janwarlen">
-<meta property="og:description" content="Record learning process">
+<meta property="og:description" content="1. 环境准备1.1 pom依赖1234&amp;lt;dependency&amp;gt;	&amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;	&amp;lt;artifactId&amp;gt;spring-boot-starter-data-mongodb&amp;lt;/artifactId&amp;gt;&amp;lt;/dependency&amp;gt;  SpringBoot 依赖12">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/26314199.jpg">
+<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/93717114.jpg">
+<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/66688277.jpg">
+<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/54809569.jpg">
+<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/66745508.jpg">
+<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/77744762.jpg">
+<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/62747143.jpg">
+<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-5/41423627.jpg">
+<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-6/11984410.jpg">
+<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/56825412.jpg">
+<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/832494.jpg">
+<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/97870062.jpg">
+<meta property="og:updated_time" content="2018-01-08T09:45:55.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Janwarlen">
-<meta name="twitter:description" content="Record learning process">
+<meta name="twitter:title" content="MongoTemplate_SpringBoot">
+<meta name="twitter:description" content="1. 环境准备1.1 pom依赖1234&amp;lt;dependency&amp;gt;	&amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;	&amp;lt;artifactId&amp;gt;spring-boot-starter-data-mongodb&amp;lt;/artifactId&amp;gt;&amp;lt;/dependency&amp;gt;  SpringBoot 依赖12">
+<meta name="twitter:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/26314199.jpg">
 
 
 
@@ -120,13 +135,13 @@
 
 
 
-  <link rel="canonical" href="http://janwarlen.com/"/>
+  <link rel="canonical" href="http://janwarlen.com/2014/11/01/MongoTemplate/"/>
 
 
 
 
 
-  <title>Janwarlen</title>
+  <title>MongoTemplate_SpringBoot | Janwarlen</title>
   
 
 
@@ -164,8 +179,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -296,159 +310,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2017/12/25/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Jan Warlen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Janwarlen">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/25/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-25T10:35:25+08:00">
-                2017-12-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-comment-o"></i>
-              </span>
-              
-                <a href="/2017/12/25/hello-world/#SOHUCS" itemprop="discussionUrl">
-                  <span id="url::http://janwarlen.com/2017/12/25/hello-world/" class="cy_cmt_count" data-xid="2017/12/25/hello-world/" itemprop="commentsCount" ></span>
-                </a>
-              
-            
-          
-
-          
-          
-             <span id="/2017/12/25/hello-world/" class="leancloud_visitors" data-flag-title="Hello World">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
 
   
 
@@ -478,9 +342,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2014/11/01/MongoTemplate/" itemprop="url">MongoTemplate_SpringBoot</a></h1>
+          <h1 class="post-title" itemprop="name headline">MongoTemplate_SpringBoot</h1>
         
 
         <div class="post-meta">
@@ -535,7 +397,7 @@
               </span>
               
                 <a href="/2014/11/01/MongoTemplate/#SOHUCS" itemprop="discussionUrl">
-                  <span id="url::http://janwarlen.com/2014/11/01/MongoTemplate/" class="cy_cmt_count" data-xid="2014/11/01/MongoTemplate/" itemprop="commentsCount" ></span>
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2014/11/01/MongoTemplate/" itemprop="commentsCount"></span>
                 </a>
               
             
@@ -556,6 +418,11 @@
           
 
           
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
 
           
 
@@ -574,9 +441,7 @@
       
 
       
-        
-          
-            <h4 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1. 环境准备"></a>1. 环境准备</h4><h5 id="1-1-pom依赖"><a href="#1-1-pom依赖" class="headerlink" title="1.1 pom依赖"></a>1.1 pom依赖</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-boot-starter-data-mongodb&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+        <h4 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1. 环境准备"></a>1. 环境准备</h4><h5 id="1-1-pom依赖"><a href="#1-1-pom依赖" class="headerlink" title="1.1 pom依赖"></a>1.1 pom依赖</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-boot-starter-data-mongodb&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>SpringBoot 依赖<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.5.9.RELEASE&lt;/version&gt;</span><br><span class="line">&lt;/parent&gt;</span><br><span class="line">&lt;dependencies&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">&lt;/dependencies&gt;</span><br></pre></td></tr></table></figure></p>
 </blockquote>
@@ -620,8 +485,6 @@
 <p>请求参数：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"save"</span> : <span class="string">"valueTest"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>执行结果：<br><img src="http://p20t6wvw7.bkt.clouddn.com/18-1-8/97870062.jpg" alt="save(Object objectToSave, String collectionName)"></p>
 
-          
-        
       
     </div>
     
@@ -636,14 +499,40 @@
 
     <footer class="post-footer">
       
-
+        <div class="post-tags">
+          
+            <a href="/tags/mongo/" rel="tag"># mongo</a>
+          
+            <a href="/tags/Spring-Boot/" rel="tag"># Spring Boot</a>
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
       
 
       
+      
+      
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/25/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
       
-        <div class="post-eof"></div>
+
+      
       
     </footer>
   </div>
@@ -653,10 +542,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -664,6 +554,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -684,8 +583,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -758,6 +666,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-环境准备"><span class="nav-number">1.</span> <span class="nav-text"><a href="#1-&#x73AF;&#x5883;&#x51C6;&#x5907;" class="headerlink" title="1. &#x73AF;&#x5883;&#x51C6;&#x5907;"></a>1. &#x73AF;&#x5883;&#x51C6;&#x5907;</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-pom依赖"><span class="nav-number">1.1.</span> <span class="nav-text"><a href="#1-1-pom&#x4F9D;&#x8D56;" class="headerlink" title="1.1 pom&#x4F9D;&#x8D56;"></a>1.1 pom&#x4F9D;&#x8D56;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-mongo配置"><span class="nav-number">1.2.</span> <span class="nav-text"><a href="#1-2-mongo&#x914D;&#x7F6E;" class="headerlink" title="1.2 mongo&#x914D;&#x7F6E;"></a>1.2 mongo&#x914D;&#x7F6E;</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-代码编写"><span class="nav-number">2.</span> <span class="nav-text"><a href="#2-&#x4EE3;&#x7801;&#x7F16;&#x5199;" class="headerlink" title="2. &#x4EE3;&#x7801;&#x7F16;&#x5199;"></a>2. &#x4EE3;&#x7801;&#x7F16;&#x5199;</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-增"><span class="nav-number">2.1.</span> <span class="nav-text"><a href="#2-1-&#x589E;" class="headerlink" title="2.1 &#x589E;"></a>2.1 &#x589E;</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-1-insert-Object-objectToSave"><span class="nav-number">2.1.1.</span> <span class="nav-text"><a href="#2-1-1-insert-Object-objectToSave" class="headerlink" title="2.1.1 insert(Object objectToSave)"></a>2.1.1 insert(Object objectToSave)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-2-insert-Object-objectToSave-String-collectionName"><span class="nav-number">2.1.2.</span> <span class="nav-text"><a href="#2-1-2-insert-Object-objectToSave-String-collectionName" class="headerlink" title="2.1.2 insert(Object objectToSave, String collectionName)"></a>2.1.2 insert(Object objectToSave, String collectionName)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-3-insert-Collection-batchToSave-Class-entityClass"><span class="nav-number">2.1.3.</span> <span class="nav-text"><a href="#2-1-3-insert-Collection-batchToSave-Class-entityClass" class="headerlink" title="2.1.3 insert(Collection batchToSave, Class entityClass)"></a>2.1.3 insert(Collection batchToSave, Class entityClass)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-4-insert-Collection-batchToSave-String-collectionName"><span class="nav-number">2.1.4.</span> <span class="nav-text"><a href="#2-1-4-insert-Collection-batchToSave-String-collectionName" class="headerlink" title="2.1.4 insert(Collection batchToSave, String collectionName)"></a>2.1.4 insert(Collection batchToSave, String collectionName)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-5-insertAll-Collection-objectsToSave"><span class="nav-number">2.1.5.</span> <span class="nav-text"><a href="#2-1-5-insertAll-Collection-objectsToSave" class="headerlink" title="2.1.5 insertAll(Collection objectsToSave)"></a>2.1.5 insertAll(Collection objectsToSave)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-6-save-Object-objectToSave"><span class="nav-number">2.1.6.</span> <span class="nav-text"><a href="#2-1-6-save-Object-objectToSave" class="headerlink" title="2.1.6 save(Object objectToSave)"></a>2.1.6 save(Object objectToSave)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-7-save-Object-objectToSave-String-collectionName"><span class="nav-number">2.1.7.</span> <span class="nav-text"><a href="#2-1-7-save-Object-objectToSave-String-collectionName" class="headerlink" title="2.1.7 save(Object objectToSave, String collectionName)"></a>2.1.7 save(Object objectToSave, String collectionName)</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -918,6 +842,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
 
   
 
@@ -952,7 +880,18 @@
 
 
   
-    <script id="cy_cmt_num" src="https://changyan.sohu.com/upload/plugins/plugins.list.count.js?clientId=cytmdsjm6"></script>
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cytmdsjm6';
+      var conf = 'c7bec07f38ff8795181545e4c7fbc973';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
   
 
 
