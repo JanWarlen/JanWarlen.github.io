@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://janwarlen.com/2018/01/18/MongoTemplate/</loc>
+    
+    <lastmod>2018-01-18T08:00:01.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://janwarlen.com/categories/index.html</loc>
+    
+    <lastmod>2017-12-25T03:51:09.785Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://janwarlen.com/tags/index.html</loc>
+    
+    <lastmod>2017-12-25T03:51:02.179Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://janwarlen.com/2017/12/25/hello-world/</loc>
+    
+    <lastmod>2017-12-25T02:35:25.276Z</lastmod>
+    
+  </url>
+  
+</urlset>
