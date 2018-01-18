@@ -4,15 +4,24 @@
 
     
   <url>
-    <loc>http://janwarlen.com/2018/01/18/MongoTemplate/</loc>
-    <lastmod>2018-01-18T08:00:01.000Z</lastmod>
+    <loc>http://janwarlen.com/2018/01/08/MongoTemplate/</loc>
+    <lastmod>2018-01-18T08:08:56.000Z</lastmod>
     <data>
         <display>
-        <title></title>
-        <pubTime>2018-01-18T08:00:52.687Z</pubTime>
+        <title>MongoTemplate_SpringBoot</title>
+        <pubTime>2018-01-08T09:50:36.000Z</pubTime>
         
+        <tag>mongo</tag>
+         
+        <tag>Spring Boot</tag>
+         
+        <tag>Java</tag>
+         
          
            
+             
+              <breadCrumb title="Java" url="http://janwarlen.com/categories/Java/"/>
+          
         </display>
     </data>
     </url>
