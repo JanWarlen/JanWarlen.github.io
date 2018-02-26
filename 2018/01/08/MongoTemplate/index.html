@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="mongo,Spring Boot,Java," />
+  <meta name="keywords" content="Java,mongo,Spring Boot," />
 
 
 
@@ -81,13 +81,13 @@
 
 
 
-<meta name="description" content="本文Demo位于DemoList中的MongoTemplate 环境准备pom依赖1234&amp;lt;dependency&amp;gt;	&amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;	&amp;lt;artifactId&amp;gt;spring-boot-starter-data-mongodb&amp;lt;/artifactId&amp;gt;&amp;lt;/depen">
-<meta name="keywords" content="mongo,Spring Boot,Java">
+<meta name="description" content="本文Demo位于DemoList中的MongoTemplate">
+<meta name="keywords" content="Java,mongo,Spring Boot">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MongoTemplate_SpringBoot">
 <meta property="og:url" content="http://janwarlen.com/2018/01/08/MongoTemplate/index.html">
 <meta property="og:site_name" content="Janwarlen">
-<meta property="og:description" content="本文Demo位于DemoList中的MongoTemplate 环境准备pom依赖1234&amp;lt;dependency&amp;gt;	&amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;	&amp;lt;artifactId&amp;gt;spring-boot-starter-data-mongodb&amp;lt;/artifactId&amp;gt;&amp;lt;/depen">
+<meta property="og:description" content="本文Demo位于DemoList中的MongoTemplate">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/26314199.jpg">
 <meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/93717114.jpg">
@@ -101,10 +101,10 @@
 <meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/56825412.jpg">
 <meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/832494.jpg">
 <meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/97870062.jpg">
-<meta property="og:updated_time" content="2018-01-20T07:38:53.000Z">
+<meta property="og:updated_time" content="2018-01-20T07:48:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MongoTemplate_SpringBoot">
-<meta name="twitter:description" content="本文Demo位于DemoList中的MongoTemplate 环境准备pom依赖1234&amp;lt;dependency&amp;gt;	&amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;	&amp;lt;artifactId&amp;gt;spring-boot-starter-data-mongodb&amp;lt;/artifactId&amp;gt;&amp;lt;/depen">
+<meta name="twitter:description" content="本文Demo位于DemoList中的MongoTemplate">
 <meta name="twitter:image" content="http://p20t6wvw7.bkt.clouddn.com/18-1-8/26314199.jpg">
 
 
@@ -442,7 +442,7 @@
 
       
         <blockquote>
-<p>本文Demo位于<a href="https://github.com/JanWarlen/DemoList" target="_blank" rel="noopener">DemoList</a>中的<strong>MongoTemplate</strong></p>
+<p>本文Demo位于<a href="https://github.com/JanWarlen/DemoList" target="_blank" rel="noopener">DemoList</a>中的<strong>MongoTemplate</strong><br><a id="more"></a></p>
 <h4 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h4><h5 id="pom依赖"><a href="#pom依赖" class="headerlink" title="pom依赖"></a>pom依赖</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-boot-starter-data-mongodb&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
 <p>SpringBoot 依赖<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.5.9.RELEASE&lt;/version&gt;</span><br><span class="line">&lt;/parent&gt;</span><br><span class="line">&lt;dependencies&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">&lt;/dependencies&gt;</span><br></pre></td></tr></table></figure></p>
 </blockquote>
@@ -582,11 +582,11 @@
       
         <div class="post-tags">
           
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
             <a href="/tags/mongo/" rel="tag"># mongo</a>
           
             <a href="/tags/Spring-Boot/" rel="tag"># Spring Boot</a>
-          
-            <a href="/tags/Java/" rel="tag"># Java</a>
           
         </div>
       
@@ -608,6 +608,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/26/Curator's_Tech_Notes/" rel="prev" title="Curator's Tech Notes 翻译与部分验证">
+                Curator's Tech Notes 翻译与部分验证 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -693,7 +697,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -715,7 +719,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

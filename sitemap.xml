@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://janwarlen.com/2018/02/26/Curator's_Tech_Notes/</loc>
+    
+    <lastmod>2018-02-26T08:52:19.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://janwarlen.com/2018/01/08/MongoTemplate/</loc>
     
-    <lastmod>2018-01-20T07:38:53.000Z</lastmod>
+    <lastmod>2018-01-20T07:48:13.000Z</lastmod>
     
   </url>
   

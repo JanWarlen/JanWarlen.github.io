@@ -4,18 +4,42 @@
 
     
   <url>
+    <loc>http://janwarlen.com/2018/02/26/Curator's_Tech_Notes/</loc>
+    <lastmod>2018-02-26T08:52:19.000Z</lastmod>
+    <data>
+        <display>
+        <title>Curator's Tech Notes 翻译与部分验证</title>
+        <pubTime>2018-02-26T08:41:09.000Z</pubTime>
+        
+        <tag>Curator</tag>
+         
+        <tag>ZooKeeper</tag>
+         
+        <tag>Java</tag>
+         
+         
+           
+             
+              <breadCrumb title="Java" url="http://janwarlen.com/categories/Java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://janwarlen.com/2018/01/08/MongoTemplate/</loc>
-    <lastmod>2018-01-20T07:38:53.000Z</lastmod>
+    <lastmod>2018-01-20T07:48:13.000Z</lastmod>
     <data>
         <display>
         <title>MongoTemplate_SpringBoot</title>
         <pubTime>2018-01-08T09:50:36.000Z</pubTime>
         
+        <tag>Java</tag>
+         
         <tag>mongo</tag>
          
         <tag>Spring Boot</tag>
-         
-        <tag>Java</tag>
          
          
            
