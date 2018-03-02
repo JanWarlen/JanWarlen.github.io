@@ -91,7 +91,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-2-1/65557665.jpg">
 <meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-2-1/35462866.jpg">
-<meta property="og:updated_time" content="2018-02-27T03:21:33.000Z">
+<meta property="og:updated_time" content="2018-03-02T07:05:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="部分关键词探究">
 <meta name="twitter:description" content="测试代码">
@@ -493,7 +493,7 @@
 </blockquote>
 <h5 id="volatile用来修饰共享变量（成员变量，static变量）表明："><a href="#volatile用来修饰共享变量（成员变量，static变量）表明：" class="headerlink" title="volatile用来修饰共享变量（成员变量，static变量）表明："></a>volatile用来修饰共享变量（成员变量，static变量）表明：</h5><p><code>volatile变量写</code>：</p>
 <ul>
-<li>当写一个volatile变量时，JMM会把所有线程本地内存的对应变量副本刷新回主存；  </li>
+<li>当写一个volatile变量时，JMM会把所有线程本地内存的对应变量副本刷新回主存；（注意是所有共享变量，不是一个volatile变量） </li>
 <li>volatile写和解锁内存语义相同；</li>
 </ul>
 <p><code>volatile变量读</code>：</p>
