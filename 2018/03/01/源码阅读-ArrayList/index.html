@@ -81,19 +81,19 @@
 
 
 
-<meta name="description" content="Tips：  如果要在集合中使用自定义类，建议重写equals函数 如果集合内元素较多，使用结束后建议清空（GC） BitSet ArrayList是非线程安全的">
+<meta name="description" content="Tips：  如果要在集合中使用自定义类，建议重写equals函数   如果集合内元素较多，使用结束后建议清空（GC）   BitSet   ArrayList是非线程安全的">
 <meta name="keywords" content="Java,集合,SourceCode">
 <meta property="og:type" content="article">
 <meta property="og:title" content="源码阅读-ArrayList">
 <meta property="og:url" content="http://janwarlen.com/2018/03/01/源码阅读-ArrayList/index.html">
 <meta property="og:site_name" content="Janwarlen">
-<meta property="og:description" content="Tips：  如果要在集合中使用自定义类，建议重写equals函数 如果集合内元素较多，使用结束后建议清空（GC） BitSet ArrayList是非线程安全的">
+<meta property="og:description" content="Tips：  如果要在集合中使用自定义类，建议重写equals函数   如果集合内元素较多，使用结束后建议清空（GC）   BitSet   ArrayList是非线程安全的">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-3-1/80652992.jpg">
-<meta property="og:updated_time" content="2018-03-01T10:01:36.000Z">
+<meta property="og:updated_time" content="2018-03-20T09:12:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="源码阅读-ArrayList">
-<meta name="twitter:description" content="Tips：  如果要在集合中使用自定义类，建议重写equals函数 如果集合内元素较多，使用结束后建议清空（GC） BitSet ArrayList是非线程安全的">
+<meta name="twitter:description" content="Tips：  如果要在集合中使用自定义类，建议重写equals函数   如果集合内元素较多，使用结束后建议清空（GC）   BitSet   ArrayList是非线程安全的">
 <meta name="twitter:image" content="http://p20t6wvw7.bkt.clouddn.com/18-3-1/80652992.jpg">
 
 
@@ -432,12 +432,50 @@
       
         <p>Tips：</p>
 <ol>
-<li>如果要在集合中使用自定义类，建议重写equals函数</li>
-<li>如果集合内元素较多，使用结束后建议清空（GC）</li>
-<li><a href="http://www.runoob.com/java/java-bitset-class.html" target="_blank" rel="noopener">BitSet</a></li>
-<li>ArrayList是非线程安全的<a id="more"></a>
-<h4 id="继承实现关系图"><a href="#继承实现关系图" class="headerlink" title="继承实现关系图"></a>继承实现关系图</h4><img src="http://p20t6wvw7.bkt.clouddn.com/18-3-1/80652992.jpg" alt="ArrayList"><br><strong>蓝色实线为继承，绿色虚线为实现</strong><h4 id="参数解释"><a href="#参数解释" class="headerlink" title="参数解释"></a>参数解释</h4>参数|释义|<br>–|–|<br>DEFAULT_CAPACITY|默认容量<br>EMPTY_ELEMENTDATA|创建大小为空实例时使用的空数组<br>DEFAULTCAPACITY_EMPTY_ELEMENTDATA|给无参构造函数使用<br>elementData|数据数组<br>size|实际大小<br>MAX_ARRAY_SIZE|值为<code>Integer.MAX_VALUE - 8</code>，主要防止自动扩容时，申请空间过大<br>modCount|默认为0，统计集合的修改次数，也可用于线程安全判断</li>
+<li>如果要在集合中使用自定义类，建议重写equals函数  </li>
+<li>如果集合内元素较多，使用结束后建议清空（GC）  </li>
+<li><a href="http://www.runoob.com/java/java-bitset-class.html" target="_blank" rel="noopener">BitSet</a>  </li>
+<li>ArrayList是非线程安全的  <a id="more"></a>
+<h4 id="继承实现关系图"><a href="#继承实现关系图" class="headerlink" title="继承实现关系图"></a>继承实现关系图</h4><img src="http://p20t6wvw7.bkt.clouddn.com/18-3-1/80652992.jpg" alt="ArrayList"><br><strong>蓝色实线为继承，绿色虚线为实现</strong><h4 id="参数解释"><a href="#参数解释" class="headerlink" title="参数解释"></a>参数解释</h4></li>
 </ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">参数</th>
+<th style="text-align:left">释义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">DEFAULT_CAPACITY</td>
+<td style="text-align:left">默认容量</td>
+</tr>
+<tr>
+<td style="text-align:left">EMPTY_ELEMENTDATA</td>
+<td style="text-align:left">创建大小为空实例时使用的空数组</td>
+</tr>
+<tr>
+<td style="text-align:left">DEFAULTCAPACITY_EMPTY_ELEMENTDATA</td>
+<td style="text-align:left">给无参构造函数使用</td>
+</tr>
+<tr>
+<td style="text-align:left">elementData</td>
+<td style="text-align:left">数据数组</td>
+</tr>
+<tr>
+<td style="text-align:left">size</td>
+<td style="text-align:left">实际大小</td>
+</tr>
+<tr>
+<td style="text-align:left">MAX_ARRAY_SIZE</td>
+<td style="text-align:left">值为(Integer.MAX_VALUE - 8)，主要防止自动扩容时，申请空间过大</td>
+</tr>
+<tr>
+<td style="text-align:left">modCount</td>
+<td style="text-align:left">默认为0，统计集合的修改次数，也可用于线程安全判断</td>
+</tr>
+</tbody>
+</table>
 <h4 id="创建实例"><a href="#创建实例" class="headerlink" title="创建实例"></a>创建实例</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建指定大小容量实例</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayList</span><span class="params">(<span class="keyword">int</span> initialCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (initialCapacity &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>.elementData = <span class="keyword">new</span> Object[initialCapacity];</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (initialCapacity == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>.elementData = EMPTY_ELEMENTDATA;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Illegal Capacity: "</span>+</span><br><span class="line">                                           initialCapacity);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建默认实例</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//根据传入集合创建实例</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayList</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">    elementData = c.toArray();</span><br><span class="line">    <span class="keyword">if</span> ((size = elementData.length) != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// c.toArray might (incorrectly) not return Object[] (see 6260652)</span></span><br><span class="line">        <span class="keyword">if</span> (elementData.getClass() != Object[].class)</span><br><span class="line">            elementData = Arrays.copyOf(elementData, size, Object[].class);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// replace with empty array.</span></span><br><span class="line">        <span class="keyword">this</span>.elementData = EMPTY_ELEMENTDATA;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="添加元素"><a href="#添加元素" class="headerlink" title="添加元素"></a>添加元素</h4><h5 id="单元素添加"><a href="#单元素添加" class="headerlink" title="单元素添加"></a>单元素添加</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//按顺序添加元素</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    ensureCapacityInternal(size + <span class="number">1</span>);  <span class="comment">// Increments modCount!!</span></span><br><span class="line">    elementData[size++] = e;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//每次添加元素之前都会进行容量检查，当容量不足时进行扩容</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureCapacityInternal</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) &#123;</span><br><span class="line">        minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ensureExplicitCapacity(minCapacity);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//确保集合有足够大小空间添加元素</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureExplicitCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    modCount++;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// overflow-conscious code</span></span><br><span class="line">    <span class="keyword">if</span> (minCapacity - elementData.length &gt; <span class="number">0</span>)</span><br><span class="line">        grow(minCapacity);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 当最小需求大于当前集合空间容量时，进行扩容</span></span><br><span class="line"><span class="comment">* 大部分情况下会进行1.5倍扩容策略</span></span><br><span class="line"><span class="comment">* 当集合本身超过2/3的`Integer.MAX_VALUE`时，因1.5倍会超过整形最大值</span></span><br><span class="line"><span class="comment">* 因此会有`hugeCapacity`进行娄底，以防内存泄露</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// overflow-conscious code</span></span><br><span class="line">    <span class="keyword">int</span> oldCapacity = elementData.length;</span><br><span class="line">    <span class="keyword">int</span> newCapacity = oldCapacity + (oldCapacity &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = minCapacity;</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    <span class="comment">// minCapacity is usually close to size, so this is a win:</span></span><br><span class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 当minCapacity &lt; 0 时，意味着当前集合元素数量基本已经达到整形最大值</span></span><br><span class="line"><span class="comment">* 因此会直接抛出`OutOfMemoryError`</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* 否则进行最大化扩容</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">hugeCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (minCapacity &lt; <span class="number">0</span>) <span class="comment">// overflow</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> OutOfMemoryError();</span><br><span class="line">    <span class="keyword">return</span> (minCapacity &gt; MAX_ARRAY_SIZE) ?</span><br><span class="line">        Integer.MAX_VALUE :</span><br><span class="line">        MAX_ARRAY_SIZE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h5 id="单元素指定位置添加"><a href="#单元素指定位置添加" class="headerlink" title="单元素指定位置添加"></a>单元素指定位置添加</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 指定位置添加元素采用的是指定索引及之后所有元素通过拷贝进行后移</span></span><br><span class="line"><span class="comment">* 在直接使用数组下标直接赋值</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> index, E element)</span> </span>&#123;</span><br><span class="line">    rangeCheckForAdd(index);</span><br><span class="line"></span><br><span class="line">    ensureCapacityInternal(size + <span class="number">1</span>);  <span class="comment">// Increments modCount!!</span></span><br><span class="line">    System.arraycopy(elementData, index, elementData, index + <span class="number">1</span>,</span><br><span class="line">                     size - index);</span><br><span class="line">    elementData[index] = element;</span><br><span class="line">    size++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//校验索引是否合法</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">rangeCheckForAdd</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (index &gt; size || index &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(outOfBoundsMsg(index));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -498,6 +536,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/25/源码阅读-LinkedList/" rel="prev" title="源码阅读-LinkedList">
+                源码阅读-LinkedList <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -583,7 +625,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -605,7 +647,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

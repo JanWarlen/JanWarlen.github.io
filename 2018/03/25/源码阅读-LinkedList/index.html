@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java,集合,SourceCode," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Janwarlen" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Tips：    如果要在集合中使用自定义类，建议重写equals函数   如果集合内元素较多，使用结束后建议清空（GC）   LinkedList所提供的原生函数无批处理，所以会有线程安全的假象，但是它并非线程安全，并且因为不想ArrayList提供批处理函数（函数内针对线程安全做了一定的处理），所以在使用LinkedList时需要格外注意   链表核心在于指针（即引用），可以先行了解这部分">
+<meta name="keywords" content="Java,集合,SourceCode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="源码阅读-LinkedList">
+<meta property="og:url" content="http://janwarlen.com/2018/03/25/源码阅读-LinkedList/index.html">
+<meta property="og:site_name" content="Janwarlen">
+<meta property="og:description" content="Tips：    如果要在集合中使用自定义类，建议重写equals函数   如果集合内元素较多，使用结束后建议清空（GC）   LinkedList所提供的原生函数无批处理，所以会有线程安全的假象，但是它并非线程安全，并且因为不想ArrayList提供批处理函数（函数内针对线程安全做了一定的处理），所以在使用LinkedList时需要格外注意   链表核心在于指针（即引用），可以先行了解这部分">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-3-20/39848976.jpg">
+<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-3-20/19679659.jpg">
+<meta property="og:updated_time" content="2018-03-26T02:53:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="源码阅读-LinkedList">
+<meta name="twitter:description" content="Tips：    如果要在集合中使用自定义类，建议重写equals函数   如果集合内元素较多，使用结束后建议清空（GC）   LinkedList所提供的原生函数无批处理，所以会有线程安全的假象，但是它并非线程安全，并且因为不想ArrayList提供批处理函数（函数内针对线程安全做了一定的处理），所以在使用LinkedList时需要格外注意   链表核心在于指针（即引用），可以先行了解这部分">
+<meta name="twitter:image" content="http://p20t6wvw7.bkt.clouddn.com/18-3-20/39848976.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '4JNGBES01X',
+      apiKey: '32fbe3470d5922ac0927fe78edb84175',
+      indexName: 'index_hexo_blog',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://janwarlen.com/2018/03/25/源码阅读-LinkedList/"/>
+
+
+
+
+
+  <title>源码阅读-LinkedList | Janwarlen</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-110997978-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2d6b785ef2d7969dc8b9db1bcd382bfa";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Janwarlen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Life recorder</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2018/03/25/源码阅读-LinkedList/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jan Warlen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Janwarlen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">源码阅读-LinkedList</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-25T10:53:49+08:00">
+                2018-03-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2018/03/25/源码阅读-LinkedList/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2018/03/25/源码阅读-LinkedList/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+             <span id="/2018/03/25/源码阅读-LinkedList/" class="leancloud_visitors" data-flag-title="源码阅读-LinkedList">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Tips：  </p>
+<ol>
+<li>如果要在集合中使用自定义类，建议重写equals函数  </li>
+<li>如果集合内元素较多，使用结束后建议清空（GC）  </li>
+<li>LinkedList所提供的原生函数无批处理，所以会有线程安全的假象，但是它并非线程安全，并且因为不想ArrayList提供批处理函数（函数内针对线程安全做了一定的处理），所以在使用LinkedList时需要格外注意  </li>
+<li>链表核心在于指针（即引用），可以先行了解这部分  </li>
+<li>本次未像ArrayList提供基础代码调用实现  <a id="more"></a>
+</li>
+</ol>
+<h4 id="继承实现关系图"><a href="#继承实现关系图" class="headerlink" title="继承实现关系图"></a>继承实现关系图</h4><p><img src="http://p20t6wvw7.bkt.clouddn.com/18-3-20/39848976.jpg" alt="LinkedList"><br><strong>蓝色实线为继承，色虚线为实现,红色为内部类</strong></p>
+<h4 id="链表简单结构示意图"><a href="#链表简单结构示意图" class="headerlink" title="链表简单结构示意图"></a>链表简单结构示意图</h4><p><img src="http://p20t6wvw7.bkt.clouddn.com/18-3-20/19679659.jpg" alt="LinkedList_Node"><br><strong>此为LinkedList的节点结构与队列模拟展示，属于数据结构中的双向链表</strong></p>
+<h4 id="参数解释"><a href="#参数解释" class="headerlink" title="参数解释"></a>参数解释</h4><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>释义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>size</td>
+<td>链表节点数目</td>
+</tr>
+<tr>
+<td>first</td>
+<td>链表头节点指针</td>
+</tr>
+<tr>
+<td>last</td>
+<td>链表尾节点指针</td>
+</tr>
+</tbody>
+</table>
+<h4 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">       E item;<span class="comment">//节点内存储值</span></span><br><span class="line">       Node&lt;E&gt; next;<span class="comment">//指针，指向后一个节点</span></span><br><span class="line">       Node&lt;E&gt; prev;<span class="comment">//指针，指向前一个节点</span></span><br><span class="line"></span><br><span class="line">       Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;</span><br><span class="line">           <span class="keyword">this</span>.item = element;</span><br><span class="line">           <span class="keyword">this</span>.next = next;</span><br><span class="line">           <span class="keyword">this</span>.prev = prev;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="创建实例"><a href="#创建实例" class="headerlink" title="创建实例"></a>创建实例</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建空链表</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//根据集合创建链表</span></span><br><span class="line"><span class="comment">//实际是先创建空链表，再遍历集合加入链表</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">LinkedList</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>();</span><br><span class="line">       addAll(c);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="增加节点"><a href="#增加节点" class="headerlink" title="增加节点"></a>增加节点</h4><h5 id="头部增加节点"><a href="#头部增加节点" class="headerlink" title="头部增加节点"></a>头部增加节点</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addFirst</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">       linkFirst(e);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">//@since 1.6</span></span><br><span class="line">   <span class="comment">//个人认为就是为了修改方法名而存在的方法</span></span><br><span class="line">   <span class="comment">//push和pop应该算是链表的标准操作</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">       addFirst(e);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">linkFirst</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">   	<span class="comment">// 创建指针指向头指针指向地址</span></span><br><span class="line">       <span class="keyword">final</span> Node&lt;E&gt; f = first;</span><br><span class="line">       <span class="comment">//创建节点，该节点next指针使用刚刚创建的指针f</span></span><br><span class="line">       <span class="comment">//即将新节点的后节点指向头结点</span></span><br><span class="line">       <span class="keyword">final</span> Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(<span class="keyword">null</span>, e, f);</span><br><span class="line">       <span class="comment">//first指针指向刚创建的节点</span></span><br><span class="line">       first = newNode;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (f == <span class="keyword">null</span>)</span><br><span class="line">       	<span class="comment">//如果当前链表为空，则f将会指向null</span></span><br><span class="line">       	<span class="comment">//则新节点不仅是头结点也是尾节点</span></span><br><span class="line">           last = newNode;</span><br><span class="line">       <span class="keyword">else</span></span><br><span class="line">       	<span class="comment">//因为f指向的是之前的头节点，目前的第二节点</span></span><br><span class="line">       	<span class="comment">//因此需要将节点的prev指针指向现在的头结点，完成结构搭建</span></span><br><span class="line">           f.prev = newNode;</span><br><span class="line">       <span class="comment">//节点数目+1</span></span><br><span class="line">       size++;</span><br><span class="line">       <span class="comment">//修改次数+1</span></span><br><span class="line">       modCount++;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="尾部增加节点"><a href="#尾部增加节点" class="headerlink" title="尾部增加节点"></a>尾部增加节点</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addLast</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">       linkLast(e);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">void</span> <span class="title">linkLast</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">   	<span class="comment">//创建指针指向尾指针指向地址</span></span><br><span class="line">       <span class="keyword">final</span> Node&lt;E&gt; l = last;</span><br><span class="line">       <span class="comment">//创建新节点，新节点的前指针指向尾指针(l)指向地址</span></span><br><span class="line">       <span class="comment">//后指针指向null</span></span><br><span class="line">       <span class="keyword">final</span> Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(l, e, <span class="keyword">null</span>);</span><br><span class="line">       <span class="comment">//链表尾指针指向新节点</span></span><br><span class="line">       last = newNode;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (l == <span class="keyword">null</span>)</span><br><span class="line">       	<span class="comment">//如果原链表为空，则新节点同时也是头结点</span></span><br><span class="line">           first = newNode;</span><br><span class="line">       <span class="keyword">else</span></span><br><span class="line">       	<span class="comment">//l原本指向尾节点，现在是倒数第二</span></span><br><span class="line">       	<span class="comment">//因此l指向的节点的后指针应指向新节点完成结构搭建</span></span><br><span class="line">           l.next = newNode;</span><br><span class="line">       <span class="comment">//节点数目+1</span></span><br><span class="line">       size++;</span><br><span class="line">       <span class="comment">//修改次数+1</span></span><br><span class="line">       modCount++;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="增加一个节点"><a href="#增加一个节点" class="headerlink" title="增加一个节点"></a>增加一个节点</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">	<span class="comment">//使用尾部添加方式</span></span><br><span class="line">       linkLast(e);</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> add(e);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">offerFirst</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">       addFirst(e);</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">offerLast</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">       addLast(e);</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">       addFirst(e);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="指定位置添加一个节点"><a href="#指定位置添加一个节点" class="headerlink" title="指定位置添加一个节点"></a>指定位置添加一个节点</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> index, E element)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//索引位置校验</span></span><br><span class="line">    checkPositionIndex(index);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (index == size)</span><br><span class="line">        <span class="comment">//尾部追加方式</span></span><br><span class="line">        linkLast(element);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="comment">//指定index插入方式</span></span><br><span class="line">        linkBefore(element, node(index));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">linkBefore</span><span class="params">(E e, Node&lt;E&gt; succ)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// assert succ != null;</span></span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; pred = succ.prev;</span><br><span class="line">    <span class="comment">//创建新节点，前指针指向的原节点的前指针指向节点</span></span><br><span class="line">    <span class="comment">//尾指针指向原节点</span></span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(pred, e, succ);</span><br><span class="line">    <span class="comment">//断开原节点的前指针，指向新节点</span></span><br><span class="line">    succ.prev = newNode;</span><br><span class="line">    <span class="keyword">if</span> (pred == <span class="keyword">null</span>)</span><br><span class="line">        <span class="comment">//原节点的前指针为空则说明插入位置为链表头部</span></span><br><span class="line">        first = newNode;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="comment">//将前一个节点的后指针断开，指向新节点</span></span><br><span class="line">        pred.next = newNode;</span><br><span class="line">    <span class="comment">//节点数目+1</span></span><br><span class="line">    size++;</span><br><span class="line">    <span class="comment">//修改次数+1</span></span><br><span class="line">    modCount++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="指定位置通过集合添加节点"><a href="#指定位置通过集合添加节点" class="headerlink" title="指定位置通过集合添加节点"></a>指定位置通过集合添加节点</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(<span class="keyword">int</span> index, Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">	<span class="comment">//检查索引位置是否合法[0,size]</span></span><br><span class="line">       checkPositionIndex(index);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//利用collection函数，将集合元素抽取为数组</span></span><br><span class="line">       Object[] a = c.toArray();</span><br><span class="line"></span><br><span class="line">       <span class="keyword">int</span> numNew = a.length;</span><br><span class="line">       <span class="keyword">if</span> (numNew == <span class="number">0</span>)</span><br><span class="line">       	<span class="comment">//如果集合为空，则直接返回</span></span><br><span class="line">           <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//声明前指针，后指针</span></span><br><span class="line">       Node&lt;E&gt; pred, succ;</span><br><span class="line">       <span class="keyword">if</span> (index == size) &#123;</span><br><span class="line">       	<span class="comment">//如果插入位置与数量size相等</span></span><br><span class="line">       	<span class="comment">//则是尾部追加</span></span><br><span class="line">           succ = <span class="keyword">null</span>;</span><br><span class="line">           pred = last;</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">       	<span class="comment">//将后指针指向指定位置节点</span></span><br><span class="line">           succ = node(index);</span><br><span class="line">		<span class="comment">//将前指针指向指定位置节点的前一个节点</span></span><br><span class="line">           pred = succ.prev;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">for</span> (Object o : a) &#123;</span><br><span class="line">       	<span class="comment">//使用pred作为前指针，创建只有前指针的节点</span></span><br><span class="line">           <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>) E e = (E) o;</span><br><span class="line">           Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(pred, e, <span class="keyword">null</span>);</span><br><span class="line">           <span class="keyword">if</span> (pred == <span class="keyword">null</span>)</span><br><span class="line">               <span class="comment">//前指针为空意味着链表为空，当前创建节点为链表头结点</span></span><br><span class="line">               <span class="comment">//需要将首指针指向该节点</span></span><br><span class="line">               first = newNode;</span><br><span class="line">           <span class="keyword">else</span></span><br><span class="line">               <span class="comment">//链表不为空，则需要将前面的节点的后指针指向创建节点</span></span><br><span class="line">               pred.next = newNode;</span><br><span class="line">           <span class="comment">//pred指针后移</span></span><br><span class="line">           pred = newNode;</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       <span class="comment">//succ指向原本位置在index的节点</span></span><br><span class="line">       <span class="keyword">if</span> (succ == <span class="keyword">null</span>) &#123;</span><br><span class="line">           <span class="comment">//succ为空，则至少说明是尾部追加</span></span><br><span class="line">           <span class="comment">//需要将尾指针指向该节点</span></span><br><span class="line">           last = pred;</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="comment">//将创建的最后一个节点的后指针指向原本位于index的节点</span></span><br><span class="line">           <span class="comment">//将原节点的前指针指向创建的最后一个节点</span></span><br><span class="line">           <span class="comment">//完成最后的连接构建</span></span><br><span class="line">           pred.next = succ;</span><br><span class="line">           succ.prev = pred;</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       <span class="comment">//刷新链表大小</span></span><br><span class="line">       size += numNew;</span><br><span class="line">       <span class="comment">//修改次数+1</span></span><br><span class="line">       modCount++;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//根据索引找到节点</span></span><br><span class="line">   <span class="function">Node&lt;E&gt; <span class="title">node</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">       <span class="comment">// assert isElementIndex(index);</span></span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (index &lt; (size &gt;&gt; <span class="number">1</span>)) &#123;</span><br><span class="line">       	<span class="comment">//如果索引在前半部，则使用头结点正向遍历查找</span></span><br><span class="line">           Node&lt;E&gt; x = first;</span><br><span class="line">           <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; i++)</span><br><span class="line">               x = x.next;</span><br><span class="line">           <span class="keyword">return</span> x;</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">       	<span class="comment">//如果索引在后半部，则使用尾节点反向遍历查找</span></span><br><span class="line">           Node&lt;E&gt; x = last;</span><br><span class="line">           <span class="keyword">for</span> (<span class="keyword">int</span> i = size - <span class="number">1</span>; i &gt; index; i--)</span><br><span class="line">               x = x.prev;</span><br><span class="line">           <span class="keyword">return</span> x;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="尾部添加集合"><a href="#尾部添加集合" class="headerlink" title="尾部添加集合"></a>尾部添加集合</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</span><br><span class="line">       <span class="comment">//直接传入size</span></span><br><span class="line">       <span class="keyword">return</span> addAll(size, c);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="删除节点"><a href="#删除节点" class="headerlink" title="删除节点"></a>删除节点</h4><h5 id="删除头节点"><a href="#删除头节点" class="headerlink" title="删除头节点"></a>删除头节点</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">removeFirst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; f = first;</span><br><span class="line">    <span class="keyword">if</span> (f == <span class="keyword">null</span>)</span><br><span class="line">        <span class="comment">//防止链表为空</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">    <span class="keyword">return</span> unlinkFirst(f);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//该方法与上一个方法的区别就是健壮性</span></span><br><span class="line"><span class="comment">//当链表为空时，不会抛出异常，而是null</span></span><br><span class="line"><span class="comment">//@since 1.5</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">poll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; f = first;</span><br><span class="line">    <span class="keyword">return</span> (f == <span class="keyword">null</span>) ? <span class="keyword">null</span> : unlinkFirst(f);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//@since 1.6</span></span><br><span class="line"><span class="comment">//只改了 一个方法名称，之所以保留上一个方法</span></span><br><span class="line"><span class="comment">//应该是出于兼容问题考虑，防止有的用户升级了jdk版本</span></span><br><span class="line"><span class="comment">//但是没有完全的修改好已经使用的方法</span></span><br><span class="line"><span class="comment">//也怀疑是方便推广</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">pollFirst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; f = first;</span><br><span class="line">    <span class="keyword">return</span> (f == <span class="keyword">null</span>) ? <span class="keyword">null</span> : unlinkFirst(f);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//@since 1.6</span></span><br><span class="line"><span class="comment">//同考虑为只是修改方法名，或者说降低使用难度（针对英语为母语）</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> removeFirst();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//个人认为该方法只是为了重载，无明显含义</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> removeFirst();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> E <span class="title">unlinkFirst</span><span class="params">(Node&lt;E&gt; f)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// assert f == first &amp;&amp; f != null;</span></span><br><span class="line">    <span class="comment">//保留下头结点内部value</span></span><br><span class="line">    <span class="keyword">final</span> E element = f.item;</span><br><span class="line">    <span class="comment">//新指针指向第二个节点</span></span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; next = f.next;</span><br><span class="line">    <span class="comment">//释放第一节点值域</span></span><br><span class="line">    f.item = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">//断开头结点与第二节点连接</span></span><br><span class="line">    f.next = <span class="keyword">null</span>; <span class="comment">// help GC</span></span><br><span class="line">    <span class="comment">//头指针指向第二节点</span></span><br><span class="line">    first = next;</span><br><span class="line">    <span class="keyword">if</span> (next == <span class="keyword">null</span>)</span><br><span class="line">        <span class="comment">//防止头结点被移除后，链表为空</span></span><br><span class="line">        last = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="comment">//第二节点与原头结点连接断开</span></span><br><span class="line">        next.prev = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">//链表节点数目-1</span></span><br><span class="line">    size--;</span><br><span class="line">    <span class="comment">//修改次数+1</span></span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="comment">//返回原头结点保存的值</span></span><br><span class="line">    <span class="keyword">return</span> element;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="删除尾节点"><a href="#删除尾节点" class="headerlink" title="删除尾节点"></a>删除尾节点</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">removeLast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; l = last;</span><br><span class="line">    <span class="keyword">if</span> (l == <span class="keyword">null</span>)</span><br><span class="line">        <span class="comment">//防止链表为空</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">    <span class="keyword">return</span> unlinkLast(l);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//@since 1.6</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">pollLast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; l = last;</span><br><span class="line">    <span class="keyword">return</span> (l == <span class="keyword">null</span>) ? <span class="keyword">null</span> : unlinkLast(l);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> E <span class="title">unlinkLast</span><span class="params">(Node&lt;E&gt; l)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// assert l == last &amp;&amp; l != null;</span></span><br><span class="line">    <span class="comment">//保留一份尾节点值</span></span><br><span class="line">    <span class="keyword">final</span> E element = l.item;</span><br><span class="line">    <span class="comment">//新指针指向倒数第二个节点</span></span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; prev = l.prev;</span><br><span class="line">    <span class="comment">//释放尾节点值域</span></span><br><span class="line">    l.item = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">//断开尾节点与倒数第二节点连接</span></span><br><span class="line">    l.prev = <span class="keyword">null</span>; <span class="comment">// help GC</span></span><br><span class="line">    <span class="comment">//尾指针指向倒数第二节点</span></span><br><span class="line">    last = prev;</span><br><span class="line">    <span class="keyword">if</span> (prev == <span class="keyword">null</span>)</span><br><span class="line">        <span class="comment">//若原链表仅有一个节点，则移除后需要处理头指针</span></span><br><span class="line">        first = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="comment">//断开倒数第二节点与尾节点的连接</span></span><br><span class="line">        prev.next = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">//刷新链表大小-1</span></span><br><span class="line">    size--;</span><br><span class="line">    <span class="comment">//修改次数+1</span></span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="comment">//返回原尾结点保存的值</span></span><br><span class="line">    <span class="keyword">return</span> element;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="根据内容删除节点"><a href="#根据内容删除节点" class="headerlink" title="根据内容删除节点"></a>根据内容删除节点</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//@since 1.6</span></span><br><span class="line"><span class="comment">//来自语言的满满恶意</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeFirstOccurrence</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> remove(o);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (o == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">//区分null是因为空无法使用equals函数比较</span></span><br><span class="line">        <span class="comment">//从头结点开始，正向遍历查找</span></span><br><span class="line">        <span class="keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="keyword">null</span>; x = x.next) &#123;</span><br><span class="line">            <span class="keyword">if</span> (x.item == <span class="keyword">null</span>) &#123;</span><br><span class="line">                unlink(x);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="keyword">null</span>; x = x.next) &#123;</span><br><span class="line">            <span class="comment">//因为使用的是传入对象的equals方法进行对比，因此</span></span><br><span class="line">            <span class="comment">//使用自定义对象的时候，建议重写equals方法</span></span><br><span class="line">            <span class="keyword">if</span> (o.equals(x.item)) &#123;</span><br><span class="line">                unlink(x);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//@since 1.6</span></span><br><span class="line"><span class="comment">//来自语言的满满恶意</span></span><br><span class="line"><span class="comment">//此方法有些许不同，它是删除最后一个出现的，即反向查找</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeLastOccurrence</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (o == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (Node&lt;E&gt; x = last; x != <span class="keyword">null</span>; x = x.prev) &#123;</span><br><span class="line">            <span class="keyword">if</span> (x.item == <span class="keyword">null</span>) &#123;</span><br><span class="line">                unlink(x);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (Node&lt;E&gt; x = last; x != <span class="keyword">null</span>; x = x.prev) &#123;</span><br><span class="line">            <span class="keyword">if</span> (o.equals(x.item)) &#123;</span><br><span class="line">                unlink(x);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">E <span class="title">unlink</span><span class="params">(Node&lt;E&gt; x)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// assert x != null;</span></span><br><span class="line">    <span class="comment">//将待移除节点值域、指针保留，一份副本</span></span><br><span class="line">    <span class="keyword">final</span> E element = x.item;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; next = x.next;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; prev = x.prev;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (prev == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">//前指针为空，则该节点为头结点</span></span><br><span class="line">        <span class="comment">//需要将头指针后移</span></span><br><span class="line">        first = next;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//修改前一个节点的后指针指向该节点的后指针指向地址</span></span><br><span class="line">        prev.next = next;</span><br><span class="line">        <span class="comment">//断开该节点与前一个节点的连接</span></span><br><span class="line">        x.prev = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (next == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">//后指针为空，则该节点是尾节点</span></span><br><span class="line">        <span class="comment">//需要将尾指针前移</span></span><br><span class="line">        last = prev;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//修改后一个节点的前指针指向该节点的前指针指向地址</span></span><br><span class="line">        next.prev = prev;</span><br><span class="line">        <span class="comment">//断开该节点与后一个节点的连接</span></span><br><span class="line">        x.next = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//置空该节点值域</span></span><br><span class="line">    x.item = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">//节点数目-1</span></span><br><span class="line">    size--;</span><br><span class="line">    <span class="comment">//修改次数+1</span></span><br><span class="line">    modCount++;</span><br><span class="line">    返回被移除节点保存内容</span><br><span class="line">    <span class="keyword">return</span> element;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="删除指定位置节点"><a href="#删除指定位置节点" class="headerlink" title="删除指定位置节点"></a>删除指定位置节点</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//校验index合法</span></span><br><span class="line">    checkElementIndex(index);</span><br><span class="line">    <span class="keyword">return</span> unlink(node(index));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="节点清空"><a href="#节点清空" class="headerlink" title="节点清空"></a>节点清空</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Clearing all of the links between nodes is "unnecessary", but:</span></span><br><span class="line">    <span class="comment">// - helps a generational GC if the discarded nodes inhabit</span></span><br><span class="line">    <span class="comment">//   more than one generation</span></span><br><span class="line">    <span class="comment">// - is sure to free memory even if there is a reachable Iterator</span></span><br><span class="line">    <span class="comment">//理论上不用清除每一个节点的指针连接，但是这能帮助减少GC压力，因为</span></span><br><span class="line">    <span class="comment">//丢弃的节点依然会存在内存中互相引用</span></span><br><span class="line">    <span class="comment">//正向遍历清空每一个节点</span></span><br><span class="line">    <span class="keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="keyword">null</span>; ) &#123;</span><br><span class="line">        Node&lt;E&gt; next = x.next;</span><br><span class="line">        x.item = <span class="keyword">null</span>;</span><br><span class="line">        x.next = <span class="keyword">null</span>;</span><br><span class="line">        x.prev = <span class="keyword">null</span>;</span><br><span class="line">        x = next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//刷新头指针与尾指针</span></span><br><span class="line">    first = last = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">//刷新链表大小</span></span><br><span class="line">    size = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//修改次数+1</span></span><br><span class="line">    modCount++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="修改节点"><a href="#修改节点" class="headerlink" title="修改节点"></a>修改节点</h4><h5 id="修改指定索引节点"><a href="#修改指定索引节点" class="headerlink" title="修改指定索引节点"></a>修改指定索引节点</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//该方法虽然修改了节点</span></span><br><span class="line"><span class="comment">//但是并没有修改modCount</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">set</span><span class="params">(<span class="keyword">int</span> index, E element)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//校验index合法</span></span><br><span class="line">    checkElementIndex(index);</span><br><span class="line">    <span class="comment">//找出指定位置节点</span></span><br><span class="line">    Node&lt;E&gt; x = node(index);</span><br><span class="line">    <span class="comment">//保留一份值的副本</span></span><br><span class="line">    E oldVal = x.item;</span><br><span class="line">    <span class="comment">//修改节点的值</span></span><br><span class="line">    x.item = element;</span><br><span class="line">    <span class="comment">//返回旧值</span></span><br><span class="line">    <span class="keyword">return</span> oldVal;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="查找节点"><a href="#查找节点" class="headerlink" title="查找节点"></a>查找节点</h4><h5 id="获取头结点"><a href="#获取头结点" class="headerlink" title="获取头结点"></a>获取头结点</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返回的是节点的值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">getFirst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; f = first;</span><br><span class="line">    <span class="keyword">if</span> (f == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">    <span class="keyword">return</span> f.item;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//@since 1.5</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">peek</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; f = first;</span><br><span class="line">    <span class="keyword">return</span> (f == <span class="keyword">null</span>) ? <span class="keyword">null</span> : f.item;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//@since 1.5</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">element</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> getFirst();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//@since 1.6</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">peekFirst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; f = first;</span><br><span class="line">    <span class="keyword">return</span> (f == <span class="keyword">null</span>) ? <span class="keyword">null</span> : f.item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="获取尾节点"><a href="#获取尾节点" class="headerlink" title="获取尾节点"></a>获取尾节点</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返回节点值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">getLast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; l = last;</span><br><span class="line">    <span class="keyword">if</span> (l == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">    <span class="keyword">return</span> l.item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="判断是否含有节点"><a href="#判断是否含有节点" class="headerlink" title="判断是否含有节点"></a>判断是否含有节点</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//通过值判断</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> indexOf(o) != -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="查询节点索引位置"><a href="#查询节点索引位置" class="headerlink" title="查询节点索引位置"></a>查询节点索引位置</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//正向，返回第一次出现的索引</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> index = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (o == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="keyword">null</span>; x = x.next) &#123;</span><br><span class="line">            <span class="keyword">if</span> (x.item == <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">return</span> index;</span><br><span class="line">            index++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="keyword">null</span>; x = x.next) &#123;</span><br><span class="line">            <span class="keyword">if</span> (o.equals(x.item))</span><br><span class="line">                <span class="keyword">return</span> index;</span><br><span class="line">            index++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//反向，返回第一次出现的索引</span></span><br><span class="line"><span class="comment">//因为是反向查找，所以结果对于正向来说是最后一次出现</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lastIndexOf</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> index = size;</span><br><span class="line">    <span class="keyword">if</span> (o == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (Node&lt;E&gt; x = last; x != <span class="keyword">null</span>; x = x.prev) &#123;</span><br><span class="line">            index--;</span><br><span class="line">            <span class="keyword">if</span> (x.item == <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">return</span> index;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (Node&lt;E&gt; x = last; x != <span class="keyword">null</span>; x = x.prev) &#123;</span><br><span class="line">            index--;</span><br><span class="line">            <span class="keyword">if</span> (o.equals(x.item))</span><br><span class="line">                <span class="keyword">return</span> index;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="查询指定索引节点"><a href="#查询指定索引节点" class="headerlink" title="查询指定索引节点"></a>查询指定索引节点</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返回值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    checkElementIndex(index);</span><br><span class="line">    <span class="keyword">return</span> node(index).item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/集合/" rel="tag"># 集合</a>
+          
+            <a href="/tags/SourceCode/" rel="tag"># SourceCode</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/01/源码阅读-ArrayList/" rel="next" title="源码阅读-ArrayList">
+                <i class="fa fa-chevron-left"></i> 源码阅读-ArrayList
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/12/一步一步数据结构-AVLTree/" rel="prev" title="一步一步数据结构-AVLTree">
+                一步一步数据结构-AVLTree <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/1.jpg"
+                alt="Jan Warlen" />
+            
+              <p class="site-author-name" itemprop="name">Jan Warlen</p>
+              <p class="site-description motion-element" itemprop="description">Record learning process</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#继承实现关系图"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x7EE7;&#x627F;&#x5B9E;&#x73B0;&#x5173;&#x7CFB;&#x56FE;" class="headerlink" title="&#x7EE7;&#x627F;&#x5B9E;&#x73B0;&#x5173;&#x7CFB;&#x56FE;"></a>&#x7EE7;&#x627F;&#x5B9E;&#x73B0;&#x5173;&#x7CFB;&#x56FE;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#链表简单结构示意图"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x94FE;&#x8868;&#x7B80;&#x5355;&#x7ED3;&#x6784;&#x793A;&#x610F;&#x56FE;" class="headerlink" title="&#x94FE;&#x8868;&#x7B80;&#x5355;&#x7ED3;&#x6784;&#x793A;&#x610F;&#x56FE;"></a>&#x94FE;&#x8868;&#x7B80;&#x5355;&#x7ED3;&#x6784;&#x793A;&#x610F;&#x56FE;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参数解释"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x53C2;&#x6570;&#x89E3;&#x91CA;" class="headerlink" title="&#x53C2;&#x6570;&#x89E3;&#x91CA;"></a>&#x53C2;&#x6570;&#x89E3;&#x91CA;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据结构"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x6570;&#x636E;&#x7ED3;&#x6784;" class="headerlink" title="&#x6570;&#x636E;&#x7ED3;&#x6784;"></a>&#x6570;&#x636E;&#x7ED3;&#x6784;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建实例"><span class="nav-number">5.</span> <span class="nav-text"><a href="#&#x521B;&#x5EFA;&#x5B9E;&#x4F8B;" class="headerlink" title="&#x521B;&#x5EFA;&#x5B9E;&#x4F8B;"></a>&#x521B;&#x5EFA;&#x5B9E;&#x4F8B;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#增加节点"><span class="nav-number">6.</span> <span class="nav-text"><a href="#&#x589E;&#x52A0;&#x8282;&#x70B9;" class="headerlink" title="&#x589E;&#x52A0;&#x8282;&#x70B9;"></a>&#x589E;&#x52A0;&#x8282;&#x70B9;</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#头部增加节点"><span class="nav-number">6.1.</span> <span class="nav-text"><a href="#&#x5934;&#x90E8;&#x589E;&#x52A0;&#x8282;&#x70B9;" class="headerlink" title="&#x5934;&#x90E8;&#x589E;&#x52A0;&#x8282;&#x70B9;"></a>&#x5934;&#x90E8;&#x589E;&#x52A0;&#x8282;&#x70B9;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#尾部增加节点"><span class="nav-number">6.2.</span> <span class="nav-text"><a href="#&#x5C3E;&#x90E8;&#x589E;&#x52A0;&#x8282;&#x70B9;" class="headerlink" title="&#x5C3E;&#x90E8;&#x589E;&#x52A0;&#x8282;&#x70B9;"></a>&#x5C3E;&#x90E8;&#x589E;&#x52A0;&#x8282;&#x70B9;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#增加一个节点"><span class="nav-number">6.3.</span> <span class="nav-text"><a href="#&#x589E;&#x52A0;&#x4E00;&#x4E2A;&#x8282;&#x70B9;" class="headerlink" title="&#x589E;&#x52A0;&#x4E00;&#x4E2A;&#x8282;&#x70B9;"></a>&#x589E;&#x52A0;&#x4E00;&#x4E2A;&#x8282;&#x70B9;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#指定位置添加一个节点"><span class="nav-number">6.4.</span> <span class="nav-text"><a href="#&#x6307;&#x5B9A;&#x4F4D;&#x7F6E;&#x6DFB;&#x52A0;&#x4E00;&#x4E2A;&#x8282;&#x70B9;" class="headerlink" title="&#x6307;&#x5B9A;&#x4F4D;&#x7F6E;&#x6DFB;&#x52A0;&#x4E00;&#x4E2A;&#x8282;&#x70B9;"></a>&#x6307;&#x5B9A;&#x4F4D;&#x7F6E;&#x6DFB;&#x52A0;&#x4E00;&#x4E2A;&#x8282;&#x70B9;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#指定位置通过集合添加节点"><span class="nav-number">6.5.</span> <span class="nav-text"><a href="#&#x6307;&#x5B9A;&#x4F4D;&#x7F6E;&#x901A;&#x8FC7;&#x96C6;&#x5408;&#x6DFB;&#x52A0;&#x8282;&#x70B9;" class="headerlink" title="&#x6307;&#x5B9A;&#x4F4D;&#x7F6E;&#x901A;&#x8FC7;&#x96C6;&#x5408;&#x6DFB;&#x52A0;&#x8282;&#x70B9;"></a>&#x6307;&#x5B9A;&#x4F4D;&#x7F6E;&#x901A;&#x8FC7;&#x96C6;&#x5408;&#x6DFB;&#x52A0;&#x8282;&#x70B9;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#尾部添加集合"><span class="nav-number">6.6.</span> <span class="nav-text"><a href="#&#x5C3E;&#x90E8;&#x6DFB;&#x52A0;&#x96C6;&#x5408;" class="headerlink" title="&#x5C3E;&#x90E8;&#x6DFB;&#x52A0;&#x96C6;&#x5408;"></a>&#x5C3E;&#x90E8;&#x6DFB;&#x52A0;&#x96C6;&#x5408;</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除节点"><span class="nav-number">7.</span> <span class="nav-text"><a href="#&#x5220;&#x9664;&#x8282;&#x70B9;" class="headerlink" title="&#x5220;&#x9664;&#x8282;&#x70B9;"></a>&#x5220;&#x9664;&#x8282;&#x70B9;</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#删除头节点"><span class="nav-number">7.1.</span> <span class="nav-text"><a href="#&#x5220;&#x9664;&#x5934;&#x8282;&#x70B9;" class="headerlink" title="&#x5220;&#x9664;&#x5934;&#x8282;&#x70B9;"></a>&#x5220;&#x9664;&#x5934;&#x8282;&#x70B9;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#删除尾节点"><span class="nav-number">7.2.</span> <span class="nav-text"><a href="#&#x5220;&#x9664;&#x5C3E;&#x8282;&#x70B9;" class="headerlink" title="&#x5220;&#x9664;&#x5C3E;&#x8282;&#x70B9;"></a>&#x5220;&#x9664;&#x5C3E;&#x8282;&#x70B9;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#根据内容删除节点"><span class="nav-number">7.3.</span> <span class="nav-text"><a href="#&#x6839;&#x636E;&#x5185;&#x5BB9;&#x5220;&#x9664;&#x8282;&#x70B9;" class="headerlink" title="&#x6839;&#x636E;&#x5185;&#x5BB9;&#x5220;&#x9664;&#x8282;&#x70B9;"></a>&#x6839;&#x636E;&#x5185;&#x5BB9;&#x5220;&#x9664;&#x8282;&#x70B9;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#删除指定位置节点"><span class="nav-number">7.4.</span> <span class="nav-text"><a href="#&#x5220;&#x9664;&#x6307;&#x5B9A;&#x4F4D;&#x7F6E;&#x8282;&#x70B9;" class="headerlink" title="&#x5220;&#x9664;&#x6307;&#x5B9A;&#x4F4D;&#x7F6E;&#x8282;&#x70B9;"></a>&#x5220;&#x9664;&#x6307;&#x5B9A;&#x4F4D;&#x7F6E;&#x8282;&#x70B9;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#节点清空"><span class="nav-number">7.5.</span> <span class="nav-text"><a href="#&#x8282;&#x70B9;&#x6E05;&#x7A7A;" class="headerlink" title="&#x8282;&#x70B9;&#x6E05;&#x7A7A;"></a>&#x8282;&#x70B9;&#x6E05;&#x7A7A;</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改节点"><span class="nav-number">8.</span> <span class="nav-text"><a href="#&#x4FEE;&#x6539;&#x8282;&#x70B9;" class="headerlink" title="&#x4FEE;&#x6539;&#x8282;&#x70B9;"></a>&#x4FEE;&#x6539;&#x8282;&#x70B9;</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#修改指定索引节点"><span class="nav-number">8.1.</span> <span class="nav-text"><a href="#&#x4FEE;&#x6539;&#x6307;&#x5B9A;&#x7D22;&#x5F15;&#x8282;&#x70B9;" class="headerlink" title="&#x4FEE;&#x6539;&#x6307;&#x5B9A;&#x7D22;&#x5F15;&#x8282;&#x70B9;"></a>&#x4FEE;&#x6539;&#x6307;&#x5B9A;&#x7D22;&#x5F15;&#x8282;&#x70B9;</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查找节点"><span class="nav-number">9.</span> <span class="nav-text"><a href="#&#x67E5;&#x627E;&#x8282;&#x70B9;" class="headerlink" title="&#x67E5;&#x627E;&#x8282;&#x70B9;"></a>&#x67E5;&#x627E;&#x8282;&#x70B9;</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#获取头结点"><span class="nav-number">9.1.</span> <span class="nav-text"><a href="#&#x83B7;&#x53D6;&#x5934;&#x7ED3;&#x70B9;" class="headerlink" title="&#x83B7;&#x53D6;&#x5934;&#x7ED3;&#x70B9;"></a>&#x83B7;&#x53D6;&#x5934;&#x7ED3;&#x70B9;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#获取尾节点"><span class="nav-number">9.2.</span> <span class="nav-text"><a href="#&#x83B7;&#x53D6;&#x5C3E;&#x8282;&#x70B9;" class="headerlink" title="&#x83B7;&#x53D6;&#x5C3E;&#x8282;&#x70B9;"></a>&#x83B7;&#x53D6;&#x5C3E;&#x8282;&#x70B9;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#判断是否含有节点"><span class="nav-number">9.3.</span> <span class="nav-text"><a href="#&#x5224;&#x65AD;&#x662F;&#x5426;&#x542B;&#x6709;&#x8282;&#x70B9;" class="headerlink" title="&#x5224;&#x65AD;&#x662F;&#x5426;&#x542B;&#x6709;&#x8282;&#x70B9;"></a>&#x5224;&#x65AD;&#x662F;&#x5426;&#x542B;&#x6709;&#x8282;&#x70B9;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查询节点索引位置"><span class="nav-number">9.4.</span> <span class="nav-text"><a href="#&#x67E5;&#x8BE2;&#x8282;&#x70B9;&#x7D22;&#x5F15;&#x4F4D;&#x7F6E;" class="headerlink" title="&#x67E5;&#x8BE2;&#x8282;&#x70B9;&#x7D22;&#x5F15;&#x4F4D;&#x7F6E;"></a>&#x67E5;&#x8BE2;&#x8282;&#x70B9;&#x7D22;&#x5F15;&#x4F4D;&#x7F6E;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查询指定索引节点"><span class="nav-number">9.5.</span> <span class="nav-text"><a href="#&#x67E5;&#x8BE2;&#x6307;&#x5B9A;&#x7D22;&#x5F15;&#x8282;&#x70B9;" class="headerlink" title="&#x67E5;&#x8BE2;&#x6307;&#x5B9A;&#x7D22;&#x5F15;&#x8282;&#x70B9;"></a>&#x67E5;&#x8BE2;&#x6307;&#x5B9A;&#x7D22;&#x5F15;&#x8282;&#x70B9;</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jan Warlen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cytmdsjm6';
+      var conf = 'c7bec07f38ff8795181545e4c7fbc973';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.3"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("PI37WJhc0suElEFBh0o9NTxM-gzGzoHsz", "HGSNdM8VlDtDViUtUuc71mCe");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
