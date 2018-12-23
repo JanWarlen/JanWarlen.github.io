@@ -89,13 +89,13 @@
 <meta property="og:site_name" content="Janwarlen">
 <meta property="og:description" content="测试代码">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-2-1/65557665.jpg">
-<meta property="og:image" content="http://p20t6wvw7.bkt.clouddn.com/18-2-1/35462866.jpg">
-<meta property="og:updated_time" content="2018-03-02T07:05:43.000Z">
+<meta property="og:image" content="http://img.janwarlen.com/18-2-1/65557665.jpg">
+<meta property="og:image" content="http://img.janwarlen.com/18-2-1/35462866.jpg">
+<meta property="og:updated_time" content="2018-12-23T14:54:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="部分关键词探究">
 <meta name="twitter:description" content="测试代码">
-<meta name="twitter:image" content="http://p20t6wvw7.bkt.clouddn.com/18-2-1/65557665.jpg">
+<meta name="twitter:image" content="http://img.janwarlen.com/18-2-1/65557665.jpg">
 
 
 
@@ -480,8 +480,8 @@
 <p>将当前处理器缓存行的数据写回主存；<br>令其他CPU里缓存该内存地址的数据无效；</p>
 </blockquote>
 </li>
-<li>针对编译器重排序<br><img src="http://p20t6wvw7.bkt.clouddn.com/18-2-1/65557665.jpg" alt=""></li>
-<li>针对处理器重排序<br><img src="http://p20t6wvw7.bkt.clouddn.com/18-2-1/35462866.jpg" alt=""></li>
+<li>针对编译器重排序<br><img src="http://img.janwarlen.com/18-2-1/65557665.jpg" alt=""></li>
+<li>针对处理器重排序<br><img src="http://img.janwarlen.com/18-2-1/35462866.jpg" alt=""></li>
 <li>在每个volatile变量写操作之前插入StoreStore屏障，之后插入StoreLoad屏障；<blockquote>
 <p>之前插入StoreStore屏障：禁止volatile写之前的写操作与其重排序，保证之前的所有写操作都写回主存，对volatile写可见；<br>之后插入StoreLoad屏障：禁止volatile写之后的读写操作与其重排序，实现volatile写结果对后续操作可见；</p>
 </blockquote>
