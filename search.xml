@@ -19,6 +19,28 @@
 ]]></content>
   </entry>
   <entry>
+    <title>一书一图-Head First设计模式</title>
+    <url>/2022/06/05/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-Head%20First%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<h4 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h4><ol>
+<li>本书适合刚学习编程，并对编程十分感兴趣的同学，此书无法立刻提升编码能力，仅仅只能提供认知拓展；</li>
+<li>设计模式是一种经验总结，并非发明创造，因此不能刻版的使用，需要因地制宜，甚至有些场景下，不适用任何设计模式解决问题反而会是最佳方案；</li>
+<li>有一定的项目编码经验的同学更适合其他学习方式，如文字版的网页菜鸟教程或者视频类其他知识分享者上传的视频教程，本人更推荐文字版的，比较方便，更能快速的了解；</li>
+<li>学习设计模式主要核心是弄清楚要解决的问题即使用场景，最好是能根据教材&#x2F;教程的案例，自己手敲一遍代码并运行去理解，仅仅靠定义去了解是远远不够的；</li>
+<li>还想更进一步了解使用场景的同学可以去阅读各大开源项目的代码，尤其是中间件一类，因为更多会考虑性能和拓展问题，设计模式使用频率会远高于一般的业务项目；</li>
+<li>思维导图中的一些优点缺点是结合部分网络教程的观点罗列而来，并非标准答案；</li>
+<li>本文的思维导图仅是本人的读书笔记，不可作为权威版本去学习参考，可以简单浏览，如果感兴趣可以购买正版书籍学习；<span id="more"></span></li>
+</ol>
+<p><img src="http://img.janwarlen.com/blog/Head%20First%20%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.png" alt="Head First设计模式"></p>
+]]></content>
+      <categories>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+        <tag>读书笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>一书一图-深入理解Java虚拟机</title>
     <url>/2022/06/01/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/</url>
     <content><![CDATA[<p>Tips：  </p>
@@ -36,9 +58,9 @@
         <category>Java</category>
       </categories>
       <tags>
+        <tag>读书笔记</tag>
         <tag>JVM</tag>
         <tag>Java</tag>
-        <tag>读书笔记</tag>
       </tags>
   </entry>
   <entry>
