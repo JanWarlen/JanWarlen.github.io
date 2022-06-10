@@ -777,7 +777,8 @@
     <content><![CDATA[<h3 id="引用参考文档链接"><a href="#引用参考文档链接" class="headerlink" title="引用参考文档链接"></a>引用参考文档链接</h3><ol>
 <li><a href="https://dev.java/learn/the-stream-api/">Java官方学习手册-Stream</a></li>
 <li><a href="https://github.com/CarpenterLee/JavaLambdaInternals">GitHub-CarpenterLee-JavaLambdaInternals</a></li>
-<li><a href="https://docs.oracle.com/javase/tutorial/collections/streams/parallelism.html">Oracle关于parallelism官方文档</a><span id="more"></span></li>
+<li><a href="https://docs.oracle.com/javase/tutorial/collections/streams/parallelism.html">Oracle关于parallelism官方文档</a></li>
+<li><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html#package.description">Oracle关于Stream包官方描述文档</a><span id="more"></span></li>
 </ol>
 <h2 id="StreamAPI"><a href="#StreamAPI" class="headerlink" title="StreamAPI"></a>StreamAPI</h2><h3 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h3><ol>
 <li>Stream API 是关于向 JDK 提供众所周知的 map-filter-reduce 算法的实现</li>
