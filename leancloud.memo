@@ -12,4 +12,6 @@
 {"title":"Hello World","url":"/2022/06/01/hello-world/"},
 {"title":"一书一图-深入理解Java虚拟机","url":"/2022/06/01/一书一图-深入理解Java虚拟机/"},
 {"title":"一书一图-Head First设计模式","url":"/2022/06/05/一书一图-Head First设计模式/"},
+{"title":"Java版本特性-Lambda","url":"/2022/06/07/Java版本特性-Lambda/"},
+{"title":"Java版本特性-StreamAPI","url":"/2022/06/08/Java版本特性-StreamAPI/"},
 ]
