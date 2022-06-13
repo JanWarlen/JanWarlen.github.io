@@ -16,7 +16,7 @@
 <li>本文仅涉及部分JDK9变更，完整可查看官方文档<a href="https://docs.oracle.com/javase/9/whatsnew/toc.htm">Standard Edition What’s New in Oracle JDK 9</a></li>
 <li>除了模块化，其他改动对日常开发影响不多，可以着重关注模块化和接口私有函数<span id="more"></span></li>
 </ol>
-<h1 id="模块化系统"><a href="#模块化系统" class="headerlink" title="模块化系统"></a>模块化系统</h1><h1 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h1><h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h3 id="ModularDemo"><a href="#ModularDemo" class="headerlink" title="ModularDemo"></a><a href="https://github.com/JanWarlen/ModularDemo">ModularDemo</a></h3><p>因目前Oracle开放的JDK下载版本仅有8&#x2F;11&#x2F;17&#x2F;18，因此该项目通过JDK18编译JDK9(Project language level设置为9)模拟</p>
+<h1 id="模块化系统"><a href="#模块化系统" class="headerlink" title="模块化系统"></a>模块化系统</h1><h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h3 id="ModularDemo"><a href="#ModularDemo" class="headerlink" title="ModularDemo"></a><a href="https://github.com/JanWarlen/ModularDemo">ModularDemo</a></h3><p>因目前Oracle开放的JDK下载版本仅有8&#x2F;11&#x2F;17&#x2F;18，因此该项目通过JDK18编译JDK9(Project language level设置为9)模拟</p>
 <h4 id="工程结构"><a href="#工程结构" class="headerlink" title="工程结构"></a>工程结构</h4><p><img src="http://img.janwarlen.com/blog/Modular-%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84.png" alt="Modular"></p>
 <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ol>
 <li><code>common</code>与<code>service</code>是在 Maven 层面上的子模块,JDK9的模块化主要通过类<code>module-info.java</code></li>
