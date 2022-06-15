@@ -205,6 +205,149 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK10/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpg">
+      <meta itemprop="name" content="Jan Warlen">
+      <meta itemprop="description" content="道路艰辛，磨砺前行">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一帆磨砺">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK10/" class="post-title-link" itemprop="url">Java版本特性-JDK10</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-11 18:05:32" itemprop="dateCreated datePublished" datetime="2022-06-11T18:05:32+08:00">2022-06-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-16 03:32:25" itemprop="dateModified" datetime="2022-06-16T03:32:25+08:00">2022-06-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK10/" class="post-meta-item leancloud_visitors" data-flag-title="Java版本特性-JDK10" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK10/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK10/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="引用参考文档链接"><a href="#引用参考文档链接" class="headerlink" title="引用参考文档链接"></a>引用参考文档链接</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://openjdk.org/projects/jdk/10/">JDK10特性列表</a></li>
+<li><a target="_blank" rel="noopener" href="https://shipilev.net/jvm/anatomy-quarks/16-megamorphic-virtual-calls/">megamorphic-virtual-calls</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/class-data-sharing.html">class-data-sharing</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/javah.html">javah</a></li>
+</ol>
+<h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol>
+<li>JDK10的更新内容不多，核心就是<code>局部变量类型推断</code></li>
+<li><code>Heap Allocation on Alternative Memory Devices</code>可能在未来会发挥相当重要的作用，不过是在运维层面了，是和机器的物理架构相结合的技术</li>
+<li>有一些面对运行性能的优化，比如<code>G1的全并行</code>、<code>Thread-Local Handshakes</code>和<code>基于 Java 的 JIT 编译器</code>，分别针对垃圾回收、多线程场景、代码编译，并且这几项技术启用需要做额外的性能测试，以确认是否在生产环境使用</li>
+</ol>
+<h1 id="局部变量类型推断"><a href="#局部变量类型推断" class="headerlink" title="局部变量类型推断"></a>局部变量类型推断</h1><p>简单来说就是在部分场景里，降低了对类型的关注度，减轻编码负担</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">var</span> <span class="variable">list</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();  <span class="comment">// infers ArrayList&lt;String&gt;</span></span><br><span class="line"><span class="type">var</span> <span class="variable">stream</span> <span class="operator">=</span> list.stream();          <span class="comment">// infers Stream&lt;String&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="局限"><a href="#局限" class="headerlink" title="局限"></a>局限</h2><ol>
+<li>var声明对象必须初始化，初始化也不可以为null<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Cannot infer type: &#x27;var&#x27; on variable without initializer</span></span><br><span class="line"><span class="keyword">var</span> a;</span><br><span class="line"><span class="comment">// Cannot infer type: variable initializer is &#x27;null&#x27;</span></span><br><span class="line"><span class="type">var</span> <span class="variable">b</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure></li>
+<li>var声明对象不可接收lambda表达式<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Cannot infer type: lambda expression requires an explicit target type</span></span><br><span class="line"><span class="type">var</span> <span class="variable">c</span> <span class="operator">=</span> () -&gt; <span class="number">1</span>;</span><br></pre></td></tr></table></figure></li>
+<li>var声明对象初始化数组时必须指定数组类型<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 编译器会直接异常提示</span></span><br><span class="line"><span class="comment">// var k = &#123; 1 , 2 &#125;;</span></span><br><span class="line"><span class="type">var</span> <span class="variable">k</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>&#125;;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="JDK源码整合为一个工程"><a href="#JDK源码整合为一个工程" class="headerlink" title="JDK源码整合为一个工程"></a>JDK源码整合为一个工程</h1><p>从<a target="_blank" rel="noopener" href="https://openjdk.org/jeps/296">特性详情页</a>来看，该特性主要是为了bug修复方便，因为多工程模式下，存在部分bug涉及多工程，这样bug的修复提交就不是原子性的了，工程合并之后，bug修复提交就是原子性操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ROOT/jdk/src/java.base</span><br><span class="line">...</span><br><span class="line">$ROOT/langtools/src/java.compiler</span><br><span class="line">...</span><br><span class="line">变更为</span><br><span class="line">$ROOT/src/java.base</span><br><span class="line">$ROOT/src/java.compiler</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h1 id="垃圾收集器接口"><a href="#垃圾收集器接口" class="headerlink" title="垃圾收集器接口"></a>垃圾收集器接口</h1><p>虚拟机内部的代码重构，对外部不影响，方便JDK的内部GC开发人员扩展垃圾收集器和虚拟机开发人员更容易理解垃圾收集器相关代码(容易找到，之前的代码是散落的，甚至部分由if-else维护)，不过以下这段原文可能需要额外注意</p>
+<blockquote>
+<p>There is a risk that performance could be harmed, for example if additional virtual calls would be introduced. This risk can be mitigated by continuous performance testing.</p>
+</blockquote>
+<p>大致意思是性能可能会受到影响，并用<code>virtual calls</code>的额外调用举例。因此JDK10+版本需要多做性能测试，以避免该影响。关于<code>virtual call</code>可参考<a target="_blank" rel="noopener" href="https://shipilev.net/jvm/anatomy-quarks/16-megamorphic-virtual-calls/">megamorphic-virtual-calls</a>，大体场景可以理解为父类声明变量接收子类对象，调用函数时，因是在运行时确定，该情况可以称作<code>virtual call</code>。(主要还是看编译后的字节码，反编译为汇编时，看到指令<code>invokevirtual</code>基本就是了)</p>
+<h1 id="G1的GC全并行"><a href="#G1的GC全并行" class="headerlink" title="G1的GC全并行"></a>G1的GC全并行</h1><p>万恶的JDK9将G1设置为默认垃圾收集器的尾声，在JDK10之前，<code>mark-sweep-compact</code>的算法实现(<code>full GC</code>场景)采取的单线程，在JDK10中，该实现修改为多线程实现，线程数与年轻代和混合代(?Mixed)收集线程数一致，并且该线程数可通过启动参数<code>-XX:ParallelGCThreads</code>指定。<br>但是原文中有这么一句话</p>
+<blockquote>
+<p>The fact that G1 uses regions will most likely lead to more wasted space after a parallel full GC than for a single threaded one.</p>
+</blockquote>
+<p>具体没说是怎么样的浪费空间，内存是一定回收了的，我推测是并行可能会导致空间碎片比较多，影响后续内存使用</p>
+<h1 id="CDS-Class-Data-Sharing-的应用级拓展"><a href="#CDS-Class-Data-Sharing-的应用级拓展" class="headerlink" title="CDS(Class-Data Sharing)的应用级拓展"></a>CDS(Class-Data Sharing)的应用级拓展</h1><p>CDS(Class-Data Sharing)在JDK5中引入(感兴趣可以研究<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/class-data-sharing.html">class-data-sharing</a>原文)<br>在JDK10中将JDK内部的CDS拓展到应用级别，可以指定类到归档文件(<code>archive file</code>)，可以有效的减少应用启动时间和内存消耗。但是根据原文描述，个人理解该技术仅限于多个Java应用程序在同一个系统镜像内运行，才可以有效的发挥作用，对于目前大多数公司的实际运行环境(一个应用一个镜像)来说，该技术没有什么实际意义。<br>JDK8&#x2F;JDK9已经有APPCDS的实现，因此在长期的测试中，基本不需要考虑风险和稳定性问题….</p>
+<h1 id="Thread-Local-Handshakes"><a href="#Thread-Local-Handshakes" class="headerlink" title="Thread-Local Handshakes"></a>Thread-Local Handshakes</h1><p>实在不知道怎么翻译，用了原文，该技术是想通过减少全局安全点从而降低JVM的延迟，尤其是在GC领域。<br>没说具体实现，但在偏向锁、堆栈追踪、G1有良好的优化功能</p>
+<h1 id="删除了javah"><a href="#删除了javah" class="headerlink" title="删除了javah"></a>删除了<code>javah</code></h1><p>功能被JDK8的javac的拓展功能所取代，在JDK10中才删除<br><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/javah.html"><code>javah</code></a>就是当java代码调用native方法(C&#x2F;C++本地实现)时，生成对应的文件头，方便JVM运行时调用<br>应该是安卓场景会用到</p>
+<h1 id="Unicode拓展"><a href="#Unicode拓展" class="headerlink" title="Unicode拓展"></a>Unicode拓展</h1><p>增强了类<code>java.util.Locale</code>及相关API拓展支持<a target="_blank" rel="noopener" href="https://www.rfc-editor.org/rfc/bcp/bcp47.txt">bcp47</a>.<br>JDK7就已经在日期和数字上针对<code>bcp 47</code>进行了补充实现，在JDK10中进行了更完整的拓展实现。</p>
+<blockquote>
+<p>An IETF BCP 47 language tag is a standardized code or tag that is used to identify human languages in the Internet.<br>                                                            ——-wiki</p>
+</blockquote>
+<p>从wiki的这段话来理解就是各国语言的标识，在国际化场景中会有重要的作用，例如安卓…..</p>
+<h1 id="Heap-Allocation-on-Alternative-Memory-Devices"><a href="#Heap-Allocation-on-Alternative-Memory-Devices" class="headerlink" title="Heap Allocation on Alternative Memory Devices"></a>Heap Allocation on Alternative Memory Devices</h1><p>痛苦，没办法精确的翻译，还没确定<code>Alternative Memory Devices</code>指代的是什么，从原文的理解来说，应该是一台物理机器有多个内存系统，尤其是针对<code>non-DRAM</code>内存系统，可以通过指令<code>-XX:AllocateHeapAt=&lt;path&gt;</code>去辅助JVM在这种类型的内存上进行堆分配。<br>这应该是一项未来将会发挥很大作用的功能，尤其是在简单了解<code>NV-DIMM</code>之后。这算是硬件适配。</p>
+<h1 id="基于-Java-的-JIT-编译器"><a href="#基于-Java-的-JIT-编译器" class="headerlink" title="基于 Java 的 JIT 编译器"></a>基于 Java 的 JIT 编译器</h1><p>可以预先把Java代码编译为本地代码，以提高运行效率。通过<code>-XX:+UnlockExperimentalVMOptions -XX:+UseJVMCICompiler</code>开启。<br>存在以下风险：</p>
+<ol>
+<li>启动会变慢</li>
+<li>堆的使用将会难以评估<br>需要额外的性能测试指标去覆盖，以确认是否需要开启该功能。</li>
+</ol>
+<h1 id="根证书"><a href="#根证书" class="headerlink" title="根证书"></a>根证书</h1><p>为了推广<code>OpenJDK</code>和降低<code>OpenJDK</code>与<code>Oracle JDK</code>差异的。</p>
+<h1 id="基于时间的发布版本控制"><a href="#基于时间的发布版本控制" class="headerlink" title="基于时间的发布版本控制"></a>基于时间的发布版本控制</h1><p>新的JDK版本号规则，影响不大，直观影响就是<code>java -v</code>显示信息会和以往不同…</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$FEATURE.$INTERIM.$UPDATE.$PATCH</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1163,113 +1306,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2018/03/01/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB-ArrayList/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/1.jpg">
-      <meta itemprop="name" content="Jan Warlen">
-      <meta itemprop="description" content="道路艰辛，磨砺前行">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="一帆磨砺">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/03/01/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB-ArrayList/" class="post-title-link" itemprop="url">源码阅读-ArrayList</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-03-01 18:00:36" itemprop="dateCreated datePublished" datetime="2018-03-01T18:00:36+08:00">2018-03-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-06-01 02:26:48" itemprop="dateModified" datetime="2022-06-01T02:26:48+08:00">2022-06-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2018/03/01/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB-ArrayList/" class="post-meta-item leancloud_visitors" data-flag-title="源码阅读-ArrayList" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2018/03/01/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB-ArrayList/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2018/03/01/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB-ArrayList/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Tips：</p>
-<ol>
-<li>如果要在集合中使用自定义类，建议重写equals函数  </li>
-<li>如果集合内元素较多，使用结束后建议清空（GC）  </li>
-<li><a target="_blank" rel="noopener" href="http://www.runoob.com/java/java-bitset-class.html">BitSet</a>  </li>
-<li>ArrayList是非线程安全的
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2018/03/01/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB-ArrayList/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1341,7 +1377,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1354,7 +1390,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

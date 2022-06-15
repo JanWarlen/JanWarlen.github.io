@@ -20,21 +20,21 @@
     var CONFIG = {"hostname":"janwarlen.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="测试代码">
+  <meta name="description" content="引用参考文档链接 JDK10特性列表 megamorphic-virtual-calls class-data-sharing javah  写在开头 JDK10的更新内容不多，核心就是局部变量类型推断 Heap Allocation on Alternative Memory Devices可能在未来会发挥相当重要的作用，不过是在运维层面了，是和机器的物理架构相结合的技术 有一些面对运行性能的优">
 <meta property="og:type" content="article">
-<meta property="og:title" content="基础语法探究">
-<meta property="og:url" content="http://janwarlen.com/2018/02/27/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E6%8E%A2%E7%A9%B6/index.html">
+<meta property="og:title" content="Java版本特性-JDK10">
+<meta property="og:url" content="http://janwarlen.com/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK10/index.html">
 <meta property="og:site_name" content="一帆磨砺">
-<meta property="og:description" content="测试代码">
+<meta property="og:description" content="引用参考文档链接 JDK10特性列表 megamorphic-virtual-calls class-data-sharing javah  写在开头 JDK10的更新内容不多，核心就是局部变量类型推断 Heap Allocation on Alternative Memory Devices可能在未来会发挥相当重要的作用，不过是在运维层面了，是和机器的物理架构相结合的技术 有一些面对运行性能的优">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2018-02-27T03:20:52.000Z">
-<meta property="article:modified_time" content="2022-05-31T18:26:48.321Z">
+<meta property="article:published_time" content="2022-06-11T10:05:32.000Z">
+<meta property="article:modified_time" content="2022-06-15T19:32:25.186Z">
 <meta property="article:author" content="Jan Warlen">
 <meta property="article:tag" content="Java">
-<meta property="article:tag" content="BasicGrammar">
+<meta property="article:tag" content="JDK10">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://janwarlen.com/2018/02/27/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E6%8E%A2%E7%A9%B6/">
+<link rel="canonical" href="http://janwarlen.com/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK10/">
 
 
 <script id="page-configurations">
@@ -47,7 +47,7 @@
   };
 </script>
 
-  <title>基础语法探究 | 一帆磨砺</title>
+  <title>Java版本特性-JDK10 | 一帆磨砺</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-110997978-1"></script>
     <script>
@@ -210,7 +210,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2018/02/27/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E6%8E%A2%E7%A9%B6/">
+    <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK10/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/1.jpg">
@@ -223,7 +223,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          基础语法探究
+          Java版本特性-JDK10
         </h1>
 
         <div class="post-meta">
@@ -233,14 +233,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2018-02-27 11:20:52" itemprop="dateCreated datePublished" datetime="2018-02-27T11:20:52+08:00">2018-02-27</time>
+              <time title="创建时间：2022-06-11 18:05:32" itemprop="dateCreated datePublished" datetime="2022-06-11T18:05:32+08:00">2022-06-11</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-06-01 02:26:48" itemprop="dateModified" datetime="2022-06-01T02:26:48+08:00">2022-06-01</time>
+                <time title="修改时间：2022-06-16 03:32:25" itemprop="dateModified" datetime="2022-06-16T03:32:25+08:00">2022-06-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -253,7 +253,7 @@
             </span>
 
           
-            <span id="/2018/02/27/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E6%8E%A2%E7%A9%B6/" class="post-meta-item leancloud_visitors" data-flag-title="基础语法探究" title="阅读次数">
+            <span id="/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK10/" class="post-meta-item leancloud_visitors" data-flag-title="Java版本特性-JDK10" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -268,8 +268,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2018/02/27/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E6%8E%A2%E7%A9%B6/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2018/02/27/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E6%8E%A2%E7%A9%B6/" itemprop="commentCount"></span>
+    <a title="valine" href="/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK10/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK10/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -284,86 +284,55 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><a target="_blank" rel="noopener" href="https://github.com/JanWarlen/DemoList/tree/master/BasicGrammarDemo">测试代码</a></p>
-<span id="more"></span>
+        <h1 id="引用参考文档链接"><a href="#引用参考文档链接" class="headerlink" title="引用参考文档链接"></a>引用参考文档链接</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://openjdk.org/projects/jdk/10/">JDK10特性列表</a></li>
+<li><a target="_blank" rel="noopener" href="https://shipilev.net/jvm/anatomy-quarks/16-megamorphic-virtual-calls/">megamorphic-virtual-calls</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/class-data-sharing.html">class-data-sharing</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/javah.html">javah</a></li>
+</ol>
+<h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol>
+<li>JDK10的更新内容不多，核心就是<code>局部变量类型推断</code></li>
+<li><code>Heap Allocation on Alternative Memory Devices</code>可能在未来会发挥相当重要的作用，不过是在运维层面了，是和机器的物理架构相结合的技术</li>
+<li>有一些面对运行性能的优化，比如<code>G1的全并行</code>、<code>Thread-Local Handshakes</code>和<code>基于 Java 的 JIT 编译器</code>，分别针对垃圾回收、多线程场景、代码编译，并且这几项技术启用需要做额外的性能测试，以确认是否在生产环境使用</li>
+</ol>
+<h1 id="局部变量类型推断"><a href="#局部变量类型推断" class="headerlink" title="局部变量类型推断"></a>局部变量类型推断</h1><p>简单来说就是在部分场景里，降低了对类型的关注度，减轻编码负担</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">var</span> <span class="variable">list</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();  <span class="comment">// infers ArrayList&lt;String&gt;</span></span><br><span class="line"><span class="type">var</span> <span class="variable">stream</span> <span class="operator">=</span> list.stream();          <span class="comment">// infers Stream&lt;String&gt;</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="foreach"><a href="#foreach" class="headerlink" title="foreach"></a>foreach</h3><ul>
-<li>Only access<blockquote>
-<p>当使用foreach循环基本类型时变量时不能修改集合中的元素的值，遍历对象时可以修改对象的属性的值，但是不能修改对象的引用</p>
+<h2 id="局限"><a href="#局限" class="headerlink" title="局限"></a>局限</h2><ol>
+<li>var声明对象必须初始化，初始化也不可以为null<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Cannot infer type: &#x27;var&#x27; on variable without initializer</span></span><br><span class="line"><span class="keyword">var</span> a;</span><br><span class="line"><span class="comment">// Cannot infer type: variable initializer is &#x27;null&#x27;</span></span><br><span class="line"><span class="type">var</span> <span class="variable">b</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure></li>
+<li>var声明对象不可接收lambda表达式<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Cannot infer type: lambda expression requires an explicit target type</span></span><br><span class="line"><span class="type">var</span> <span class="variable">c</span> <span class="operator">=</span> () -&gt; <span class="number">1</span>;</span><br></pre></td></tr></table></figure></li>
+<li>var声明对象初始化数组时必须指定数组类型<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 编译器会直接异常提示</span></span><br><span class="line"><span class="comment">// var k = &#123; 1 , 2 &#125;;</span></span><br><span class="line"><span class="type">var</span> <span class="variable">k</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>&#125;;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="JDK源码整合为一个工程"><a href="#JDK源码整合为一个工程" class="headerlink" title="JDK源码整合为一个工程"></a>JDK源码整合为一个工程</h1><p>从<a target="_blank" rel="noopener" href="https://openjdk.org/jeps/296">特性详情页</a>来看，该特性主要是为了bug修复方便，因为多工程模式下，存在部分bug涉及多工程，这样bug的修复提交就不是原子性的了，工程合并之后，bug修复提交就是原子性操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ROOT/jdk/src/java.base</span><br><span class="line">...</span><br><span class="line">$ROOT/langtools/src/java.compiler</span><br><span class="line">...</span><br><span class="line">变更为</span><br><span class="line">$ROOT/src/java.base</span><br><span class="line">$ROOT/src/java.compiler</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h1 id="垃圾收集器接口"><a href="#垃圾收集器接口" class="headerlink" title="垃圾收集器接口"></a>垃圾收集器接口</h1><p>虚拟机内部的代码重构，对外部不影响，方便JDK的内部GC开发人员扩展垃圾收集器和虚拟机开发人员更容易理解垃圾收集器相关代码(容易找到，之前的代码是散落的，甚至部分由if-else维护)，不过以下这段原文可能需要额外注意</p>
+<blockquote>
+<p>There is a risk that performance could be harmed, for example if additional virtual calls would be introduced. This risk can be mitigated by continuous performance testing.</p>
 </blockquote>
-</li>
-<li>Only single structure<blockquote>
-<p>同时只能遍历一个collection或数组，不能同时遍历多余一个collection或数组</p>
+<p>大致意思是性能可能会受到影响，并用<code>virtual calls</code>的额外调用举例。因此JDK10+版本需要多做性能测试，以避免该影响。关于<code>virtual call</code>可参考<a target="_blank" rel="noopener" href="https://shipilev.net/jvm/anatomy-quarks/16-megamorphic-virtual-calls/">megamorphic-virtual-calls</a>，大体场景可以理解为父类声明变量接收子类对象，调用函数时，因是在运行时确定，该情况可以称作<code>virtual call</code>。(主要还是看编译后的字节码，反编译为汇编时，看到指令<code>invokevirtual</code>基本就是了)</p>
+<h1 id="G1的GC全并行"><a href="#G1的GC全并行" class="headerlink" title="G1的GC全并行"></a>G1的GC全并行</h1><p>万恶的JDK9将G1设置为默认垃圾收集器的尾声，在JDK10之前，<code>mark-sweep-compact</code>的算法实现(<code>full GC</code>场景)采取的单线程，在JDK10中，该实现修改为多线程实现，线程数与年轻代和混合代(?Mixed)收集线程数一致，并且该线程数可通过启动参数<code>-XX:ParallelGCThreads</code>指定。<br>但是原文中有这么一句话</p>
+<blockquote>
+<p>The fact that G1 uses regions will most likely lead to more wasted space after a parallel full GC than for a single threaded one.</p>
 </blockquote>
-</li>
-<li>Only single element<blockquote>
-<p>遍历过程中，collection或数组中同时只有一个元素可见，即只有“当前遍历到的元素”可见，而前一个或后一个元素是不可见的。</p>
+<p>具体没说是怎么样的浪费空间，内存是一定回收了的，我推测是并行可能会导致空间碎片比较多，影响后续内存使用</p>
+<h1 id="CDS-Class-Data-Sharing-的应用级拓展"><a href="#CDS-Class-Data-Sharing-的应用级拓展" class="headerlink" title="CDS(Class-Data Sharing)的应用级拓展"></a>CDS(Class-Data Sharing)的应用级拓展</h1><p>CDS(Class-Data Sharing)在JDK5中引入(感兴趣可以研究<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/class-data-sharing.html">class-data-sharing</a>原文)<br>在JDK10中将JDK内部的CDS拓展到应用级别，可以指定类到归档文件(<code>archive file</code>)，可以有效的减少应用启动时间和内存消耗。但是根据原文描述，个人理解该技术仅限于多个Java应用程序在同一个系统镜像内运行，才可以有效的发挥作用，对于目前大多数公司的实际运行环境(一个应用一个镜像)来说，该技术没有什么实际意义。<br>JDK8&#x2F;JDK9已经有APPCDS的实现，因此在长期的测试中，基本不需要考虑风险和稳定性问题….</p>
+<h1 id="Thread-Local-Handshakes"><a href="#Thread-Local-Handshakes" class="headerlink" title="Thread-Local Handshakes"></a>Thread-Local Handshakes</h1><p>实在不知道怎么翻译，用了原文，该技术是想通过减少全局安全点从而降低JVM的延迟，尤其是在GC领域。<br>没说具体实现，但在偏向锁、堆栈追踪、G1有良好的优化功能</p>
+<h1 id="删除了javah"><a href="#删除了javah" class="headerlink" title="删除了javah"></a>删除了<code>javah</code></h1><p>功能被JDK8的javac的拓展功能所取代，在JDK10中才删除<br><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/javah.html"><code>javah</code></a>就是当java代码调用native方法(C&#x2F;C++本地实现)时，生成对应的文件头，方便JVM运行时调用<br>应该是安卓场景会用到</p>
+<h1 id="Unicode拓展"><a href="#Unicode拓展" class="headerlink" title="Unicode拓展"></a>Unicode拓展</h1><p>增强了类<code>java.util.Locale</code>及相关API拓展支持<a target="_blank" rel="noopener" href="https://www.rfc-editor.org/rfc/bcp/bcp47.txt">bcp47</a>.<br>JDK7就已经在日期和数字上针对<code>bcp 47</code>进行了补充实现，在JDK10中进行了更完整的拓展实现。</p>
+<blockquote>
+<p>An IETF BCP 47 language tag is a standardized code or tag that is used to identify human languages in the Internet.<br>                                                            ——-wiki</p>
 </blockquote>
-</li>
-<li>Only forward<blockquote>
-<p>只能正向遍历，不能反向遍历</p>
-</blockquote>
-</li>
-<li>At least Java 5<blockquote>
-<p>如果要兼容Java 5之前的Java版本，就不能使用For-each</p>
-</blockquote>
-</li>
-<li>Iterable<blockquote>
-<p>任何一个集合，无论是JDK提供的还是自己写的，只要想使用foreach循环遍历，就必须正确地实现Iterable接口</p>
-</blockquote>
-</li>
-<li>Array<blockquote>
-<p>Java将对于数组的foreach循环转换为对于这个数组每一个的循环引用。</p>
-</blockquote>
-</li>
-</ul>
-<h3 id="正则"><a href="#正则" class="headerlink" title="正则"></a>正则</h3><ul>
-<li>匹配的模式(Pattern flags)<br><code>Pattern Pattern.compile(String regex, int flag)</code></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>编译标志</th>
-<th>效果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Pattern.UNIX_LINES</td>
-<td>启用 Unix 行模式。在此模式中，.、^ 和 $ 的行为中仅识别 ‘&#x2F;n’行结束符。通过嵌入式标志表达式 (?d) 也可以启用 Unix 行模式。</td>
-</tr>
-<tr>
-<td>CASE_INSENSITIVE</td>
-<td>启用不区分大小写的匹配。默认情况下，不区分大小写的匹配假定仅匹配 US-ASCII 字符集中的字符。可以通过指定#UNICODE_CASE标志连同此标志来启用 Unicode 感知的、不区分大小写的匹配。通过嵌入式标志表达式  (?i)也可以启用不区分大小写的匹配。指定此标志可能对性能产生一些影响。</td>
-</tr>
-<tr>
-<td>COMMENTS</td>
-<td>模式中允许空白和注释。此模式将忽略空白和在结束行之前以 #开头的嵌入式注释。通过嵌入式标志表达式  (?x) 也可以启用注释模式。</td>
-</tr>
-<tr>
-<td>MULTILINE</td>
-<td>启用多行模式。在多行模式中，表达式 ^ 和 $仅分别在行结束符前后匹配，或者在输入序列的结尾处匹配。默认情况下，这些表达式仅在整个输入序列的开头和结尾处匹配。通过嵌入式标志表达式 (?m) 也可以启用多行模式。</td>
-</tr>
-<tr>
-<td>LITERAL</td>
-<td>启用模式的字面值解析。指定此标志后，指定模式的输入字符串就会作为字面值字符序列来对待。输入序列中的元字符或转义序列不具有任何特殊意义。标志 CASE_INSENSITIVE 和 UNICODE_CASE 在与此标志一起使用时将对匹配产生影响。其他标志都变得多余了。不存在可以启用字面值解析的嵌入式标志字符。</td>
-</tr>
-<tr>
-<td>DOTALL</td>
-<td>启用 dotall 模式。在 dotall 模式中，表达式 .可以匹配任何字符，包括行结束符。默认情况下，此表达式不匹配行结束符。通过嵌入式标志表达式 (?s) 也可以启用 dotall 模式（s 是 “single-line” 模式的助记符，在 Perl 中也使用它）。</td>
-</tr>
-<tr>
-<td>UNICODE_CASE</td>
-<td>启用 Unicode 感知的大小写折叠。指定此标志后，由 #CASE_INSENSITIVE标志启用时，不区分大小写的匹配将以符合 Unicode Standard的方式完成。默认情况下，不区分大小写的匹配假定仅匹配 US-ASCII 字符集中的字符。通过嵌入式标志表达式 (?u)也可以启用 Unicode 感知的大小写折叠。指定此标志可能对性能产生影响。</td>
-</tr>
-<tr>
-<td>CANON_EQ</td>
-<td>启用规范等价。指定此标志后，当且仅当其完整规范分解匹配时，两个字符才可视为匹配。例如，当指定此标志时，表达式 “a&#x2F;u030A” 将与字符串 “&#x2F;u00E5”匹配。默认情况下，匹配不考虑采用规范等价。不存在可以启用规范等价的嵌入式标志字符。指定此标志可能对性能产生影响。</td>
-</tr>
-<tr>
-<td>UNICODE_CHARACTER_CLASS</td>
-<td>启用Unicode版本的预定义字符类和POSIX字符类。当这个标志被指定时，那么（仅US-ASCII）预定义的字符类和POSIX字符类符合Unicode技术标准＃18：Unicode正则表达式；附录C：兼容性属性； UNICODE_CHARACTER_CLASS模式也可以通过嵌入标志表达式(?U)。该标志暗示着UNICODE_CASE，也就是说，它启用Unicode感知的案例折叠，指定此标志可能会导致性能损失。</td>
-</tr>
-</tbody></table>
+<p>从wiki的这段话来理解就是各国语言的标识，在国际化场景中会有重要的作用，例如安卓…..</p>
+<h1 id="Heap-Allocation-on-Alternative-Memory-Devices"><a href="#Heap-Allocation-on-Alternative-Memory-Devices" class="headerlink" title="Heap Allocation on Alternative Memory Devices"></a>Heap Allocation on Alternative Memory Devices</h1><p>痛苦，没办法精确的翻译，还没确定<code>Alternative Memory Devices</code>指代的是什么，从原文的理解来说，应该是一台物理机器有多个内存系统，尤其是针对<code>non-DRAM</code>内存系统，可以通过指令<code>-XX:AllocateHeapAt=&lt;path&gt;</code>去辅助JVM在这种类型的内存上进行堆分配。<br>这应该是一项未来将会发挥很大作用的功能，尤其是在简单了解<code>NV-DIMM</code>之后。这算是硬件适配。</p>
+<h1 id="基于-Java-的-JIT-编译器"><a href="#基于-Java-的-JIT-编译器" class="headerlink" title="基于 Java 的 JIT 编译器"></a>基于 Java 的 JIT 编译器</h1><p>可以预先把Java代码编译为本地代码，以提高运行效率。通过<code>-XX:+UnlockExperimentalVMOptions -XX:+UseJVMCICompiler</code>开启。<br>存在以下风险：</p>
+<ol>
+<li>启动会变慢</li>
+<li>堆的使用将会难以评估<br>需要额外的性能测试指标去覆盖，以确认是否需要开启该功能。</li>
+</ol>
+<h1 id="根证书"><a href="#根证书" class="headerlink" title="根证书"></a>根证书</h1><p>为了推广<code>OpenJDK</code>和降低<code>OpenJDK</code>与<code>Oracle JDK</code>差异的。</p>
+<h1 id="基于时间的发布版本控制"><a href="#基于时间的发布版本控制" class="headerlink" title="基于时间的发布版本控制"></a>基于时间的发布版本控制</h1><p>新的JDK版本号规则，影响不大，直观影响就是<code>java -v</code>显示信息会和以往不同…</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$FEATURE.$INTERIM.$UPDATE.$PATCH</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -393,7 +362,7 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/Java/" rel="tag"># Java</a>
-              <a href="/tags/BasicGrammar/" rel="tag"># BasicGrammar</a>
+              <a href="/tags/JDK10/" rel="tag"># JDK10</a>
           </div>
 
         
@@ -402,13 +371,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2018/02/27/%E9%83%A8%E5%88%86%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8E%A2%E7%A9%B6/" rel="prev" title="部分关键词探究">
-      <i class="fa fa-chevron-left"></i> 部分关键词探究
+    <a href="/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK9/" rel="prev" title="Java版本特性-JDK9">
+      <i class="fa fa-chevron-left"></i> Java版本特性-JDK9
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2018/03/01/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB-ArrayList/" rel="next" title="源码阅读-ArrayList">
-      源码阅读-ArrayList <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -481,7 +447,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#foreach"><span class="nav-number">1.</span> <span class="nav-text">foreach</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99"><span class="nav-number">2.</span> <span class="nav-text">正则</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3%E9%93%BE%E6%8E%A5"><span class="nav-number">1.</span> <span class="nav-text">引用参考文档链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%BC%80%E5%A4%B4"><span class="nav-number">2.</span> <span class="nav-text">写在开头</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B%E6%8E%A8%E6%96%AD"><span class="nav-number">3.</span> <span class="nav-text">局部变量类型推断</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%80%E9%99%90"><span class="nav-number">3.1.</span> <span class="nav-text">局限</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JDK%E6%BA%90%E7%A0%81%E6%95%B4%E5%90%88%E4%B8%BA%E4%B8%80%E4%B8%AA%E5%B7%A5%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">JDK源码整合为一个工程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E6%8E%A5%E5%8F%A3"><span class="nav-number">5.</span> <span class="nav-text">垃圾收集器接口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#G1%E7%9A%84GC%E5%85%A8%E5%B9%B6%E8%A1%8C"><span class="nav-number">6.</span> <span class="nav-text">G1的GC全并行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CDS-Class-Data-Sharing-%E7%9A%84%E5%BA%94%E7%94%A8%E7%BA%A7%E6%8B%93%E5%B1%95"><span class="nav-number">7.</span> <span class="nav-text">CDS(Class-Data Sharing)的应用级拓展</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Thread-Local-Handshakes"><span class="nav-number">8.</span> <span class="nav-text">Thread-Local Handshakes</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E4%BA%86javah"><span class="nav-number">9.</span> <span class="nav-text">删除了javah</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Unicode%E6%8B%93%E5%B1%95"><span class="nav-number">10.</span> <span class="nav-text">Unicode拓展</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Heap-Allocation-on-Alternative-Memory-Devices"><span class="nav-number">11.</span> <span class="nav-text">Heap Allocation on Alternative Memory Devices</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E-Java-%E7%9A%84-JIT-%E7%BC%96%E8%AF%91%E5%99%A8"><span class="nav-number">12.</span> <span class="nav-text">基于 Java 的 JIT 编译器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%B9%E8%AF%81%E4%B9%A6"><span class="nav-number">13.</span> <span class="nav-text">根证书</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%97%B6%E9%97%B4%E7%9A%84%E5%8F%91%E5%B8%83%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6"><span class="nav-number">14.</span> <span class="nav-text">基于时间的发布版本控制</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -721,7 +687,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'BlogComments',
       owner       : 'janwarlen',
       admin       : ['janwarlen'],
-      id          : '9efe6c07a7e63fdbee8ce8a540c36966',
+      id          : 'aedb614afc381b121d6653e2c0b5795f',
         language: '',
       distractionFreeMode: false,
       proxy: 'http://janwarlen.com/login/oauth/access_token'
