@@ -14,6 +14,8 @@
 <li><code>Heap Allocation on Alternative Memory Devices</code>可能在未来会发挥相当重要的作用，不过是在运维层面了，是和机器的物理架构相结合的技术</li>
 <li>有一些面对运行性能的优化，比如<code>G1的全并行</code>、<code>Thread-Local Handshakes</code>和<code>基于 Java 的 JIT 编译器</code>，分别针对垃圾回收、多线程场景、代码编译，并且这几项技术启用需要做额外的性能测试，以确认是否在生产环境使用</li>
 </ol>
+<span id="more"></span>
+
 <h1 id="局部变量类型推断"><a href="#局部变量类型推断" class="headerlink" title="局部变量类型推断"></a>局部变量类型推断</h1><p>简单来说就是在部分场景里，降低了对类型的关注度，减轻编码负担</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">var</span> <span class="variable">list</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();  <span class="comment">// infers ArrayList&lt;String&gt;</span></span><br><span class="line"><span class="type">var</span> <span class="variable">stream</span> <span class="operator">=</span> list.stream();          <span class="comment">// infers Stream&lt;String&gt;</span></span><br></pre></td></tr></table></figure>
 
