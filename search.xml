@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>Java版本特性-JDK10</title>
-    <url>/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK10/</url>
+    <url>/2022/06/16/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK10/</url>
     <content><![CDATA[<h1 id="引用参考文档链接"><a href="#引用参考文档链接" class="headerlink" title="引用参考文档链接"></a>引用参考文档链接</h1><ol>
 <li><a href="https://openjdk.org/projects/jdk/10/">JDK10特性列表</a></li>
 <li><a href="https://shipilev.net/jvm/anatomy-quarks/16-megamorphic-virtual-calls/">megamorphic-virtual-calls</a></li>
