@@ -64,6 +64,289 @@
       </tags>
   </entry>
   <entry>
+    <title>Java版本特性-JDK12</title>
+    <url>/2022/06/19/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK12/</url>
+    <content><![CDATA[<h1 id="引用参考文档链接"><a href="#引用参考文档链接" class="headerlink" title="引用参考文档链接"></a>引用参考文档链接</h1><ol>
+<li><a href="https://openjdk.org/projects/jdk/12/">jdk12特性列表</a></li>
+<li><a href="https://www.researchgate.net/publication/306112816_Shenandoah_An_open-source_concurrent_compacting_garbage_collector_for_OpenJDK">Shenandoah算法论文</a></li>
+<li><a href="https://github.com/openjdk/jmh-jdk-microbenchmarks">jmh Git仓库</a></li>
+</ol>
+<h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol>
+<li>JDK12对用户代码无直接影响</li>
+<li>主要内容是新增GC(实验阶段)和对已有G1的增强<span id="more"></span></li>
+</ol>
+<h1 id="新GC：Shenandoah-实验"><a href="#新GC：Shenandoah-实验" class="headerlink" title="新GC：Shenandoah(实验)"></a>新GC：Shenandoah(实验)</h1><p>GC时间不受堆内存大小影响，200M与200G 停顿时间一致，通过启动参数<code>-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC</code>开启。</p>
+<h1 id="基准测试组件"><a href="#基准测试组件" class="headerlink" title="基准测试组件"></a>基准测试组件</h1><p>添加了基础的基准测试组件，方便开发人员(测试方向)执行现有的基准测试和创建新的基准测试。<br>实际尝试了，从JDK12-18在maven未引入<code>jmh</code>相关jar包是无法使用相关注解的。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.openjdk.jmh<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jmh-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.19<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.openjdk.jmh<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jmh-generator-annprocess<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.19<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>但是官方文档明确说了将基础的组件添加到了jdk的源码中，因此只能推测是只开放给JDK开发人员使用。通过官方github下载的<code>jdk12</code>源码，目录结构也与文档一致，相关代码都在test目录中，因此该特性是针对JDK开发人员来说的….</p>
+<h1 id="Switch表达式优化-JDK12暂未开放"><a href="#Switch表达式优化-JDK12暂未开放" class="headerlink" title="Switch表达式优化(JDK12暂未开放)"></a>Switch表达式优化(JDK12暂未开放)</h1><h2 id="简化case分支"><a href="#简化case分支" class="headerlink" title="简化case分支"></a>简化case分支</h2><p>但在JDK12中还不能使用，会提示<code>Enhanced &#39;switch&#39; blocks are not supported at language level &#39;12&#39;</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">switch</span> (day) &#123;</span><br><span class="line">    <span class="keyword">case</span> MONDAY:</span><br><span class="line">    <span class="keyword">case</span> FRIDAY:</span><br><span class="line">    <span class="keyword">case</span> SUNDAY:</span><br><span class="line">        System.out.println(<span class="number">6</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> TUESDAY:</span><br><span class="line">        System.out.println(<span class="number">7</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> THURSDAY:</span><br><span class="line">    <span class="keyword">case</span> SATURDAY:</span><br><span class="line">        System.out.println(<span class="number">8</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> WEDNESDAY:</span><br><span class="line">        System.out.println(<span class="number">9</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">switch</span> (day) &#123;</span><br><span class="line">    <span class="keyword">case</span> MONDAY, FRIDAY, SUNDAY -&gt; System.out.println(<span class="number">6</span>);</span><br><span class="line">    <span class="keyword">case</span> TUESDAY                -&gt; System.out.println(<span class="number">7</span>);</span><br><span class="line">    <span class="keyword">case</span> THURSDAY, SATURDAY     -&gt; System.out.println(<span class="number">8</span>);</span><br><span class="line">    <span class="keyword">case</span> WEDNESDAY              -&gt; System.out.println(<span class="number">9</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="switch代码块可当作函数返回值"><a href="#switch代码块可当作函数返回值" class="headerlink" title="switch代码块可当作函数返回值"></a>switch代码块可当作函数返回值</h2><p>实际不确定这样写会不会影响代码的可读性，尤其是switch的case情况较多的场景，还是建议封装为单独的函数，避免switch代码块庞大影响代码可读性。</p>
+<h3 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">T</span> <span class="variable">result</span> <span class="operator">=</span> <span class="keyword">switch</span> (arg) &#123;</span><br><span class="line">    <span class="keyword">case</span> L1 -&gt; e1;</span><br><span class="line">    <span class="keyword">case</span> L2 -&gt; e2;</span><br><span class="line">    <span class="keyword">default</span> -&gt; e3;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> <span class="keyword">switch</span> (s) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;Foo&quot;</span>: </span><br><span class="line">        <span class="keyword">break</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;Bar&quot;</span>:</span><br><span class="line">        <span class="keyword">break</span> <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        System.out.println(<span class="string">&quot;Neither Foo nor Bar, hmmm...&quot;</span>);</span><br><span class="line">        <span class="keyword">break</span> <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="JVM常量API"><a href="#JVM常量API" class="headerlink" title="JVM常量API"></a>JVM常量API</h1><blockquote>
+<p>Introduce an API to model nominal descriptions of key class-file and run-time artifacts, in particular constants that are loadable from the constant pool.</p>
+</blockquote>
+<p>引入一个 API 来模拟关键类文件和运行时工件的名义描述，特别是可从常量池加载的常量。<br>没有搜到有博主分享使用该特性的场景，应该也是JDK或JVM内部的开发工作优化。</p>
+<h1 id="AArch64兼容代码优化"><a href="#AArch64兼容代码优化" class="headerlink" title="AArch64兼容代码优化"></a>AArch64兼容代码优化</h1><p>属于代码重构，简化后续JDK工作。</p>
+<h1 id="默认-CDS"><a href="#默认-CDS" class="headerlink" title="默认 CDS"></a>默认 CDS</h1><p>该特性仅针对64位的JDK，相当于默认开启JDK的CDS，如果不需要CDS，需要使用启动参数<code>-Xshare:off</code>停止。</p>
+<h1 id="可中断的Mixed-G1"><a href="#可中断的Mixed-G1" class="headerlink" title="可中断的Mixed G1"></a>可中断的Mixed G1</h1><p>当G1预计回收的区域过多时，将会切换到Mixed模式，将目标切割为必须回收与可选回收，在目标时间内，有限回收必须回收部分，如果时间有剩余，才会处理可选回收部分，并且时间结束就立即停止，无论可选回收部分是否全部回收结束。<br>有效的避免G1的回收时间超过用户指定时间(<code>-XX:MaxGCPauseMillis</code>默认200ms)</p>
+<h1 id="空闲时G1也可释放内存回操作系统"><a href="#空闲时G1也可释放内存回操作系统" class="headerlink" title="空闲时G1也可释放内存回操作系统"></a>空闲时G1也可释放内存回操作系统</h1><p>增强G1(定期触发)，使得G1在应用程序不活动期间，也可以进行内存回收行动，减少资源消耗。<br>触发条件有两个，需同时满足：</p>
+<ol>
+<li>G1PeriodicGCInterval时间内无任何垃圾回收行为(包括并发标记周期)</li>
+<li>一分钟内，系统负载(通过<code>getloadavg()</code>获取)低于<code>G1PeriodicGCSystemLoadThreshold</code>(该值为0则此条件忽略)</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>JDK12</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java版本特性-JDK13</title>
+    <url>/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK13/</url>
+    <content><![CDATA[<h1 id="引用参考文档链接"><a href="#引用参考文档链接" class="headerlink" title="引用参考文档链接"></a>引用参考文档链接</h1><ol>
+<li><a href="https://openjdk.org/projects/jdk/13/">jdk13特性列表</a></li>
+</ol>
+<h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol>
+<li>本次版本没有对用户代码直接影响特性</li>
+<li>AppCDS的增强对于使用AppCDS的用户来说是降低了日常的使用成本</li>
+<li>对于大多数开发人员来说，我想<code>文本块</code>的提出是非常令人舒畅的，日常的大文本的使用的确是一直为人诟病的，这个虽然只是小细节的优化调整，甚至都未开放使用，但是却令笔者对Java的后续更新迭代增加了很多期望<span id="more"></span></li>
+</ol>
+<h1 id="AppCDS增强"><a href="#AppCDS增强" class="headerlink" title="AppCDS增强"></a>AppCDS增强</h1><p>应用程序退出时将动态创建共享的归档，该归档是在JDK12中新增的默认归档基础上创建，因此启动参数不可指定<code>-Xshare:off</code>(默认为on)，该特性提高了AppCDS的可用性，JDK10 中需要先运行几次应用来创建类列表，再转储为归档文件，再使用归档文件启动。<br>应用程序退出时动态创建归档需要使用启动参数<code>-XX:ArchiveClassesAtExit</code>开启。</p>
+<h1 id="ZGC增强：允许释放未使用堆内存回操作系统"><a href="#ZGC增强：允许释放未使用堆内存回操作系统" class="headerlink" title="ZGC增强：允许释放未使用堆内存回操作系统"></a>ZGC增强：允许释放未使用堆内存回操作系统</h1><p>该功能与JDK10 的G1增强一致，都是为了尽可能减少应用程序的资源消耗。<br>不会将内存减少到低于<code>-Xms</code>。</p>
+<h1 id="替换-Socket-API-底层实现"><a href="#替换-Socket-API-底层实现" class="headerlink" title="替换 Socket API 底层实现"></a>替换 Socket API 底层实现</h1><p>将 java.net.Socket 和 java.net.ServerSocket API 使用的底层实现替换为更简单、更现代且易于维护和调试的实现。</p>
+<h1 id="switch表达式第二次预调整"><a href="#switch表达式第二次预调整" class="headerlink" title="switch表达式第二次预调整"></a>switch表达式第二次预调整</h1><p>对比于JDK12的调整，本次是取消了break 返回值，使用<code>yield</code>返回值进行替换。<br>JDK13未正式开放使用该特性。</p>
+<h1 id="文本块-预调整"><a href="#文本块-预调整" class="headerlink" title="文本块(预调整)"></a>文本块(预调整)</h1><p>目前对于大量文本大多用<code>+</code>和换行进行拼接</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">html</span> <span class="operator">=</span> <span class="string">&quot;&lt;html&gt;\n&quot;</span> +</span><br><span class="line">              <span class="string">&quot;    &lt;body&gt;\n&quot;</span> +</span><br><span class="line">              <span class="string">&quot;        &lt;p&gt;Hello, world&lt;/p&gt;\n&quot;</span> +</span><br><span class="line">              <span class="string">&quot;    &lt;/body&gt;\n&quot;</span> +</span><br><span class="line">              <span class="string">&quot;&lt;/html&gt;\n&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>新的文本块特性将允许<code>&quot;&quot;&quot;</code>标记文本区域，从而简化文本块的使用</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">html</span> <span class="operator">=</span> <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">              &lt;html&gt;</span></span><br><span class="line"><span class="string">                  &lt;body&gt;</span></span><br><span class="line"><span class="string">                      &lt;p&gt;Hello, world&lt;/p&gt;</span></span><br><span class="line"><span class="string">                  &lt;/body&gt;</span></span><br><span class="line"><span class="string">              &lt;/html&gt;</span></span><br><span class="line"><span class="string">              &quot;&quot;&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>JDK13未正式开放使用该特性。</p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>JDK13</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java版本特性-JDK14</title>
+    <url>/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK14/</url>
+    <content><![CDATA[<h1 id="引用参考文档链接"><a href="#引用参考文档链接" class="headerlink" title="引用参考文档链接"></a>引用参考文档链接</h1><ol>
+<li><a href="https://openjdk.org/projects/jdk/14/">jdk14特性列表</a></li>
+</ol>
+<h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol>
+<li>switch已经可以正式使用，用起来很爽</li>
+<li>官方开放了API可以访问堆外的外部内存，这个特性看起来在大数据领域可以发挥很大的作用</li>
+<li>空指针异常信息的细节增强非常方便开发人员的本地开发过程，大大的简化了本地调试的工作<span id="more"></span></li>
+</ol>
+<h1 id="instanceof增强-预调整"><a href="#instanceof增强-预调整" class="headerlink" title="instanceof增强(预调整)"></a><code>instanceof</code>增强(预调整)</h1><p>目前<code>instanceof</code>大多数使用方式如下所示：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (obj <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> (String) obj;</span><br><span class="line">    <span class="comment">// use s</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>先判断是否是String类型</li>
+<li>类型强转并赋值新变量</li>
+<li>变量使用<br>增强后，将1-2步骤合并，如下所示：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (obj <span class="keyword">instanceof</span> String s) &#123;</span><br><span class="line">    <span class="comment">// can use s here</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// can&#x27;t use s here</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+该特性属于代码简化，增加代码可读性。<br>目前JDK14未开放使用。</li>
+</ol>
+<h1 id="新增一个打包工具"><a href="#新增一个打包工具" class="headerlink" title="新增一个打包工具"></a>新增一个打包工具</h1><p>基于JavaFX的打包工具，能够将Java应用程序打包成各系统对应的应用类型，如exe、dmg、dep等。应该是针对客户端软件的更新。</p>
+<h1 id="G1增强：NUMA-Aware-内存分配"><a href="#G1增强：NUMA-Aware-内存分配" class="headerlink" title="G1增强：NUMA-Aware 内存分配"></a>G1增强：NUMA-Aware 内存分配</h1><p>随着使用非统一内存访问架构(NUMA)的机器越来越多，G1将针对NUMA场景处理增强</p>
+<ol>
+<li>年轻代将保证在同一NUMA节点分配内存，如果内存不够将触发垃圾回收</li>
+<li>老年代不需要保证在同一NUMA节点分配内存</li>
+<li>Humongous区域不适用该策略<br>通过启动参数<code>+XX:+UseNUMA</code>开启</li>
+</ol>
+<h1 id="JFR增强：事件流"><a href="#JFR增强：事件流" class="headerlink" title="JFR增强：事件流"></a>JFR增强：事件流</h1><p>在JDK14之前，JFR都是通过命令手动开启录制，转储文件，再进行分析，现在开放了API，可以通过Java代码进行持续的监控，接下来举例两种使用方式(还有其他使用方式)。<code>agent</code>领域的开发同学狂喜。</p>
+<h2 id="RecordingStream"><a href="#RecordingStream" class="headerlink" title="RecordingStream"></a>RecordingStream</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> (<span class="type">var</span> <span class="variable">rs</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RecordingStream</span>()) &#123;</span><br><span class="line">    rs.enable(<span class="string">&quot;jdk.CPULoad&quot;</span>).withPeriod(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line">    rs.enable(<span class="string">&quot;jdk.JavaMonitorEnter&quot;</span>).withThreshold(Duration.ofMillis(<span class="number">10</span>));</span><br><span class="line">    rs.onEvent(<span class="string">&quot;jdk.CPULoad&quot;</span>, event -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;func1:jdk.CPULoad:&quot;</span> + event.getFloat(<span class="string">&quot;machineTotal&quot;</span>));</span><br><span class="line">    &#125;);</span><br><span class="line">    rs.onEvent(<span class="string">&quot;jdk.JavaMonitorEnter&quot;</span>, event -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;func1:jdk.JavaMonitorEnter:&quot;</span> + event.getClass(<span class="string">&quot;monitorClass&quot;</span>));</span><br><span class="line">    &#125;);</span><br><span class="line">    rs.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方法可以直接进行指定的参数录制，并在对应的事件中触发，可由自定义代码收集</p>
+<h2 id="EventStream-openRepository"><a href="#EventStream-openRepository" class="headerlink" title="EventStream::openRepository()"></a>EventStream::openRepository()</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="type">EventStream</span> <span class="variable">eventStream</span> <span class="operator">=</span> EventStream.openRepository();</span><br><span class="line">    <span class="keyword">try</span> (eventStream) &#123;</span><br><span class="line">        eventStream.onEvent(recordedEvent -&gt; &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;func2:getEventType:&quot;</span> + recordedEvent.getEventType().getName());</span><br><span class="line">        &#125;);</span><br><span class="line">        eventStream.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方式需要在进程外通过命令行或其他方式开启JFR才能够开始录制。</p>
+<h1 id="硬件适配增强：Non-Volatile-Mapped-Byte-Buffers"><a href="#硬件适配增强：Non-Volatile-Mapped-Byte-Buffers" class="headerlink" title="硬件适配增强：Non-Volatile Mapped Byte Buffers"></a>硬件适配增强：Non-Volatile Mapped Byte Buffers</h1><p>针对 Linux&#x2F;x64 和 Linux&#x2F;AArch64 的非易失性存储器 (NVM)场景下，应用程序可以有效且连贯的访问和更新NVM。<br>官方文档说</p>
+<blockquote>
+<p>NVM offers the opportunity for application programmers to create and update program state across program runs without incurring the significant copying and&#x2F;or translation costs that output to and input from a persistent medium normally implies. This is particularly significant for transactional programs, where regular persistence of in-doubt state is required to enable crash recovery.</p>
+</blockquote>
+<p>跨程序的数据交互场景，笔者想不到能够容易理解的业务场景。这中特定的硬件组合，和JDK10提出的<code>Heap Allocation on Alternative Memory Devices</code>很类似，应该在大数据集群处理的业务场景可能会有用处？</p>
+<h1 id="空指针异常信息增强"><a href="#空指针异常信息增强" class="headerlink" title="空指针异常信息增强"></a>空指针异常信息增强</h1><p>以前的空指针异常信息只显示到某一行，如果某一行的变量比较多，是没办法直接定位哪个变量为null的，这时候基本上都需要本地再运行debug才行，而JDK14中，通过启动参数<code>-XX:+ShowCodeDetailsInExceptionMessages</code>可以开启更详细的空指针异常信息.<br>需要注意的是，官方文档提出这种详细信息是经过了额外的计算的，因此性能方面需要考虑自己的应用空指针异常是否频繁，避免带来额外的性能开销。</p>
+<h2 id="异常示例代码"><a href="#异常示例代码" class="headerlink" title="异常示例代码"></a>异常示例代码</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NPE</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">func</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">C</span> <span class="variable">c</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">C</span>();</span><br><span class="line">        c.b = <span class="keyword">new</span> <span class="title class_">B</span>();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            c.b.a.name = <span class="string">&quot;null&quot;</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            B.test().arr[<span class="number">1</span>][<span class="number">2</span>] = <span class="number">3</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">        <span class="keyword">public</span> String name;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span>[][] arr;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">B</span> &#123;</span><br><span class="line">        <span class="keyword">public</span> A a;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> A <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">A</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">C</span> &#123;</span><br><span class="line">        <span class="keyword">public</span> B b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="异常信息"><a href="#异常信息" class="headerlink" title="异常信息"></a>异常信息</h2><h3 id="开启前"><a href="#开启前" class="headerlink" title="开启前"></a>开启前</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">java.lang.NullPointerException</span><br><span class="line">	at com.janwarlen.feature.NPE.func(NPE.java:<span class="number">9</span>)</span><br><span class="line">	at com.janwarlen.Demo.main(Demo.java:<span class="number">15</span>)</span><br><span class="line">java.lang.NullPointerException</span><br><span class="line">	at com.janwarlen.feature.NPE.func(NPE.java:<span class="number">14</span>)</span><br><span class="line">	at com.janwarlen.Demo.main(Demo.java:<span class="number">15</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="开启后"><a href="#开启后" class="headerlink" title="开启后"></a>开启后</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">java.lang.NullPointerException: Cannot assign field <span class="string">&quot;name&quot;</span> because <span class="string">&quot;c.b.a&quot;</span> is <span class="literal">null</span></span><br><span class="line">	at com.janwarlen.feature.NPE.func(NPE.java:<span class="number">9</span>)</span><br><span class="line">	at com.janwarlen.Demo.main(Demo.java:<span class="number">15</span>)</span><br><span class="line">java.lang.NullPointerException: Cannot load from object array because <span class="string">&quot;com.janwarlen.feature.NPE$B.test().arr&quot;</span> is <span class="literal">null</span></span><br><span class="line">	at com.janwarlen.feature.NPE.func(NPE.java:<span class="number">14</span>)</span><br><span class="line">	at com.janwarlen.Demo.main(Demo.java:<span class="number">15</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="新的数据建模方式-预调整"><a href="#新的数据建模方式-预调整" class="headerlink" title="新的数据建模方式(预调整)"></a>新的数据建模方式(预调整)</h1><p>目前想要封装一个数据模型类，有很多方法需要重复的编码，如<code>equals</code>、<code>hashcode</code>、<code>toString</code>等。因此JDK14中预添加了该技术特性(添加但未开放使用)，以便开发人员更简单的创建数据模型类。因未开放使用，因此只能从官方文档上简单的阅读，从表面上看是简化了数据模型的类的创建，但是看起来实际使用效果并不会太好，因为数据模型类的创建，那些重复编码的函数并不是非常重要的部分，继承多态、工程结构才是。使用该特性是有额外的限制的，比如：不能继承于其他的类，不能为抽象类，并且是隐式的<code>final</code>等等。综合对比，似乎该特性即便开放使用，也只能在有限的场景里发挥作用。</p>
+<h1 id="Switch增强-正式开发使用"><a href="#Switch增强-正式开发使用" class="headerlink" title="Switch增强(正式开发使用)"></a>Switch增强(正式开发使用)</h1><p>前两次JDK的预调整终于开放使用，放Demo代码</p>
+<h2 id="增强前"><a href="#增强前" class="headerlink" title="增强前"></a>增强前</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">func1</span><span class="params">(String arg)</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> (arg) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;1&quot;</span>:</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;2&quot;</span>:</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;3&quot;</span>:</span><br><span class="line">            System.out.println(<span class="string">&quot;small&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;4&quot;</span>:</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;5&quot;</span>:</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;6&quot;</span>:</span><br><span class="line">            System.out.println(<span class="string">&quot;big&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            System.out.println(<span class="string">&quot;illegal&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">func2</span><span class="params">(<span class="type">int</span> e)</span> &#123;</span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="keyword">switch</span> (e) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            x = <span class="number">111</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">            x = <span class="number">222</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">            x = <span class="number">233</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            x = <span class="number">666</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="增强后"><a href="#增强后" class="headerlink" title="增强后"></a>增强后</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">func1Enhanced</span><span class="params">(String arg)</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> (arg) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;1&quot;</span>, <span class="string">&quot;2&quot;</span>, <span class="string">&quot;3&quot;</span> -&gt; System.out.println(<span class="string">&quot;small&quot;</span>);</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;4&quot;</span>, <span class="string">&quot;5&quot;</span>, <span class="string">&quot;6&quot;</span> -&gt; System.out.println(<span class="string">&quot;big&quot;</span>);</span><br><span class="line">        <span class="keyword">default</span> -&gt; System.out.println(<span class="string">&quot;illegal&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">func2Enhanced</span><span class="params">(<span class="type">int</span> e)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> <span class="keyword">switch</span> (e) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span> -&gt; <span class="number">111</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span> -&gt; <span class="number">222</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">3</span> -&gt; <span class="number">233</span>;</span><br><span class="line">        <span class="keyword">default</span> -&gt; <span class="number">666</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">    System.out.println(x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="yield"><a href="#yield" class="headerlink" title="yield"></a>yield</h2><p>官方文档没有明确说明yield的作用，从示例代码来看(和之前JDK版本的说明)，该关键字使用场景为case中执行语句有多条，但是又必须返回值的场景。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">func3</span><span class="params">(String yield)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">d</span> <span class="operator">=</span> <span class="keyword">switch</span> (yield) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;MONDAY&quot;</span> -&gt; &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;monday&quot;</span>);</span><br><span class="line">                yield <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;TUESDAY&quot;</span> -&gt; &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;TUESDAY&quot;</span>);</span><br><span class="line">                yield <span class="number">2</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">default</span> -&gt; &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;not monday&quot;</span>);</span><br><span class="line">                yield <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        System.out.println(<span class="string">&quot;func3:&quot;</span> + d);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="弃用-Solaris-and-SPARC-Ports"><a href="#弃用-Solaris-and-SPARC-Ports" class="headerlink" title="弃用 Solaris and SPARC Ports"></a>弃用 Solaris and SPARC Ports</h1><p>不太明白这俩是干嘛的，也没有搜到有博主分享关于这两个的文档，根据官方文档的这段话</p>
+<blockquote>
+<p>Dropping support for these ports will enable contributors in the OpenJDK Community to accelerate the development of new features that will move the platform forward.</p>
+</blockquote>
+<p>看着像是针对特殊的系统平台类的兼容，该弃用应该也是为了更方便的迭代和扩展。</p>
+<h1 id="删除垃圾回收器-CMS-Concurrent-Mark-Sweep"><a href="#删除垃圾回收器-CMS-Concurrent-Mark-Sweep" class="headerlink" title="删除垃圾回收器: CMS(Concurrent Mark Sweep)"></a>删除垃圾回收器: CMS(Concurrent Mark Sweep)</h1><p>G1已经可以完全替代CMS，从性能和效率各个方面，JDK9标注废弃，等到这个版本才正式删除。</p>
+<h1 id="ZGC移植：macOS、Windows-实验性"><a href="#ZGC移植：macOS、Windows-实验性" class="headerlink" title="ZGC移植：macOS、Windows(实验性)"></a>ZGC移植：macOS、Windows(实验性)</h1><p>方便开发人员在本地调试，也针对开发桌面客户端软件的用户能够使用ZGC。</p>
+<h1 id="垃圾回收算法弃用：ParallelScavenge-SerialOld"><a href="#垃圾回收算法弃用：ParallelScavenge-SerialOld" class="headerlink" title="垃圾回收算法弃用：ParallelScavenge + SerialOld"></a>垃圾回收算法弃用：ParallelScavenge + SerialOld</h1><p>官方假设使用这种算法组合的人较少才进行弃用，如果后续反馈的人数较多，可能会重新启用。<br>官方认为这种组合仅适用于具有非常大的年轻一代和非常小的老一代的部署。<br>涉及启动参数:<code>-XX:+UseParallelGC -XX:-UseParallelOldGC -XX:UseParallelOldGC</code></p>
+<h1 id="删除Pack200及其API"><a href="#删除Pack200及其API" class="headerlink" title="删除Pack200及其API"></a>删除Pack200及其API</h1><p>JDK11弃用的，在本此JDK迭代中彻底删除<br>该针对jar包的压缩方案已经不再适用于现在的各种场景。</p>
+<h1 id="文本块-第二次预调整"><a href="#文本块-第二次预调整" class="headerlink" title="文本块(第二次预调整)"></a>文本块(第二次预调整)</h1><p>为了更好地控制换行符和空格的处理，我们引入了两个新的转义序列。</p>
+<h2 id="当前行末尾添加-表示不换行"><a href="#当前行末尾添加-表示不换行" class="headerlink" title="当前行末尾添加\表示不换行"></a>当前行末尾添加\表示不换行</h2><p>该转义仅在文本块中生效。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">literal</span> <span class="operator">=</span> <span class="string">&quot;Lorem ipsum dolor sit amet, consectetur adipiscing &quot;</span> +</span><br><span class="line">                 <span class="string">&quot;elit, sed do eiusmod tempor incididunt ut labore &quot;</span> +</span><br><span class="line">                 <span class="string">&quot;et dolore magna aliqua.&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>等同于</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">text</span> <span class="operator">=</span> <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">                Lorem ipsum dolor sit amet, consectetur adipiscing \</span></span><br><span class="line"><span class="string">                elit, sed do eiusmod tempor incididunt ut labore \</span></span><br><span class="line"><span class="string">                et dolore magna aliqua.\</span></span><br><span class="line"><span class="string">                &quot;&quot;&quot;</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="s"><a href="#s" class="headerlink" title="\s"></a>\s</h2><p>等效于’ ‘。该转义在String中都可以使用。<br>应该是针对String::stripIndent()和trim()提出的，<code>Escape sequences aren&#39;t translated until after incident space stripping</code>，使用\s防止文本块中行末的空格被清空。</p>
+<h1 id="添加API以便Java可以访问堆外外部内存"><a href="#添加API以便Java可以访问堆外外部内存" class="headerlink" title="添加API以便Java可以访问堆外外部内存"></a>添加API以便Java可以访问堆外外部内存</h1><ol>
+<li>避开垃圾回收器维护大量的缓存</li>
+<li>跨进程通信</li>
+<li>映射文件到内存<br>等等场景皆可使用，不过官方仅是给出API可以访问堆外的外部内存，具体的功能实现还需要用户自己去封装。<br>核心三个类<code>MemorySegment/MemoryAddress/MemoryLayout</code></li>
+</ol>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>JDK14</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java版本特性-JDK15</title>
+    <url>/2022/06/21/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK15/</url>
+    <content><![CDATA[<h1 id="引用参考文档链接"><a href="#引用参考文档链接" class="headerlink" title="引用参考文档链接"></a>引用参考文档链接</h1><ol>
+<li><a href="https://openjdk.org/projects/jdk/15/">jdk15特性列表</a></li>
+<li><a href="https://blog.csdn.net/JAVA88866/article/details/124673213">隐藏类使用案例</a></li>
+<li><a href="http://c.biancheng.net/view/1203.html">UDP通信:DatagramSocket类和DatagramPacket类</a></li>
+<li><a href="http://t.zoukankan.com/yif0118-p-15315745.html">Java17新特性初探</a></li>
+</ol>
+<h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol>
+<li>ZGC和Shenandoah 的可正式投产比较重要</li>
+<li>隐藏类的使用场景不多，但是对于agent和平台框架开发人员来说比较重要</li>
+<li>文本块的正式开放使用，喜大普奔，相较于以前的大文本操作用起来是真的舒服很多<span id="more"></span></li>
+</ol>
+<h1 id="新签名方案：EdDSA-爱德华兹曲线数字签名算法"><a href="#新签名方案：EdDSA-爱德华兹曲线数字签名算法" class="headerlink" title="新签名方案：EdDSA(爱德华兹曲线数字签名算法)"></a>新签名方案：EdDSA(爱德华兹曲线数字签名算法)</h1><p>新增的签名方案，相比于现有的其他签名方案，它更快并且不降低安全性。可在TLS 1.3 中使用。</p>
+<h1 id="密封类-预调整"><a href="#密封类-预调整" class="headerlink" title="密封类(预调整)"></a>密封类(预调整)</h1><p>使用<code>sealed</code>修饰类后，通过<code>permits</code>限制可以继承当前类的子类，避免无限制的继承扩张。<br>接口也是同样的使用规则。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">sealed</span> <span class="keyword">class</span> <span class="title class_">Shape</span> </span><br><span class="line">    permits com.example.polar.Circle,</span><br><span class="line">            com.example.quad.Rectangle,</span><br><span class="line">            com.example.quad.simple.Square &#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>子类必须是 <code>final</code> 或者 <code>sealed</code></p>
+<h1 id="隐藏类"><a href="#隐藏类" class="headerlink" title="隐藏类"></a>隐藏类</h1><p>官方文档看的比较晦涩，可以浏览<a href="https://blog.csdn.net/JAVA88866/article/details/124673213">隐藏类使用案例</a>进行初步的了解，该特性对于平台、框架、agent开发人员比较友好，正常的业务场景不会使用到该特性。</p>
+<h1 id="删除Nashorn-JavaScript-引擎"><a href="#删除Nashorn-JavaScript-引擎" class="headerlink" title="删除Nashorn JavaScript 引擎"></a>删除Nashorn JavaScript 引擎</h1><p>删除 Nashorn JavaScript 脚本引擎和 API 以及该jjs 工具。JDK11标注弃用，JDK15删除。</p>
+<h1 id="重新实现-DatagramSocket-API"><a href="#重新实现-DatagramSocket-API" class="headerlink" title="重新实现 DatagramSocket API"></a>重新实现 DatagramSocket API</h1><p>用易于维护和调试的更简单、更现代的实现替换java.net.DatagramSocket和API的底层实现。<br>笔者未使用过，因此通过其他博主分享的文章了解<code>DatagramSocket</code>是UDP通信的相关类。网络编程相关需要重点关注下。</p>
+<h1 id="弃用和禁用偏向锁"><a href="#弃用和禁用偏向锁" class="headerlink" title="弃用和禁用偏向锁"></a>弃用和禁用偏向锁</h1><p>根据官方文档的说明</p>
+<ol>
+<li>应用不会通过偏向锁获得明显的性能优化</li>
+<li>偏向锁的维护成本较高，并且侵入了其他的HotSpot组件<br>因此，官方决定禁用并且弃用偏向锁。<br>实际的编码中，不会直接涉及偏向锁，主要是JVM内部实现涉及。</li>
+</ol>
+<h1 id="instanceof增强-第二次预调整"><a href="#instanceof增强-第二次预调整" class="headerlink" title="instanceof增强(第二次预调整)"></a>instanceof增强(第二次预调整)</h1><blockquote>
+<p>This JEP proposes to re-preview the feature in JDK 15, with no changes relative to the preview in JDK 14, in order to gather additional feedback.</p>
+</blockquote>
+<p>没变动，纯粹属于提个醒，想收集更多的反馈…..</p>
+<h1 id="ZGC可正式投产"><a href="#ZGC可正式投产" class="headerlink" title="ZGC可正式投产"></a>ZGC可正式投产</h1><p>默认仍是G1，通过启动参数<code>-XX:+UnlockExperimentalVMOptions -XX:+UseZGC</code>启用</p>
+<h1 id="文本块"><a href="#文本块" class="headerlink" title="文本块"></a>文本块</h1><p>无新增调整，正式开放使用。</p>
+<h1 id="Shenandoah-可正式投产"><a href="#Shenandoah-可正式投产" class="headerlink" title="Shenandoah 可正式投产"></a>Shenandoah 可正式投产</h1><p>默认仍是G1，通过启动参数<code>-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC</code>启用。<br>本次无新增功能，并且JDK8于JDK11同步可正式投产使用。</p>
+<h1 id="删除-Solaris-和-SPARC-端口"><a href="#删除-Solaris-和-SPARC-端口" class="headerlink" title="删除 Solaris 和 SPARC 端口"></a>删除 Solaris 和 SPARC 端口</h1><p>JDK14标记弃用，本次迭代彻底删除。</p>
+<ul>
+<li>删除所有特定于 Solaris 操作系统的源代码</li>
+<li>删除特定于 SPARC 体系结构的所有源代码</li>
+</ul>
+<h1 id="外部内存访问-API（更新调整）"><a href="#外部内存访问-API（更新调整）" class="headerlink" title="外部内存访问 API（更新调整）"></a>外部内存访问 API（更新调整）</h1><p>本次更新内容：</p>
+<ul>
+<li>丰富的VarHandle组合器 API，用于自定义内存访问 var 句柄；</li>
+<li>通过接口有针对性地支持内存段的并行处理Spliterator；</li>
+<li>增强了对映射内存段的支持（例如，MappedMemorySegment::force）；</li>
+<li>支持串行限制的安全 API 点（例如，在两个线程之间转移线程所有权）；和</li>
+<li>不安全的 API 指向操作和取消引用来自例如本地调用的地址，或者将这些地址包装到合成内存段中</li>
+</ul>
+<p>因为使用经验较少，对于更新内容无法作出总结…</p>
+<h1 id="新的数据建模方式-Records-第二次预调整"><a href="#新的数据建模方式-Records-第二次预调整" class="headerlink" title="新的数据建模方式 Records(第二次预调整)"></a>新的数据建模方式 Records(第二次预调整)</h1><ul>
+<li>适配了<code>sealed</code><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.expression;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">sealed</span> <span class="keyword">interface</span> <span class="title class_">Expr</span></span><br><span class="line">    permits ConstantExpr, PlusExpr, TimesExpr, NegExpr &#123;...&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">record</span> <span class="title class_">ConstantExpr</span><span class="params">(<span class="type">int</span> i)</span>       <span class="keyword">implements</span> <span class="title class_">Expr</span> &#123;...&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">record</span> <span class="title class_">PlusExpr</span><span class="params">(Expr a, Expr b)</span>  <span class="keyword">implements</span> <span class="title class_">Expr</span> &#123;...&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">record</span> <span class="title class_">TimesExpr</span><span class="params">(Expr a, Expr b)</span> <span class="keyword">implements</span> <span class="title class_">Expr</span> &#123;...&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">record</span> <span class="title class_">NegExpr</span><span class="params">(Expr e)</span>           <span class="keyword">implements</span> <span class="title class_">Expr</span> &#123;...&#125;</span><br></pre></td></tr></table></figure></li>
+<li>可局部数据建模<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Merchant&gt; <span class="title function_">findTopMerchants</span><span class="params">(List&lt;Merchant&gt; merchants, <span class="type">int</span> month)</span> &#123;</span><br><span class="line">    <span class="comment">// Local record</span></span><br><span class="line">    <span class="keyword">record</span> <span class="title class_">MerchantSales</span><span class="params">(Merchant merchant, <span class="type">double</span> sales)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> merchants.stream()</span><br><span class="line">        .map(merchant -&gt; <span class="keyword">new</span> <span class="title class_">MerchantSales</span>(merchant, computeSales(merchant, month)))</span><br><span class="line">        .sorted((m1, m2) -&gt; Double.compare(m2.sales(), m1.sales()))</span><br><span class="line">        .map(MerchantSales::merchant)</span><br><span class="line">        .collect(toList());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="弃用-RMI-Remote-Method-Invocation-Activation"><a href="#弃用-RMI-Remote-Method-Invocation-Activation" class="headerlink" title="弃用 RMI(Remote Method Invocation) Activation"></a>弃用 RMI(Remote Method Invocation) Activation</h1><blockquote>
+<p>RMI 即 Remote Method Invocation ，其为 Java 提供了远程方法调用的能力，不过，比较鸡肋，基本不会用到。RMI Activation 为激活分布式对象提供支持，不过，一般也不会用到。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>JDK15</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java版本特性-JDK16</title>
+    <url>/2022/06/21/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK16/</url>
+    <content><![CDATA[<h1 id="引用参考文档链接"><a href="#引用参考文档链接" class="headerlink" title="引用参考文档链接"></a>引用参考文档链接</h1><ol>
+<li><a href="https://openjdk.org/projects/jdk/16/">jdk16特性列表</a></li>
+<li><a href="https://cr.openjdk.java.net/~stuefe/JEP-Improve-Metaspace-Allocator/review-guide/review-guide-1.0.html">JEP-Improve-Metaspace-Allocator</a></li>
+<li><a href="https://my.oschina.net/benhaile/blog/214159">元空间（MetaSpace）一种新的内存空间诞生</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1933656">Java 16 中对于 Project Valhalla 的铺垫</a></li>
+</ol>
+<h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol>
+<li><code>record</code>的开放使用对于一些简单的数据建模场景非常友好，能简化很多重复的编码工作</li>
+<li><code>instanceof</code>正式放出，可以简化代码，提高代码可读性<span id="more"></span></li>
+</ol>
+<h1 id="矢量API"><a href="#矢量API" class="headerlink" title="矢量API"></a>矢量API</h1><p>经历了一顿能干三顿饭的四年，已经不知道矢量计算的相关公示和理论了。有需求的可以看官方给出的案例简单了解下。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">scalarComputation</span><span class="params">(<span class="type">float</span>[] a, <span class="type">float</span>[] b, <span class="type">float</span>[] c)</span> &#123;</span><br><span class="line">   <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; a.length; i++) &#123;</span><br><span class="line">        c[i] = (a[i] * a[i] + b[i] * b[i]) * -<span class="number">1.0f</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>等效于</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> VectorSpecies&lt;Float&gt; SPECIES = FloatVector.SPECIES_256;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">vectorComputation</span><span class="params">(<span class="type">float</span>[] a, <span class="type">float</span>[] b, <span class="type">float</span>[] c)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; a.length; i += SPECIES.length()) &#123;</span><br><span class="line">        <span class="type">var</span> <span class="variable">m</span> <span class="operator">=</span> SPECIES.indexInRange(i, a.length);</span><br><span class="line">		<span class="comment">// FloatVector va, vb, vc;</span></span><br><span class="line">        <span class="type">var</span> <span class="variable">va</span> <span class="operator">=</span> FloatVector.fromArray(SPECIES, a, i, m);</span><br><span class="line">        <span class="type">var</span> <span class="variable">vb</span> <span class="operator">=</span> FloatVector.fromArray(SPECIES, b, i, m);</span><br><span class="line">        <span class="type">var</span> <span class="variable">vc</span> <span class="operator">=</span> va.mul(va).</span><br><span class="line">                    add(vb.mul(vb)).</span><br><span class="line">                    neg();</span><br><span class="line">        vc.intoArray(c, i, m);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="可使用-C-14"><a href="#可使用-C-14" class="headerlink" title="可使用 C++14"></a>可使用 C++14</h1><p>Java有相当一部分代码底层实现是通过调用本地C++库实现，并且也支持开发人员自定义C++本地实现调用，本次版本是升级了C++的支持范围。</p>
+<h1 id="JDK-源码迁移至git"><a href="#JDK-源码迁移至git" class="headerlink" title="JDK 源码迁移至git"></a>JDK 源码迁移至git</h1><p><a href="https://github.com/openjdk/">https://github.com/openjdk/</a></p>
+<h1 id="ZGC增强：并发线程堆栈处理"><a href="#ZGC增强：并发线程堆栈处理" class="headerlink" title="ZGC增强：并发线程堆栈处理"></a>ZGC增强：并发线程堆栈处理</h1><p>将 ZGC 线程堆栈处理从安全点移至并发阶段。减少ZGC在safepoint上的暂停时间，官方文档说是基本控制在1ms内。</p>
+<h1 id="Unix-Domain-Socket-Channels"><a href="#Unix-Domain-Socket-Channels" class="headerlink" title="Unix-Domain Socket Channels"></a>Unix-Domain Socket Channels</h1><p>对于本地、进程间通信，Unix 域套接字比 TCP&#x2F;IP 环回连接更安全、更高效。</p>
+<ul>
+<li>Unix 域套接字严格用于同一系统上的进程之间的通信。不打算接受远程连接的应用程序可以通过使用 Unix 域套接字来提高安全性。</li>
+<li>Unix 域套接字进一步受到操作系统强制、基于文件系统的访问控制的保护。</li>
+<li>与 TCP&#x2F;IP 环回连接相比，Unix 域套接字具有更快的设置时间和更高的数据吞吐量。</li>
+<li>对于需要在同一系统上的容器之间进行通信的容器环境，Unix 域套接字可能是比 TCP&#x2F;IP 套接字更好的解决方案。这可以使用位于共享卷中的套接字来实现。<br>Unix 域套接字长期以来一直是大多数 Unix 平台的一项功能，现在在 Windows 10 和 Windows Server 2019 中得到支持</li>
+</ul>
+<h1 id="兼容新系统：Alpine-Linux"><a href="#兼容新系统：Alpine-Linux" class="headerlink" title="兼容新系统：Alpine Linux"></a>兼容新系统：Alpine Linux</h1><p>以及其他使用 musl 作为主要 C 库的 Linux 发行版，机器是x64和AArch64架构的</p>
+<h1 id="弹性元空间"><a href="#弹性元空间" class="headerlink" title="弹性元空间"></a>弹性元空间</h1><p>更及时地将未使用的 HotSpot 类元数据（即元空间）内存返回给操作系统，减少元空间占用，并简化元空间代码以降低维护成本。<br><code>-XX:MetaspaceReclaimPolicy=(balanced|aggressive|none)</code></p>
+<ul>
+<li>balanced：大多数应用程序应该看到元空间内存占用有所改善，而内存回收的负面影响应该是微不足道的。此模式是默认模式，旨在向后兼容。</li>
+<li>‘aggressive’：以增加虚拟内存碎片为代价提供更高的内存回收率。</li>
+<li>‘none’：完全禁用内存回收。<br>新算法说明文档：<a href="https://cr.openjdk.java.net/~stuefe/JEP-Improve-Metaspace-Allocator/review-guide/review-guide-1.0.html">https://cr.openjdk.java.net/~stuefe/JEP-Improve-Metaspace-Allocator/review-guide/review-guide-1.0.html</a></li>
+</ul>
+<h1 id="兼容Windows-x2F-AArch64"><a href="#兼容Windows-x2F-AArch64" class="headerlink" title="兼容Windows&#x2F;AArch64"></a>兼容Windows&#x2F;AArch64</h1><p>AArch64架构的兼容越来越多了，这次针对Windows的兼容应该是针对桌面软件领域。</p>
+<h1 id="开放新API调用本地代码"><a href="#开放新API调用本地代码" class="headerlink" title="开放新API调用本地代码"></a>开放新API调用本地代码</h1><p>还在孵化阶段，目标应该是替换JNI，提供一种更高校更安全的调用本地方法的方式。</p>
+<h1 id="针对值类型的告警信息"><a href="#针对值类型的告警信息" class="headerlink" title="针对值类型的告警信息"></a>针对值类型的告警信息</h1><p>可以先浏览<a href="https://cloud.tencent.com/developer/article/1933656">Java 16 中对于 Project Valhalla 的铺垫</a>，这篇文章对于值类型讲解和demo展示比较到位。</p>
+<h1 id="新的打包工具（正式开放使用）"><a href="#新的打包工具（正式开放使用）" class="headerlink" title="新的打包工具（正式开放使用）"></a>新的打包工具（正式开放使用）</h1><p>JDK14开始孵化的打包工具，用以给各个系统打包各自平台的应用包：exe&#x2F;pkg&#x2F;dmg&#x2F;deb&#x2F;rpm</p>
+<h1 id="外部内存访问-API（第三次孵化）"><a href="#外部内存访问-API（第三次孵化）" class="headerlink" title="外部内存访问 API（第三次孵化）"></a>外部内存访问 API（第三次孵化）</h1><ul>
+<li><code>MemorySegment</code> 和 <code>MemoryAddress</code>之间的职责区别更清晰</li>
+<li>提供新的接口<code>MemoryAccess</code>，在简单的使用场景降低<code>VarHandle API</code>的使用需求，即简化普通场景的使用</li>
+<li>支持 <code>shared segments</code>(多线程场景)</li>
+<li>可以通过<code>Cleaner</code>注册<code>segments</code>（API 保证段的清理操作最多会被调用一次——要么显式地（通过客户端代码），要么隐式地（通过清理器）。）<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">MemorySegment</span> <span class="variable">segment</span> <span class="operator">=</span> MemorySegment.allocateNative(<span class="number">100</span>);</span><br><span class="line"><span class="type">Cleaner</span> <span class="variable">cleaner</span> <span class="operator">=</span> Cleaner.create();</span><br><span class="line">segment.registerCleaner(cleaner);</span><br><span class="line"><span class="comment">// do some work</span></span><br><span class="line">segment = <span class="literal">null</span>; <span class="comment">// Cleaner might reclaim the segment memory now</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="instanceof增强开放使用"><a href="#instanceof增强开放使用" class="headerlink" title="instanceof增强开放使用"></a><code>instanceof</code>增强开放使用</h1><p>需要注意变量的声明，避免重复，重复不会影响使用，会影响代码可读性。</p>
+<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Model</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Model</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Instanceof</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">Model</span> <span class="variable">m</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Model</span>(<span class="string">&quot;private&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">func</span><span class="params">(Object obj)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> String s) &#123;</span><br><span class="line">            System.out.println(s);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> Model m) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;instanceof:&quot;</span> + m.getName());</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;out:instanceof:&quot;</span> + m.getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    Instanceof.func(<span class="string">&quot;sedg3&quot;</span>);</span><br><span class="line">    Instanceof.func(<span class="keyword">new</span> <span class="title class_">Model</span>(<span class="string">&quot;demo&quot;</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时的输出结果为：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">sedg3</span><br><span class="line">out:<span class="keyword">instanceof</span>:<span class="keyword">private</span></span><br><span class="line"><span class="keyword">instanceof</span>:demo</span><br><span class="line">out:<span class="keyword">instanceof</span>:<span class="keyword">private</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="record-开放使用"><a href="#record-开放使用" class="headerlink" title="record 开放使用"></a>record 开放使用</h1><p>经过JDK14与JDK15的两次调整，在JDK16中开放使用，对于只需要数据建模的场景比较有用，需要额外注意record的限制规则：</p>
+<ul>
+<li>无法继承其他类，与<code>Enum</code>类似，父类限制为<code>java.lang.Record</code></li>
+<li><code>record</code>修饰的类自动包含<code>final</code>规则限制</li>
+<li>类的内部属性默认都是<code>final</code>的</li>
+<li><code>record</code>修饰的类不能在内部显示声明变量<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">public</span> <span class="keyword">record</span> <span class="title class_">RecordPoint</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line"><span class="comment">//        Instance field is not allowed in record</span></span><br><span class="line">       <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> z;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+<li>不能声明<code>native</code>方法</li>
+</ul>
+<h1 id="强封装JDK"><a href="#强封装JDK" class="headerlink" title="强封装JDK"></a>强封装JDK</h1><p>建议开发人员通过标准API使用JDK内部类的内部元素，而不是直接使用。<br>提高JDK的安全性和可维护性。<br>影响的类涉足领域较多，如果迁移版本后编译失败，可以通过<a href="https://openjdk.org/jeps/396">JEP-396</a>查看替代方案</p>
+<h1 id="密封类（第二次预调整）"><a href="#密封类（第二次预调整）" class="headerlink" title="密封类（第二次预调整）"></a>密封类（第二次预调整）</h1><p>添加了<code>non-sealed</code>，当<code>sealed</code>类的子类使用<code>non-sealed</code>修饰时，该子类可以被其他类继承。</p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>JDK16</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java版本特性-JDK9</title>
     <url>/2022/06/11/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK9/</url>
     <content><![CDATA[<h1 id="引用参考文档链接"><a href="#引用参考文档链接" class="headerlink" title="引用参考文档链接"></a>引用参考文档链接</h1><ol>
