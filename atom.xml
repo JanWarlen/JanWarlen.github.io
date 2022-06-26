@@ -6,7 +6,7 @@
   <link href="http://janwarlen.com/atom.xml" rel="self"/>
   
   <link href="http://janwarlen.com/"/>
-  <updated>2022-06-26T14:32:26.490Z</updated>
+  <updated>2022-06-26T14:34:10.898Z</updated>
   <id>http://janwarlen.com/</id>
   
   <author>
@@ -17,19 +17,16 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title></title>
+    <title>一书一图-Java高并发与集合框架</title>
     <link href="http://janwarlen.com/2022/06/26/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-Java%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/"/>
     <id>http://janwarlen.com/2022/06/26/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-Java%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/</id>
-    <published>2022-06-26T14:32:26.475Z</published>
-    <updated>2022-06-26T14:32:26.490Z</updated>
+    <published>2022-06-26T02:46:21.000Z</published>
+    <updated>2022-06-26T14:34:10.898Z</updated>
     
-    <content type="html"><![CDATA[<hr><p>title: 一书一图-Java高并发与集合框架<br>date: 2022-6-26 10:46:21<br>tags:<br>    - Java<br>    - 读书笔记<br>categories: Java</p><hr><h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol><li>书中主要内容是源码解读，因为是黑白印刷，阅读体验会有所影响</li><li>书中关于大顶堆&#x2F;小顶堆&#x2F;红黑树&#x2F;管程(Object Monitor&#x2F;AQS)建议单独拎出来阅读</li><li>并发部分对于没有足够编程经验的同学门槛会有一些高，建议同时搜索相关博文多方参考学习</li><li>因为是源码解读，建议读者先使用相关类做简单的编码demo，可以更容易理解解读内容（最好可以先自己阅读一遍源码）</li><li>因书中主要内容是源码解析，因此不建议作为系统化学习的教材使用，可以用作学习过程中的辅助教材</li><li>打折时推荐入手，原价不推荐</li><li>下方思维导图仅是个人的简单记录，可以用作知识点列表按图索骥的单独去学习，图中无任何具体知识内容<span id="more"></span></li></ol><p><img src="http://img.janwarlen.com/blog/Java%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6.png" alt="Java高并发与集合框架"></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol><li>书中主要内容是源码解读，因为是黑白印刷，阅读体验会有所影响</li><li>书中关于大顶堆&#x2F;小顶堆&#x2F;红黑树&#x2F;管程(Object Monitor&#x2F;AQS)建议单独拎出来阅读</li><li>并发部分对于没有足够编程经验的同学门槛会有一些高，建议同时搜索相关博文多方参考学习</li><li>因为是源码解读，建议读者先使用相关类做简单的编码demo，可以更容易理解解读内容（最好可以先自己阅读一遍源码）</li><li>因书中主要内容是源码解析，因此不建议作为系统化学习的教材使用，可以用作学习过程中的辅助教材</li><li>打折时推荐入手，原价不推荐</li><li>下方思维导图仅是个人的简单记录，可以用作知识点列表按图索骥的单独去学习，图中无任何具体知识内容<span id="more"></span></li></ol><p><img src="http://img.janwarlen.com/blog/Java%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6.png" alt="Java高并发与集合框架"></p>]]></content>
     
     
-    <summary type="html">&lt;hr&gt;
-&lt;p&gt;title: 一书一图-Java高并发与集合框架&lt;br&gt;date: 2022-6-26 10:46:21&lt;br&gt;tags:&lt;br&gt;    - Java&lt;br&gt;    - 读书笔记&lt;br&gt;categories: Java&lt;/p&gt;
-&lt;hr&gt;
-&lt;h1 id=&quot;写在开头&quot;&gt;&lt;a href=&quot;#写在开头&quot; class=&quot;headerlink&quot; title=&quot;写在开头&quot;&gt;&lt;/a&gt;写在开头&lt;/h1&gt;&lt;ol&gt;
+    <summary type="html">&lt;h1 id=&quot;写在开头&quot;&gt;&lt;a href=&quot;#写在开头&quot; class=&quot;headerlink&quot; title=&quot;写在开头&quot;&gt;&lt;/a&gt;写在开头&lt;/h1&gt;&lt;ol&gt;
 &lt;li&gt;书中主要内容是源码解读，因为是黑白印刷，阅读体验会有所影响&lt;/li&gt;
 &lt;li&gt;书中关于大顶堆&amp;#x2F;小顶堆&amp;#x2F;红黑树&amp;#x2F;管程(Object Monitor&amp;#x2F;AQS)建议单独拎出来阅读&lt;/li&gt;
 &lt;li&gt;并发部分对于没有足够编程经验的同学门槛会有一些高，建议同时搜索相关博文多方参考学习&lt;/li&gt;
@@ -40,6 +37,12 @@
     
     
     
+    <category term="Java" scheme="http://janwarlen.com/categories/Java/"/>
+    
+    
+    <category term="Java" scheme="http://janwarlen.com/tags/Java/"/>
+    
+    <category term="读书笔记" scheme="http://janwarlen.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
