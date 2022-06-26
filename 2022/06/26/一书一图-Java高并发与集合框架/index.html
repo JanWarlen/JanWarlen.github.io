@@ -20,24 +20,21 @@
     var CONFIG = {"hostname":"janwarlen.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Tips：    本书推荐按章节顺序读取，但是不同篇章需要不同程度的深入了解； 对于Java开发人员，本书最重要的篇章就是自动内存管理机制部分(第2章-第5章)，可以在日常的OOM和StackOverflow场景中提供巨大帮助，尤其其中提供的几个案例，更能帮助读者更好的理解内存管理； 其次就是高效并发篇章，该篇章可以帮助读者更深入的理解并发竞争的模型，理解为什么死锁，不过部分内容除了需要本书的其他">
+  <meta name="description" content="title: 一书一图-Java高并发与集合框架date: 2022-6-26 10:46:21tags:    - Java    - 读书笔记categories: Java  写在开头 书中主要内容是源码解读，因为是黑白印刷，阅读体验会有所影响 书中关于大顶堆&#x2F;小顶堆&#x2F;红黑树&#x2F;管程(Object Monitor&#x2F;AQS)建议单独拎出来阅读 并发部分对">
 <meta property="og:type" content="article">
-<meta property="og:title" content="一书一图-深入理解Java虚拟机">
-<meta property="og:url" content="http://janwarlen.com/2022/06/01/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/index.html">
+<meta property="og:title" content="一帆磨砺">
+<meta property="og:url" content="http://janwarlen.com/2022/06/26/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-Java%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/index.html">
 <meta property="og:site_name" content="一帆磨砺">
-<meta property="og:description" content="Tips：    本书推荐按章节顺序读取，但是不同篇章需要不同程度的深入了解； 对于Java开发人员，本书最重要的篇章就是自动内存管理机制部分(第2章-第5章)，可以在日常的OOM和StackOverflow场景中提供巨大帮助，尤其其中提供的几个案例，更能帮助读者更好的理解内存管理； 其次就是高效并发篇章，该篇章可以帮助读者更深入的理解并发竞争的模型，理解为什么死锁，不过部分内容除了需要本书的其他">
+<meta property="og:description" content="title: 一书一图-Java高并发与集合框架date: 2022-6-26 10:46:21tags:    - Java    - 读书笔记categories: Java  写在开头 书中主要内容是源码解读，因为是黑白印刷，阅读体验会有所影响 书中关于大顶堆&#x2F;小顶堆&#x2F;红黑树&#x2F;管程(Object Monitor&#x2F;AQS)建议单独拎出来阅读 并发部分对">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://img.janwarlen.com/blog/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA.png">
-<meta property="article:published_time" content="2022-06-01T02:53:49.000Z">
-<meta property="article:modified_time" content="2022-05-31T21:17:34.206Z">
+<meta property="og:image" content="http://img.janwarlen.com/blog/Java%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6.png">
+<meta property="article:published_time" content="2022-06-26T14:32:26.475Z">
+<meta property="article:modified_time" content="2022-06-26T14:32:26.490Z">
 <meta property="article:author" content="Jan Warlen">
-<meta property="article:tag" content="Java">
-<meta property="article:tag" content="读书笔记">
-<meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://img.janwarlen.com/blog/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA.png">
+<meta name="twitter:image" content="http://img.janwarlen.com/blog/Java%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6.png">
 
-<link rel="canonical" href="http://janwarlen.com/2022/06/01/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/">
+<link rel="canonical" href="http://janwarlen.com/2022/06/26/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-Java%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">
 
 
 <script id="page-configurations">
@@ -50,7 +47,7 @@
   };
 </script>
 
-  <title>一书一图-深入理解Java虚拟机 | 一帆磨砺</title>
+  <title> | 一帆磨砺</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-110997978-1"></script>
     <script>
@@ -213,7 +210,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2022/06/01/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/">
+    <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2022/06/26/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-Java%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/1.jpg">
@@ -226,7 +223,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          一书一图-深入理解Java虚拟机
+          
         </h1>
 
         <div class="post-meta">
@@ -235,22 +232,12 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-06-01 10:53:49 / 修改时间：05:17:34" itemprop="dateCreated datePublished" datetime="2022-06-01T10:53:49+08:00">2022-06-01</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
+              <time title="创建时间：2022-06-26 22:32:26" itemprop="dateCreated datePublished" datetime="2022-06-26T22:32:26+08:00">2022-06-26</time>
             </span>
 
           
-            <span id="/2022/06/01/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/" class="post-meta-item leancloud_visitors" data-flag-title="一书一图-深入理解Java虚拟机" title="阅读次数">
+            <span id="/2022/06/26/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-Java%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/" class="post-meta-item leancloud_visitors" data-flag-title="" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -265,8 +252,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2022/06/01/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/06/01/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/" itemprop="commentCount"></span>
+    <a title="valine" href="/2022/06/26/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-Java%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/06/26/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-Java%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -281,16 +268,19 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Tips：  </p>
-<ol>
-<li>本书推荐按章节顺序读取，但是不同篇章需要不同程度的深入了解；</li>
-<li>对于Java开发人员，本书最重要的篇章就是自动内存管理机制部分(第2章-第5章)，可以在日常的OOM和StackOverflow场景中提供巨大帮助，尤其其中提供的几个案例，更能帮助读者更好的理解内存管理；</li>
-<li>其次就是高效并发篇章，该篇章可以帮助读者更深入的理解并发竞争的模型，理解为什么死锁，不过部分内容除了需要本书的其他篇章内容支撑外i，还需要额外了解操作系统知识(信号量)，并且无死锁场景的排查案例，因此需要读者需要额外通过其他方式学习如何在死锁时定位；</li>
-<li>其他篇章内容对于Java开发人员基本只需要阅读产生印象即可，无需更深入了解(对大部分常规日常工作无明显帮助)；</li>
-<li>平台(中间件)开发人员，需要额外深入阅读虚拟机执行子系统篇章，尤其是类加载内容，其中的双亲委派模型尤为重要；</li>
-<li>思维导图不适合作为学习材料，可以简单一阅，建议购买正版书籍。<span id="more"></span></li>
+        <hr>
+<p>title: 一书一图-Java高并发与集合框架<br>date: 2022-6-26 10:46:21<br>tags:<br>    - Java<br>    - 读书笔记<br>categories: Java</p>
+<hr>
+<h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol>
+<li>书中主要内容是源码解读，因为是黑白印刷，阅读体验会有所影响</li>
+<li>书中关于大顶堆&#x2F;小顶堆&#x2F;红黑树&#x2F;管程(Object Monitor&#x2F;AQS)建议单独拎出来阅读</li>
+<li>并发部分对于没有足够编程经验的同学门槛会有一些高，建议同时搜索相关博文多方参考学习</li>
+<li>因为是源码解读，建议读者先使用相关类做简单的编码demo，可以更容易理解解读内容（最好可以先自己阅读一遍源码）</li>
+<li>因书中主要内容是源码解析，因此不建议作为系统化学习的教材使用，可以用作学习过程中的辅助教材</li>
+<li>打折时推荐入手，原价不推荐</li>
+<li>下方思维导图仅是个人的简单记录，可以用作知识点列表按图索骥的单独去学习，图中无任何具体知识内容<span id="more"></span></li>
 </ol>
-<p><img src="http://img.janwarlen.com/blog/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA.png" alt="深入理解Java虚拟机"></p>
+<p><img src="http://img.janwarlen.com/blog/Java%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6.png" alt="Java高并发与集合框架"></p>
 
     </div>
 
@@ -318,11 +308,6 @@
 
 
       <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/Java/" rel="tag"># Java</a>
-              <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
-              <a href="/tags/JVM/" rel="tag"># JVM</a>
-          </div>
 
         
 
@@ -330,13 +315,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2018/08/16/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB-HashMap/" rel="prev" title="源码阅读-HashMap">
-      <i class="fa fa-chevron-left"></i> 源码阅读-HashMap
+    <a href="/2022/06/22/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK18/" rel="prev" title="Java版本特性-JDK18">
+      <i class="fa fa-chevron-left"></i> Java版本特性-JDK18
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/06/05/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-Head%20First%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="next" title="一书一图-Head First设计模式">
-      一书一图-Head First设计模式 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -409,6 +391,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%BC%80%E5%A4%B4"><span class="nav-number">1.</span> <span class="nav-text">写在开头</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -648,7 +631,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'BlogComments',
       owner       : 'janwarlen',
       admin       : ['janwarlen'],
-      id          : 'ef5868c2dd44c811e91232a8f2f0d4e7',
+      id          : '2ac6d854c7cf8108f8d40dcbc2765c21',
         language: '',
       distractionFreeMode: false,
       proxy: 'http://janwarlen.com/login/oauth/access_token'
