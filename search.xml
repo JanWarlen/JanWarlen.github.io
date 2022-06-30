@@ -659,6 +659,27 @@
       </tags>
   </entry>
   <entry>
+    <title>一书一图-Java多线程编程核心技术</title>
+    <url>/2022/06/30/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/</url>
+    <content><![CDATA[<h4 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h4><ol>
+<li>本书难度比较简单，属于实践类，难度不高建议跟随书中代码敲一遍，有兴趣的可以点到源码看一看</li>
+<li>正版定价129，建议京东活动时买入，半价还是可以的</li>
+<li>本书大量的代码案例都是简单的Api使用，原理与源码讲解较少，深入理解需要自己看源码或者搜索相关知识点的博文</li>
+<li>推荐入手，整本书如果代码都跟着敲一遍，预计有10-20个小时的工作量</li>
+<li>下方的思维导图可以用作知识点大纲，有感兴趣的知识点可以额外单独搜索或者阅读对应书中章节细节内容</li>
+<li>多线程相关实践代码可以参考我的<a href="https://github.com/JanWarlen/JavaPractice/tree/master/Basic/src/main/java/com/janwarlen/learn/thread">练习代码</a><span id="more"></span></li>
+</ol>
+<p><img src="http://img.janwarlen.com/blog/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF.png" alt="Java多线程编程核心技术"></p>
+]]></content>
+      <categories>
+        <category>多线程</category>
+      </categories>
+      <tags>
+        <tag>读书笔记</tag>
+        <tag>多线程编程</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>一书一图-Java高并发与集合框架</title>
     <url>/2022/06/26/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-Java%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/</url>
     <content><![CDATA[<h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol>
