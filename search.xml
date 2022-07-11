@@ -772,9 +772,10 @@
 <li>带有平衡条件：每个节点的左右节点的高度差值不超过1（左子数，右子树）</li>
 <li>每个节点的左子树与右子树都是AVLTree</li>
 </ul>
-<center>![AVLTree](http://img.janwarlen.com/18-4-16/94024279.jpg)</center>  
+<p><img src="http://img.janwarlen.com/18-4-16/94024279.jpg" alt="AVLTree"></p>
 <center>图1(AVLTree)</center>  
-<center>![二叉树](http://img.janwarlen.com/18-4-16/91461504.jpg)</center>  
+
+<p><img src="http://img.janwarlen.com/18-4-16/91461504.jpg" alt="二叉树"></p>
 <center>图2(非AVLTree)</center>
 
 <h5 id="旋转"><a href="#旋转" class="headerlink" title="旋转"></a>旋转</h5><p>节点的插入与删除都有可能会造成操作节点至根节点的所有节点的平衡信息，因此在执行插入和删除节点（单节点操作，非批量）后需要对树进行简单的修正来恢复平衡，这种操作就是旋转。<br>旋转一共适应四种情况：</p>
