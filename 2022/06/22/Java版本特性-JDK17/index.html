@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"janwarlen.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引用参考文档链接 jdk17特性列表 Java 随机数相关 API 的演进与思考（上） Java 随机数相关 API 的演进与思考（下） 支持上下文的序列化过滤器，又一次给序列化打补丁  写在开头 浮点数计算将跨系统平台结果统一，不过float这个坑已经几乎所有人都知道，这个改动即便知道大部分也会遵循之前的安全习惯 switch的匹配模式增强虽然还没开放，但可以直观的看出对简化代码的帮助很大 密封">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java版本特性-JDK17">
+<meta property="og:url" content="http://janwarlen.com/2022/06/22/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK17/index.html">
+<meta property="og:site_name" content="一帆磨砺">
+<meta property="og:description" content="引用参考文档链接 jdk17特性列表 Java 随机数相关 API 的演进与思考（上） Java 随机数相关 API 的演进与思考（下） 支持上下文的序列化过滤器，又一次给序列化打补丁  写在开头 浮点数计算将跨系统平台结果统一，不过float这个坑已经几乎所有人都知道，这个改动即便知道大部分也会遵循之前的安全习惯 switch的匹配模式增强虽然还没开放，但可以直观的看出对简化代码的帮助很大 密封">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-21T21:23:33.000Z">
+<meta property="article:modified_time" content="2022-07-26T16:59:01.370Z">
+<meta property="article:author" content="Jan Warlen">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="JDK17">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://janwarlen.com/2022/06/22/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK17/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Java版本特性-JDK17 | 一帆磨砺</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-110997978-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-110997978-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2d6b785ef2d7969dc8b9db1bcd382bfa";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="一帆磨砺" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一帆磨砺</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">生活所迫，一叶孤舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2022/06/22/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK17/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpg">
+      <meta itemprop="name" content="Jan Warlen">
+      <meta itemprop="description" content="道路艰辛，磨砺前行">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一帆磨砺">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java版本特性-JDK17
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-22 05:23:33" itemprop="dateCreated datePublished" datetime="2022-06-22T05:23:33+08:00">2022-06-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-27 00:59:01" itemprop="dateModified" datetime="2022-07-27T00:59:01+08:00">2022-07-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/06/22/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK17/" class="post-meta-item leancloud_visitors" data-flag-title="Java版本特性-JDK17" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/06/22/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK17/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/06/22/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK17/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引用参考文档链接"><a href="#引用参考文档链接" class="headerlink" title="引用参考文档链接"></a>引用参考文档链接</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://openjdk.org/projects/jdk/17/">jdk17特性列表</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000041252650">Java 随机数相关 API 的演进与思考（上）</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000041262013">Java 随机数相关 API 的演进与思考（下）</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1890732">支持上下文的序列化过滤器，又一次给序列化打补丁</a></li>
+</ol>
+<h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol>
+<li>浮点数计算将跨系统平台结果统一，不过float这个坑已经几乎所有人都知道，这个改动即便知道大部分也会遵循之前的安全习惯</li>
+<li>switch的匹配模式增强虽然还没开放，但可以直观的看出对简化代码的帮助很大</li>
+<li>密封类<code>sealed</code>将会让多态环境更好控制，避免代码的无序扩张</li>
+<li>反序列化过滤器没有想到使用场景，但是从介绍到demo可以直观的感受到它的重要性，一个是安全性，一个是反序列化过程的可控性</li>
+<li>调用本地方法和操作堆外内存是非常重要的点，只是平时接触和使用的机会太少，这个特性未来能够正式使用一定能绽放精彩<span id="more"></span></li>
+</ol>
+<h1 id="float跨平台值统一"><a href="#float跨平台值统一" class="headerlink" title="float跨平台值统一"></a>float跨平台值统一</h1><p>使浮点运算始终保持严格。所有的浮点数计算都遵循<code>strictfp</code><br>该特性令我比较疑惑。疑惑的点是这个遵循的是所有系统平台执行的结果一致还是没有了数据波动。</p>
+<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StrictFloat</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">func</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">float</span> <span class="variable">a</span> <span class="operator">=</span> <span class="number">0.1231231f</span>;</span><br><span class="line">        <span class="type">double</span> <span class="variable">b</span> <span class="operator">=</span> <span class="number">0.23456d</span>;</span><br><span class="line">        <span class="type">double</span> <span class="variable">c</span> <span class="operator">=</span> a + b;</span><br><span class="line">        System.out.println(c);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">strictfp</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">func2</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">float</span> <span class="variable">a</span> <span class="operator">=</span> <span class="number">0.1231231f</span>;</span><br><span class="line">        <span class="type">double</span> <span class="variable">b</span> <span class="operator">=</span> <span class="number">0.23456d</span>;</span><br><span class="line">        <span class="type">double</span> <span class="variable">c</span> <span class="operator">=</span> a + b;</span><br><span class="line">        System.out.println(c);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// JDK8 中执行结果</span></span><br><span class="line"><span class="comment">// 0.3576831018900871</span></span><br><span class="line"><span class="comment">// 0.3576831018900871</span></span><br><span class="line"><span class="comment">// JDK17 执行 func 结果</span></span><br><span class="line"><span class="comment">// 0.3576831018900871</span></span><br></pre></td></tr></table></figure>
+<h2 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h2><p>按照个人理解的<code>strictfp</code>，执行结果应该是 <code>0.3576831</code>。<br>但是依然有不稳定的波动值存在，因此只能理解为跨平台系统的执行结果统一了。。。。<br>上方案例代码在JDK8反编译汇编后，两个函数指令集一样，只有函数2有<code>strictfp</code>修饰符一个区别</p>
+<h2 id="JDK17不需要使用strictfp"><a href="#JDK17不需要使用strictfp" class="headerlink" title="JDK17不需要使用strictfp"></a>JDK17不需要使用<code>strictfp</code></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//    Modifier &#x27;strictfp&#x27; is redundant on Java 17 and later</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">strictfp</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">func2</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">float</span> <span class="variable">a</span> <span class="operator">=</span> <span class="number">0.1231231f</span>;</span><br><span class="line">        <span class="type">double</span> <span class="variable">b</span> <span class="operator">=</span> <span class="number">0.23456d</span>;</span><br><span class="line">        <span class="type">double</span> <span class="variable">c</span> <span class="operator">=</span> a + b;</span><br><span class="line">        System.out.println(c);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="增强PRNG（伪随机数生成器）"><a href="#增强PRNG（伪随机数生成器）" class="headerlink" title="增强PRNG（伪随机数生成器）"></a>增强PRNG（伪随机数生成器）</h1><p>提供新的接口类型和实现，包括可跳转 PRNG 和另一类可拆分 PRNG 算法 (LXM)。<br>具体详细内容和关于随机数的可以浏览博文<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000041252650">Java 随机数相关 API 的演进与思考（上）</a>&#x2F;<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000041262013">Java 随机数相关 API 的演进与思考（下）</a>，博主写的非常详尽</p>
+<h1 id="macOS新的渲染管道"><a href="#macOS新的渲染管道" class="headerlink" title="macOS新的渲染管道"></a>macOS新的渲染管道</h1><p>使用 Apple Metal API 为 macOS 实现 Java 2D 内部渲染管道，以替代使用已弃用的 Apple OpenGL API 的现有管道。</p>
+<h1 id="系统平台架构兼容：-macOS-x2F-AArch64"><a href="#系统平台架构兼容：-macOS-x2F-AArch64" class="headerlink" title="系统平台架构兼容： macOS&#x2F;AArch64"></a>系统平台架构兼容： macOS&#x2F;AArch64</h1><h1 id="弃用-Applet-API"><a href="#弃用-Applet-API" class="headerlink" title="弃用 Applet API"></a>弃用 Applet API</h1><blockquote>
+<p>It is essentially irrelevant since all web-browser vendors have either removed support for Java browser plug-ins or announced plans to do so.</p>
+</blockquote>
+<p>市面主流浏览器已经不再支持Java的浏览器插件，这个API已经没有作用了。</p>
+<h1 id="JDK内部代码继续加强-强封装"><a href="#JDK内部代码继续加强-强封装" class="headerlink" title="JDK内部代码继续加强 强封装"></a>JDK内部代码继续加强 强封装</h1><p>除了部分<a target="_blank" rel="noopener" href="https://openjdk.org/jeps/260#Description">关键代码</a>，对其他所有JDK内部的Java类内部元素进行强封装，以提高JDK的安全性和可维护性。</p>
+<h1 id="switch模式匹配增强（预调整）"><a href="#switch模式匹配增强（预调整）" class="headerlink" title="switch模式匹配增强（预调整）"></a>switch模式匹配增强（预调整）</h1><p>因还未开放使用，因此使用官方文档案例说明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> String <span class="title function_">formatterPatternSwitch</span><span class="params">(Object o)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">switch</span> (o) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="literal">null</span>      -&gt; System.out.println(<span class="string">&quot;Oops&quot;</span>);</span><br><span class="line">        <span class="keyword">case</span> Integer i -&gt; String.format(<span class="string">&quot;int %d&quot;</span>, i);</span><br><span class="line">        <span class="keyword">case</span> Long l    -&gt; String.format(<span class="string">&quot;long %d&quot;</span>, l);</span><br><span class="line">        <span class="keyword">case</span> Double d  -&gt; String.format(<span class="string">&quot;double %f&quot;</span>, d);</span><br><span class="line">        <span class="keyword">case</span> String s &amp;&amp; (s.length() &gt; <span class="number">100</span>)  -&gt; String.format(<span class="string">&quot;String %s&quot;</span>, s);</span><br><span class="line">        <span class="keyword">default</span>        -&gt; o.toString();</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>可跨类型匹配，带匹配对象无类型限制（从文档看起来是这样）</li>
+<li>可匹配null</li>
+<li>可在匹配条件添加判断条件</li>
+</ul>
+<h1 id="删除-RMI-Activation"><a href="#删除-RMI-Activation" class="headerlink" title="删除 RMI Activation"></a>删除 RMI Activation</h1><p> JDK15标注弃用，JDK17删除。<br>删除远程方法调用 (RMI) 激活机制，同时保留 RMI 的其余部分。</p>
+<h1 id="密封类-开放使用"><a href="#密封类-开放使用" class="headerlink" title="密封类-开放使用"></a>密封类-开放使用</h1><p> 与JDK16相比，JDK17没有新增变更。</p>
+<ul>
+<li><code>sealed</code>修饰的类必须有子类</li>
+<li><code>non-sealed</code>修饰的子类被其他类继承不受限制</li>
+<li><code>sealed</code>修饰的类的子类在不同包时，所有类必须在同一个模块下（同一个<code>module-info.java</code>）</li>
+</ul>
+<h1 id="删除实验性-AOT-和-JIT-编译器"><a href="#删除实验性-AOT-和-JIT-编译器" class="headerlink" title="删除实验性 AOT 和 JIT 编译器"></a>删除实验性 AOT 和 JIT 编译器</h1><p>官方发现没啥人用，就给删了。（维护工作量大）<br>保留了实验性的JVMCI。</p>
+<h1 id="弃用安全管理器（Security-Manager）"><a href="#弃用安全管理器（Security-Manager）" class="headerlink" title="弃用安全管理器（Security Manager）"></a>弃用安全管理器（Security Manager）</h1><p>根据官方文档的说法，安全管理器使用率较低，有一部分框架甚至避开JDK内置策略实现自定义安全管理器。加上官方认定的性能不佳&#x2F;权限模型脆弱&#x2F;编码困难，因此决定弃用。<br>但是没有提到替代方案，只是在未来工作列表中表示会在多个方面增强安全性。</p>
+<h1 id="本地方法调用和操作堆外内存-API（孵化器）"><a href="#本地方法调用和操作堆外内存-API（孵化器）" class="headerlink" title="本地方法调用和操作堆外内存 API（孵化器）"></a>本地方法调用和操作堆外内存 API（孵化器）</h1><p>JDK14&#x2F;15&#x2F;16已经进行过孵化，这次是在之前基础之上的演变。<br>官方文档没说和之前相比的变动内容，挖个坑，等以后填。。。。。</p>
+<h1 id="Vector-API（第二次孵化器）"><a href="#Vector-API（第二次孵化器）" class="headerlink" title="Vector API（第二次孵化器）"></a>Vector API（第二次孵化器）</h1><ul>
+<li>增强 API 以支持字符操作，例如 UTF-8 字符解码。short具体来说，我们添加了用于在向量和数组之间复制字符的方法char，以及用于与整数向量进行无符号比较的新向量比较运算符。</li>
+<li>byte用于将向量转换为数组和从boolean 数组转换为 API 的增强功能。</li>
+<li>使用英特尔的短向量数学库 (SVML)对 x64 上的超越和三角通道运算的内在支持。</li>
+<li>对 Intel x64 和 ARM NEON 实施的一般性能增强。</li>
+</ul>
+<h1 id="特定于上下文的反序列化过滤器"><a href="#特定于上下文的反序列化过滤器" class="headerlink" title="特定于上下文的反序列化过滤器"></a>特定于上下文的反序列化过滤器</h1><p>结合官方文档和<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1890732">支持上下文的序列化过滤器，又一次给序列化打补丁</a>大致明白了这个是干啥的。<br>简单的总结就是在所有使用<code>ObjectInputStream</code>的时候，都会经过反序列化过滤器，如果不符合所有过滤器，则无法反序列化。</p>
+<h2 id="案例-1"><a href="#案例-1" class="headerlink" title="案例"></a>案例</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DeserializationFilter</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 可以先不执行该方法正常序列化/反序列化</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">func</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 该过滤器将只允许java.base路径的类反序列化，其他所有反序列化操作均拒绝</span></span><br><span class="line">        <span class="type">ObjectInputFilter</span> <span class="variable">filter</span> <span class="operator">=</span> ObjectInputFilter.Config.createFilter(<span class="string">&quot;java.base/*;!*&quot;</span>);</span><br><span class="line">        <span class="type">ObjectInputFilter</span> <span class="variable">serialFilter</span> <span class="operator">=</span> ObjectInputFilter.Config.getSerialFilter();</span><br><span class="line">        ObjectInputFilter.Config.setSerialFilter(filter);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">serial</span><span class="params">(Object obj)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">FileOutputStream</span> <span class="variable">fileOutputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">            <span class="type">ObjectOutputStream</span> <span class="variable">objectOutputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectOutputStream</span>(fileOutputStream);</span><br><span class="line">            objectOutputStream.writeObject(obj);</span><br><span class="line">            objectOutputStream.close();</span><br><span class="line">            fileOutputStream.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">deserial</span> <span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">FileInputStream</span> <span class="variable">fileInputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">            <span class="type">ObjectInputStream</span> <span class="variable">objectInputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectInputStream</span>(fileInputStream);</span><br><span class="line">            <span class="type">Object</span> <span class="variable">o</span> <span class="operator">=</span> objectInputStream.readObject();</span><br><span class="line">            <span class="keyword">if</span> (o <span class="keyword">instanceof</span> Shape s) &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;deserial:&quot;</span>);</span><br><span class="line">                s.func();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException | ClassNotFoundException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="不设置过滤器"><a href="#不设置过滤器" class="headerlink" title="不设置过滤器"></a>不设置过滤器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">// DeserializationFilter.func();</span></span><br><span class="line">    DeserializationFilter.serial(cirle);</span><br><span class="line">    DeserializationFilter.deserial();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 反序列化正常</span></span><br><span class="line"><span class="comment">// deserial:</span></span><br><span class="line"><span class="comment">// com.janwarlen.feature.Circle</span></span><br></pre></td></tr></table></figure>
+<h3 id="设置过滤器"><a href="#设置过滤器" class="headerlink" title="设置过滤器"></a>设置过滤器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    DeserializationFilter.func();</span><br><span class="line">    DeserializationFilter.serial(cirle);</span><br><span class="line">    DeserializationFilter.deserial();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 反序列化失败</span></span><br><span class="line">Exception in thread <span class="string">&quot;main&quot;</span> java.lang.RuntimeException: java.io.InvalidClassException: filter status: REJECTED</span><br><span class="line">	at JDK17/com.janwarlen.feature.DeserializationFilter.deserial(DeserializationFilter.java:<span class="number">38</span>)</span><br><span class="line">	at JDK17/com.janwarlen.Demo.main(Demo.java:<span class="number">26</span>)</span><br><span class="line">Caused by: java.io.InvalidClassException: filter status: REJECTED</span><br><span class="line">	at java.base/java.io.ObjectInputStream.filterCheck(ObjectInputStream.java:<span class="number">1414</span>)</span><br><span class="line">	at java.base/java.io.ObjectInputStream.readNonProxyDesc(ObjectInputStream.java:<span class="number">2055</span>)</span><br><span class="line">	at java.base/java.io.ObjectInputStream.readClassDesc(ObjectInputStream.java:<span class="number">1909</span>)</span><br><span class="line">	at java.base/java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:<span class="number">2235</span>)</span><br><span class="line">	at java.base/java.io.ObjectInputStream.readObject0(ObjectInputStream.java:<span class="number">1744</span>)</span><br><span class="line">	at java.base/java.io.ObjectInputStream.readObject(ObjectInputStream.java:<span class="number">514</span>)</span><br><span class="line">	at java.base/java.io.ObjectInputStream.readObject(ObjectInputStream.java:<span class="number">472</span>)</span><br><span class="line">	at JDK17/com.janwarlen.feature.DeserializationFilter.deserial(DeserializationFilter.java:<span class="number">32</span>)</span><br><span class="line">	... <span class="number">1</span> more</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/JDK17/" rel="tag"># JDK17</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/06/21/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK16/" rel="prev" title="Java版本特性-JDK16">
+      <i class="fa fa-chevron-left"></i> Java版本特性-JDK16
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/06/22/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK18/" rel="next" title="Java版本特性-JDK18">
+      Java版本特性-JDK18 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-valine">valine</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane valine" id="comment-valine">
+              <div class="comments" id="valine-comments"></div>
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3%E9%93%BE%E6%8E%A5"><span class="nav-number">1.</span> <span class="nav-text">引用参考文档链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%BC%80%E5%A4%B4"><span class="nav-number">2.</span> <span class="nav-text">写在开头</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#float%E8%B7%A8%E5%B9%B3%E5%8F%B0%E5%80%BC%E7%BB%9F%E4%B8%80"><span class="nav-number">3.</span> <span class="nav-text">float跨平台值统一</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B"><span class="nav-number">3.1.</span> <span class="nav-text">案例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%96%91%E6%83%91"><span class="nav-number">3.2.</span> <span class="nav-text">疑惑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDK17%E4%B8%8D%E9%9C%80%E8%A6%81%E4%BD%BF%E7%94%A8strictfp"><span class="nav-number">3.3.</span> <span class="nav-text">JDK17不需要使用strictfp</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A2%9E%E5%BC%BAPRNG%EF%BC%88%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">增强PRNG（伪随机数生成器）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#macOS%E6%96%B0%E7%9A%84%E6%B8%B2%E6%9F%93%E7%AE%A1%E9%81%93"><span class="nav-number">5.</span> <span class="nav-text">macOS新的渲染管道</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84%E5%85%BC%E5%AE%B9%EF%BC%9A-macOS-x2F-AArch64"><span class="nav-number">6.</span> <span class="nav-text">系统平台架构兼容： macOS&#x2F;AArch64</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%83%E7%94%A8-Applet-API"><span class="nav-number">7.</span> <span class="nav-text">弃用 Applet API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JDK%E5%86%85%E9%83%A8%E4%BB%A3%E7%A0%81%E7%BB%A7%E7%BB%AD%E5%8A%A0%E5%BC%BA-%E5%BC%BA%E5%B0%81%E8%A3%85"><span class="nav-number">8.</span> <span class="nav-text">JDK内部代码继续加强 强封装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#switch%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D%E5%A2%9E%E5%BC%BA%EF%BC%88%E9%A2%84%E8%B0%83%E6%95%B4%EF%BC%89"><span class="nav-number">9.</span> <span class="nav-text">switch模式匹配增强（预调整）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-RMI-Activation"><span class="nav-number">10.</span> <span class="nav-text">删除 RMI Activation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%86%E5%B0%81%E7%B1%BB-%E5%BC%80%E6%94%BE%E4%BD%BF%E7%94%A8"><span class="nav-number">11.</span> <span class="nav-text">密封类-开放使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%AE%9E%E9%AA%8C%E6%80%A7-AOT-%E5%92%8C-JIT-%E7%BC%96%E8%AF%91%E5%99%A8"><span class="nav-number">12.</span> <span class="nav-text">删除实验性 AOT 和 JIT 编译器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%83%E7%94%A8%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E5%99%A8%EF%BC%88Security-Manager%EF%BC%89"><span class="nav-number">13.</span> <span class="nav-text">弃用安全管理器（Security Manager）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8%E5%92%8C%E6%93%8D%E4%BD%9C%E5%A0%86%E5%A4%96%E5%86%85%E5%AD%98-API%EF%BC%88%E5%AD%B5%E5%8C%96%E5%99%A8%EF%BC%89"><span class="nav-number">14.</span> <span class="nav-text">本地方法调用和操作堆外内存 API（孵化器）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Vector-API%EF%BC%88%E7%AC%AC%E4%BA%8C%E6%AC%A1%E5%AD%B5%E5%8C%96%E5%99%A8%EF%BC%89"><span class="nav-number">15.</span> <span class="nav-text">Vector API（第二次孵化器）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%89%B9%E5%AE%9A%E4%BA%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E7%9A%84%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="nav-number">16.</span> <span class="nav-text">特定于上下文的反序列化过滤器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B-1"><span class="nav-number">16.1.</span> <span class="nav-text">案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E8%AE%BE%E7%BD%AE%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="nav-number">16.1.1.</span> <span class="nav-text">不设置过滤器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="nav-number">16.1.2.</span> <span class="nav-text">设置过滤器</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jan Warlen"
+      src="/images/1.jpg">
+  <p class="site-author-name" itemprop="name">Jan Warlen</p>
+  <div class="site-description" itemprop="description">道路艰辛，磨砺前行</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">皖ICP备17001898号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;">
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jan Warlen</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"SI59Lqfcn8LIDHNEYsVHaptm-MdYXbMMI","app_key":"KWyHSYm5WQz8vOKf1dP2mFNB","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e34aa1d9b02a537cdb2a',
+      clientSecret: 'b64710eb326d596165dac47ac5d00b82d5aac262',
+      repo        : 'BlogComments',
+      owner       : 'janwarlen',
+      admin       : ['janwarlen'],
+      id          : '8f297c3cf93134fbf424b97608c2b88a',
+        language: '',
+      distractionFreeMode: false,
+      proxy: 'http://janwarlen.com/login/oauth/access_token'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'dMn5kVFlVpzDrSz89HFDTstl-9Nh9j0Va',
+      appKey     : 'irzXPD5LFMvmK94HNMlUOdIe',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

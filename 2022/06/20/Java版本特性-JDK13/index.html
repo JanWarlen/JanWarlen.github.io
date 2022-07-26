@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"janwarlen.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引用参考文档链接 jdk13特性列表  写在开头 本次版本没有对用户代码直接影响特性 AppCDS的增强对于使用AppCDS的用户来说是降低了日常的使用成本 对于大多数开发人员来说，我想文本块的提出是非常令人舒畅的，日常的大文本的使用的确是一直为人诟病的，这个虽然只是小细节的优化调整，甚至都未开放使用，但是却令笔者对Java的后续更新迭代增加了很多期望">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java版本特性-JDK13">
+<meta property="og:url" content="http://janwarlen.com/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK13/index.html">
+<meta property="og:site_name" content="一帆磨砺">
+<meta property="og:description" content="引用参考文档链接 jdk13特性列表  写在开头 本次版本没有对用户代码直接影响特性 AppCDS的增强对于使用AppCDS的用户来说是降低了日常的使用成本 对于大多数开发人员来说，我想文本块的提出是非常令人舒畅的，日常的大文本的使用的确是一直为人诟病的，这个虽然只是小细节的优化调整，甚至都未开放使用，但是却令笔者对Java的后续更新迭代增加了很多期望">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-20T08:12:33.000Z">
+<meta property="article:modified_time" content="2022-07-26T16:59:01.277Z">
+<meta property="article:author" content="Jan Warlen">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="JDK13">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://janwarlen.com/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK13/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Java版本特性-JDK13 | 一帆磨砺</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-110997978-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-110997978-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2d6b785ef2d7969dc8b9db1bcd382bfa";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="一帆磨砺" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一帆磨砺</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">生活所迫，一叶孤舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK13/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpg">
+      <meta itemprop="name" content="Jan Warlen">
+      <meta itemprop="description" content="道路艰辛，磨砺前行">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一帆磨砺">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java版本特性-JDK13
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-20 16:12:33" itemprop="dateCreated datePublished" datetime="2022-06-20T16:12:33+08:00">2022-06-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-27 00:59:01" itemprop="dateModified" datetime="2022-07-27T00:59:01+08:00">2022-07-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK13/" class="post-meta-item leancloud_visitors" data-flag-title="Java版本特性-JDK13" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK13/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK13/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引用参考文档链接"><a href="#引用参考文档链接" class="headerlink" title="引用参考文档链接"></a>引用参考文档链接</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://openjdk.org/projects/jdk/13/">jdk13特性列表</a></li>
+</ol>
+<h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol>
+<li>本次版本没有对用户代码直接影响特性</li>
+<li>AppCDS的增强对于使用AppCDS的用户来说是降低了日常的使用成本</li>
+<li>对于大多数开发人员来说，我想<code>文本块</code>的提出是非常令人舒畅的，日常的大文本的使用的确是一直为人诟病的，这个虽然只是小细节的优化调整，甚至都未开放使用，但是却令笔者对Java的后续更新迭代增加了很多期望<span id="more"></span></li>
+</ol>
+<h1 id="AppCDS增强"><a href="#AppCDS增强" class="headerlink" title="AppCDS增强"></a>AppCDS增强</h1><p>应用程序退出时将动态创建共享的归档，该归档是在JDK12中新增的默认归档基础上创建，因此启动参数不可指定<code>-Xshare:off</code>(默认为on)，该特性提高了AppCDS的可用性，JDK10 中需要先运行几次应用来创建类列表，再转储为归档文件，再使用归档文件启动。<br>应用程序退出时动态创建归档需要使用启动参数<code>-XX:ArchiveClassesAtExit</code>开启。</p>
+<h1 id="ZGC增强：允许释放未使用堆内存回操作系统"><a href="#ZGC增强：允许释放未使用堆内存回操作系统" class="headerlink" title="ZGC增强：允许释放未使用堆内存回操作系统"></a>ZGC增强：允许释放未使用堆内存回操作系统</h1><p>该功能与JDK10 的G1增强一致，都是为了尽可能减少应用程序的资源消耗。<br>不会将内存减少到低于<code>-Xms</code>。</p>
+<h1 id="替换-Socket-API-底层实现"><a href="#替换-Socket-API-底层实现" class="headerlink" title="替换 Socket API 底层实现"></a>替换 Socket API 底层实现</h1><p>将 java.net.Socket 和 java.net.ServerSocket API 使用的底层实现替换为更简单、更现代且易于维护和调试的实现。</p>
+<h1 id="switch表达式第二次预调整"><a href="#switch表达式第二次预调整" class="headerlink" title="switch表达式第二次预调整"></a>switch表达式第二次预调整</h1><p>对比于JDK12的调整，本次是取消了break 返回值，使用<code>yield</code>返回值进行替换。<br>JDK13未正式开放使用该特性。</p>
+<h1 id="文本块-预调整"><a href="#文本块-预调整" class="headerlink" title="文本块(预调整)"></a>文本块(预调整)</h1><p>目前对于大量文本大多用<code>+</code>和换行进行拼接</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">html</span> <span class="operator">=</span> <span class="string">&quot;&lt;html&gt;\n&quot;</span> +</span><br><span class="line">              <span class="string">&quot;    &lt;body&gt;\n&quot;</span> +</span><br><span class="line">              <span class="string">&quot;        &lt;p&gt;Hello, world&lt;/p&gt;\n&quot;</span> +</span><br><span class="line">              <span class="string">&quot;    &lt;/body&gt;\n&quot;</span> +</span><br><span class="line">              <span class="string">&quot;&lt;/html&gt;\n&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>新的文本块特性将允许<code>&quot;&quot;&quot;</code>标记文本区域，从而简化文本块的使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">html</span> <span class="operator">=</span> <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">              &lt;html&gt;</span></span><br><span class="line"><span class="string">                  &lt;body&gt;</span></span><br><span class="line"><span class="string">                      &lt;p&gt;Hello, world&lt;/p&gt;</span></span><br><span class="line"><span class="string">                  &lt;/body&gt;</span></span><br><span class="line"><span class="string">              &lt;/html&gt;</span></span><br><span class="line"><span class="string">              &quot;&quot;&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>JDK13未正式开放使用该特性。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/JDK13/" rel="tag"># JDK13</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/06/19/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK12/" rel="prev" title="Java版本特性-JDK12">
+      <i class="fa fa-chevron-left"></i> Java版本特性-JDK12
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK14/" rel="next" title="Java版本特性-JDK14">
+      Java版本特性-JDK14 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-valine">valine</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane valine" id="comment-valine">
+              <div class="comments" id="valine-comments"></div>
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3%E9%93%BE%E6%8E%A5"><span class="nav-number">1.</span> <span class="nav-text">引用参考文档链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%BC%80%E5%A4%B4"><span class="nav-number">2.</span> <span class="nav-text">写在开头</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AppCDS%E5%A2%9E%E5%BC%BA"><span class="nav-number">3.</span> <span class="nav-text">AppCDS增强</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ZGC%E5%A2%9E%E5%BC%BA%EF%BC%9A%E5%85%81%E8%AE%B8%E9%87%8A%E6%94%BE%E6%9C%AA%E4%BD%BF%E7%94%A8%E5%A0%86%E5%86%85%E5%AD%98%E5%9B%9E%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-number">4.</span> <span class="nav-text">ZGC增强：允许释放未使用堆内存回操作系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2-Socket-API-%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0"><span class="nav-number">5.</span> <span class="nav-text">替换 Socket API 底层实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#switch%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%AC%AC%E4%BA%8C%E6%AC%A1%E9%A2%84%E8%B0%83%E6%95%B4"><span class="nav-number">6.</span> <span class="nav-text">switch表达式第二次预调整</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E5%9D%97-%E9%A2%84%E8%B0%83%E6%95%B4"><span class="nav-number">7.</span> <span class="nav-text">文本块(预调整)</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jan Warlen"
+      src="/images/1.jpg">
+  <p class="site-author-name" itemprop="name">Jan Warlen</p>
+  <div class="site-description" itemprop="description">道路艰辛，磨砺前行</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">皖ICP备17001898号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;">
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jan Warlen</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"SI59Lqfcn8LIDHNEYsVHaptm-MdYXbMMI","app_key":"KWyHSYm5WQz8vOKf1dP2mFNB","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e34aa1d9b02a537cdb2a',
+      clientSecret: 'b64710eb326d596165dac47ac5d00b82d5aac262',
+      repo        : 'BlogComments',
+      owner       : 'janwarlen',
+      admin       : ['janwarlen'],
+      id          : '988cac9d81313dad0781b2420d53177e',
+        language: '',
+      distractionFreeMode: false,
+      proxy: 'http://janwarlen.com/login/oauth/access_token'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'dMn5kVFlVpzDrSz89HFDTstl-9Nh9j0Va',
+      appKey     : 'irzXPD5LFMvmK94HNMlUOdIe',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

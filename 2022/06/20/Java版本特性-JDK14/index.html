@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"janwarlen.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引用参考文档链接 jdk14特性列表  写在开头 switch已经可以正式使用，用起来很爽 官方开放了API可以访问堆外的外部内存，这个特性看起来在大数据领域可以发挥很大的作用 空指针异常信息的细节增强非常方便开发人员的本地开发过程，大大的简化了本地调试的工作">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java版本特性-JDK14">
+<meta property="og:url" content="http://janwarlen.com/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK14/index.html">
+<meta property="og:site_name" content="一帆磨砺">
+<meta property="og:description" content="引用参考文档链接 jdk14特性列表  写在开头 switch已经可以正式使用，用起来很爽 官方开放了API可以访问堆外的外部内存，这个特性看起来在大数据领域可以发挥很大的作用 空指针异常信息的细节增强非常方便开发人员的本地开发过程，大大的简化了本地调试的工作">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-20T12:22:33.000Z">
+<meta property="article:modified_time" content="2022-07-26T16:59:01.299Z">
+<meta property="article:author" content="Jan Warlen">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="JDK14">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://janwarlen.com/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK14/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Java版本特性-JDK14 | 一帆磨砺</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-110997978-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-110997978-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2d6b785ef2d7969dc8b9db1bcd382bfa";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="一帆磨砺" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一帆磨砺</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">生活所迫，一叶孤舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK14/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpg">
+      <meta itemprop="name" content="Jan Warlen">
+      <meta itemprop="description" content="道路艰辛，磨砺前行">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一帆磨砺">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java版本特性-JDK14
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-20 20:22:33" itemprop="dateCreated datePublished" datetime="2022-06-20T20:22:33+08:00">2022-06-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-27 00:59:01" itemprop="dateModified" datetime="2022-07-27T00:59:01+08:00">2022-07-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK14/" class="post-meta-item leancloud_visitors" data-flag-title="Java版本特性-JDK14" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK14/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK14/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引用参考文档链接"><a href="#引用参考文档链接" class="headerlink" title="引用参考文档链接"></a>引用参考文档链接</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://openjdk.org/projects/jdk/14/">jdk14特性列表</a></li>
+</ol>
+<h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol>
+<li>switch已经可以正式使用，用起来很爽</li>
+<li>官方开放了API可以访问堆外的外部内存，这个特性看起来在大数据领域可以发挥很大的作用</li>
+<li>空指针异常信息的细节增强非常方便开发人员的本地开发过程，大大的简化了本地调试的工作<span id="more"></span></li>
+</ol>
+<h1 id="instanceof增强-预调整"><a href="#instanceof增强-预调整" class="headerlink" title="instanceof增强(预调整)"></a><code>instanceof</code>增强(预调整)</h1><p>目前<code>instanceof</code>大多数使用方式如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (obj <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> (String) obj;</span><br><span class="line">    <span class="comment">// use s</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>先判断是否是String类型</li>
+<li>类型强转并赋值新变量</li>
+<li>变量使用<br>增强后，将1-2步骤合并，如下所示：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (obj <span class="keyword">instanceof</span> String s) &#123;</span><br><span class="line">    <span class="comment">// can use s here</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// can&#x27;t use s here</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+该特性属于代码简化，增加代码可读性。<br>目前JDK14未开放使用。</li>
+</ol>
+<h1 id="新增一个打包工具"><a href="#新增一个打包工具" class="headerlink" title="新增一个打包工具"></a>新增一个打包工具</h1><p>基于JavaFX的打包工具，能够将Java应用程序打包成各系统对应的应用类型，如exe、dmg、dep等。应该是针对客户端软件的更新。</p>
+<h1 id="G1增强：NUMA-Aware-内存分配"><a href="#G1增强：NUMA-Aware-内存分配" class="headerlink" title="G1增强：NUMA-Aware 内存分配"></a>G1增强：NUMA-Aware 内存分配</h1><p>随着使用非统一内存访问架构(NUMA)的机器越来越多，G1将针对NUMA场景处理增强</p>
+<ol>
+<li>年轻代将保证在同一NUMA节点分配内存，如果内存不够将触发垃圾回收</li>
+<li>老年代不需要保证在同一NUMA节点分配内存</li>
+<li>Humongous区域不适用该策略<br>通过启动参数<code>+XX:+UseNUMA</code>开启</li>
+</ol>
+<h1 id="JFR增强：事件流"><a href="#JFR增强：事件流" class="headerlink" title="JFR增强：事件流"></a>JFR增强：事件流</h1><p>在JDK14之前，JFR都是通过命令手动开启录制，转储文件，再进行分析，现在开放了API，可以通过Java代码进行持续的监控，接下来举例两种使用方式(还有其他使用方式)。<code>agent</code>领域的开发同学狂喜。</p>
+<h2 id="RecordingStream"><a href="#RecordingStream" class="headerlink" title="RecordingStream"></a>RecordingStream</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (<span class="type">var</span> <span class="variable">rs</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RecordingStream</span>()) &#123;</span><br><span class="line">    rs.enable(<span class="string">&quot;jdk.CPULoad&quot;</span>).withPeriod(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line">    rs.enable(<span class="string">&quot;jdk.JavaMonitorEnter&quot;</span>).withThreshold(Duration.ofMillis(<span class="number">10</span>));</span><br><span class="line">    rs.onEvent(<span class="string">&quot;jdk.CPULoad&quot;</span>, event -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;func1:jdk.CPULoad:&quot;</span> + event.getFloat(<span class="string">&quot;machineTotal&quot;</span>));</span><br><span class="line">    &#125;);</span><br><span class="line">    rs.onEvent(<span class="string">&quot;jdk.JavaMonitorEnter&quot;</span>, event -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;func1:jdk.JavaMonitorEnter:&quot;</span> + event.getClass(<span class="string">&quot;monitorClass&quot;</span>));</span><br><span class="line">    &#125;);</span><br><span class="line">    rs.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方法可以直接进行指定的参数录制，并在对应的事件中触发，可由自定义代码收集</p>
+<h2 id="EventStream-openRepository"><a href="#EventStream-openRepository" class="headerlink" title="EventStream::openRepository()"></a>EventStream::openRepository()</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="type">EventStream</span> <span class="variable">eventStream</span> <span class="operator">=</span> EventStream.openRepository();</span><br><span class="line">    <span class="keyword">try</span> (eventStream) &#123;</span><br><span class="line">        eventStream.onEvent(recordedEvent -&gt; &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;func2:getEventType:&quot;</span> + recordedEvent.getEventType().getName());</span><br><span class="line">        &#125;);</span><br><span class="line">        eventStream.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方式需要在进程外通过命令行或其他方式开启JFR才能够开始录制。</p>
+<h1 id="硬件适配增强：Non-Volatile-Mapped-Byte-Buffers"><a href="#硬件适配增强：Non-Volatile-Mapped-Byte-Buffers" class="headerlink" title="硬件适配增强：Non-Volatile Mapped Byte Buffers"></a>硬件适配增强：Non-Volatile Mapped Byte Buffers</h1><p>针对 Linux&#x2F;x64 和 Linux&#x2F;AArch64 的非易失性存储器 (NVM)场景下，应用程序可以有效且连贯的访问和更新NVM。<br>官方文档说</p>
+<blockquote>
+<p>NVM offers the opportunity for application programmers to create and update program state across program runs without incurring the significant copying and&#x2F;or translation costs that output to and input from a persistent medium normally implies. This is particularly significant for transactional programs, where regular persistence of in-doubt state is required to enable crash recovery.</p>
+</blockquote>
+<p>跨程序的数据交互场景，笔者想不到能够容易理解的业务场景。这中特定的硬件组合，和JDK10提出的<code>Heap Allocation on Alternative Memory Devices</code>很类似，应该在大数据集群处理的业务场景可能会有用处？</p>
+<h1 id="空指针异常信息增强"><a href="#空指针异常信息增强" class="headerlink" title="空指针异常信息增强"></a>空指针异常信息增强</h1><p>以前的空指针异常信息只显示到某一行，如果某一行的变量比较多，是没办法直接定位哪个变量为null的，这时候基本上都需要本地再运行debug才行，而JDK14中，通过启动参数<code>-XX:+ShowCodeDetailsInExceptionMessages</code>可以开启更详细的空指针异常信息.<br>需要注意的是，官方文档提出这种详细信息是经过了额外的计算的，因此性能方面需要考虑自己的应用空指针异常是否频繁，避免带来额外的性能开销。</p>
+<h2 id="异常示例代码"><a href="#异常示例代码" class="headerlink" title="异常示例代码"></a>异常示例代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NPE</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">func</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">C</span> <span class="variable">c</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">C</span>();</span><br><span class="line">        c.b = <span class="keyword">new</span> <span class="title class_">B</span>();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            c.b.a.name = <span class="string">&quot;null&quot;</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            B.test().arr[<span class="number">1</span>][<span class="number">2</span>] = <span class="number">3</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">        <span class="keyword">public</span> String name;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span>[][] arr;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">B</span> &#123;</span><br><span class="line">        <span class="keyword">public</span> A a;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> A <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">A</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">C</span> &#123;</span><br><span class="line">        <span class="keyword">public</span> B b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="异常信息"><a href="#异常信息" class="headerlink" title="异常信息"></a>异常信息</h2><h3 id="开启前"><a href="#开启前" class="headerlink" title="开启前"></a>开启前</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">java.lang.NullPointerException</span><br><span class="line">	at com.janwarlen.feature.NPE.func(NPE.java:<span class="number">9</span>)</span><br><span class="line">	at com.janwarlen.Demo.main(Demo.java:<span class="number">15</span>)</span><br><span class="line">java.lang.NullPointerException</span><br><span class="line">	at com.janwarlen.feature.NPE.func(NPE.java:<span class="number">14</span>)</span><br><span class="line">	at com.janwarlen.Demo.main(Demo.java:<span class="number">15</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="开启后"><a href="#开启后" class="headerlink" title="开启后"></a>开启后</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">java.lang.NullPointerException: Cannot assign field <span class="string">&quot;name&quot;</span> because <span class="string">&quot;c.b.a&quot;</span> is <span class="literal">null</span></span><br><span class="line">	at com.janwarlen.feature.NPE.func(NPE.java:<span class="number">9</span>)</span><br><span class="line">	at com.janwarlen.Demo.main(Demo.java:<span class="number">15</span>)</span><br><span class="line">java.lang.NullPointerException: Cannot load from object array because <span class="string">&quot;com.janwarlen.feature.NPE$B.test().arr&quot;</span> is <span class="literal">null</span></span><br><span class="line">	at com.janwarlen.feature.NPE.func(NPE.java:<span class="number">14</span>)</span><br><span class="line">	at com.janwarlen.Demo.main(Demo.java:<span class="number">15</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="新的数据建模方式-预调整"><a href="#新的数据建模方式-预调整" class="headerlink" title="新的数据建模方式(预调整)"></a>新的数据建模方式(预调整)</h1><p>目前想要封装一个数据模型类，有很多方法需要重复的编码，如<code>equals</code>、<code>hashcode</code>、<code>toString</code>等。因此JDK14中预添加了该技术特性(添加但未开放使用)，以便开发人员更简单的创建数据模型类。因未开放使用，因此只能从官方文档上简单的阅读，从表面上看是简化了数据模型的类的创建，但是看起来实际使用效果并不会太好，因为数据模型类的创建，那些重复编码的函数并不是非常重要的部分，继承多态、工程结构才是。使用该特性是有额外的限制的，比如：不能继承于其他的类，不能为抽象类，并且是隐式的<code>final</code>等等。综合对比，似乎该特性即便开放使用，也只能在有限的场景里发挥作用。</p>
+<h1 id="Switch增强-正式开发使用"><a href="#Switch增强-正式开发使用" class="headerlink" title="Switch增强(正式开发使用)"></a>Switch增强(正式开发使用)</h1><p>前两次JDK的预调整终于开放使用，放Demo代码</p>
+<h2 id="增强前"><a href="#增强前" class="headerlink" title="增强前"></a>增强前</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">func1</span><span class="params">(String arg)</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> (arg) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;1&quot;</span>:</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;2&quot;</span>:</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;3&quot;</span>:</span><br><span class="line">            System.out.println(<span class="string">&quot;small&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;4&quot;</span>:</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;5&quot;</span>:</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;6&quot;</span>:</span><br><span class="line">            System.out.println(<span class="string">&quot;big&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            System.out.println(<span class="string">&quot;illegal&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">func2</span><span class="params">(<span class="type">int</span> e)</span> &#123;</span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="keyword">switch</span> (e) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            x = <span class="number">111</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">            x = <span class="number">222</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">            x = <span class="number">233</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            x = <span class="number">666</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="增强后"><a href="#增强后" class="headerlink" title="增强后"></a>增强后</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">func1Enhanced</span><span class="params">(String arg)</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> (arg) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;1&quot;</span>, <span class="string">&quot;2&quot;</span>, <span class="string">&quot;3&quot;</span> -&gt; System.out.println(<span class="string">&quot;small&quot;</span>);</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;4&quot;</span>, <span class="string">&quot;5&quot;</span>, <span class="string">&quot;6&quot;</span> -&gt; System.out.println(<span class="string">&quot;big&quot;</span>);</span><br><span class="line">        <span class="keyword">default</span> -&gt; System.out.println(<span class="string">&quot;illegal&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">func2Enhanced</span><span class="params">(<span class="type">int</span> e)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> <span class="keyword">switch</span> (e) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span> -&gt; <span class="number">111</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span> -&gt; <span class="number">222</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">3</span> -&gt; <span class="number">233</span>;</span><br><span class="line">        <span class="keyword">default</span> -&gt; <span class="number">666</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">    System.out.println(x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="yield"><a href="#yield" class="headerlink" title="yield"></a>yield</h2><p>官方文档没有明确说明yield的作用，从示例代码来看(和之前JDK版本的说明)，该关键字使用场景为case中执行语句有多条，但是又必须返回值的场景。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">func3</span><span class="params">(String yield)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">d</span> <span class="operator">=</span> <span class="keyword">switch</span> (yield) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;MONDAY&quot;</span> -&gt; &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;monday&quot;</span>);</span><br><span class="line">                yield <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">&quot;TUESDAY&quot;</span> -&gt; &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;TUESDAY&quot;</span>);</span><br><span class="line">                yield <span class="number">2</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">default</span> -&gt; &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;not monday&quot;</span>);</span><br><span class="line">                yield <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        System.out.println(<span class="string">&quot;func3:&quot;</span> + d);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="弃用-Solaris-and-SPARC-Ports"><a href="#弃用-Solaris-and-SPARC-Ports" class="headerlink" title="弃用 Solaris and SPARC Ports"></a>弃用 Solaris and SPARC Ports</h1><p>不太明白这俩是干嘛的，也没有搜到有博主分享关于这两个的文档，根据官方文档的这段话</p>
+<blockquote>
+<p>Dropping support for these ports will enable contributors in the OpenJDK Community to accelerate the development of new features that will move the platform forward.</p>
+</blockquote>
+<p>看着像是针对特殊的系统平台类的兼容，该弃用应该也是为了更方便的迭代和扩展。</p>
+<h1 id="删除垃圾回收器-CMS-Concurrent-Mark-Sweep"><a href="#删除垃圾回收器-CMS-Concurrent-Mark-Sweep" class="headerlink" title="删除垃圾回收器: CMS(Concurrent Mark Sweep)"></a>删除垃圾回收器: CMS(Concurrent Mark Sweep)</h1><p>G1已经可以完全替代CMS，从性能和效率各个方面，JDK9标注废弃，等到这个版本才正式删除。</p>
+<h1 id="ZGC移植：macOS、Windows-实验性"><a href="#ZGC移植：macOS、Windows-实验性" class="headerlink" title="ZGC移植：macOS、Windows(实验性)"></a>ZGC移植：macOS、Windows(实验性)</h1><p>方便开发人员在本地调试，也针对开发桌面客户端软件的用户能够使用ZGC。</p>
+<h1 id="垃圾回收算法弃用：ParallelScavenge-SerialOld"><a href="#垃圾回收算法弃用：ParallelScavenge-SerialOld" class="headerlink" title="垃圾回收算法弃用：ParallelScavenge + SerialOld"></a>垃圾回收算法弃用：ParallelScavenge + SerialOld</h1><p>官方假设使用这种算法组合的人较少才进行弃用，如果后续反馈的人数较多，可能会重新启用。<br>官方认为这种组合仅适用于具有非常大的年轻一代和非常小的老一代的部署。<br>涉及启动参数:<code>-XX:+UseParallelGC -XX:-UseParallelOldGC -XX:UseParallelOldGC</code></p>
+<h1 id="删除Pack200及其API"><a href="#删除Pack200及其API" class="headerlink" title="删除Pack200及其API"></a>删除Pack200及其API</h1><p>JDK11弃用的，在本此JDK迭代中彻底删除<br>该针对jar包的压缩方案已经不再适用于现在的各种场景。</p>
+<h1 id="文本块-第二次预调整"><a href="#文本块-第二次预调整" class="headerlink" title="文本块(第二次预调整)"></a>文本块(第二次预调整)</h1><p>为了更好地控制换行符和空格的处理，我们引入了两个新的转义序列。</p>
+<h2 id="当前行末尾添加-表示不换行"><a href="#当前行末尾添加-表示不换行" class="headerlink" title="当前行末尾添加\表示不换行"></a>当前行末尾添加\表示不换行</h2><p>该转义仅在文本块中生效。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">literal</span> <span class="operator">=</span> <span class="string">&quot;Lorem ipsum dolor sit amet, consectetur adipiscing &quot;</span> +</span><br><span class="line">                 <span class="string">&quot;elit, sed do eiusmod tempor incididunt ut labore &quot;</span> +</span><br><span class="line">                 <span class="string">&quot;et dolore magna aliqua.&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>等同于</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">text</span> <span class="operator">=</span> <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">                Lorem ipsum dolor sit amet, consectetur adipiscing \</span></span><br><span class="line"><span class="string">                elit, sed do eiusmod tempor incididunt ut labore \</span></span><br><span class="line"><span class="string">                et dolore magna aliqua.\</span></span><br><span class="line"><span class="string">                &quot;&quot;&quot;</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="s"><a href="#s" class="headerlink" title="\s"></a>\s</h2><p>等效于’ ‘。该转义在String中都可以使用。<br>应该是针对String::stripIndent()和trim()提出的，<code>Escape sequences aren&#39;t translated until after incident space stripping</code>，使用\s防止文本块中行末的空格被清空。</p>
+<h1 id="添加API以便Java可以访问堆外外部内存"><a href="#添加API以便Java可以访问堆外外部内存" class="headerlink" title="添加API以便Java可以访问堆外外部内存"></a>添加API以便Java可以访问堆外外部内存</h1><ol>
+<li>避开垃圾回收器维护大量的缓存</li>
+<li>跨进程通信</li>
+<li>映射文件到内存<br>等等场景皆可使用，不过官方仅是给出API可以访问堆外的外部内存，具体的功能实现还需要用户自己去封装。<br>核心三个类<code>MemorySegment/MemoryAddress/MemoryLayout</code></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/JDK14/" rel="tag"># JDK14</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/06/20/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK13/" rel="prev" title="Java版本特性-JDK13">
+      <i class="fa fa-chevron-left"></i> Java版本特性-JDK13
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/06/21/Java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-JDK15/" rel="next" title="Java版本特性-JDK15">
+      Java版本特性-JDK15 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-valine">valine</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane valine" id="comment-valine">
+              <div class="comments" id="valine-comments"></div>
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3%E9%93%BE%E6%8E%A5"><span class="nav-number">1.</span> <span class="nav-text">引用参考文档链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%BC%80%E5%A4%B4"><span class="nav-number">2.</span> <span class="nav-text">写在开头</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#instanceof%E5%A2%9E%E5%BC%BA-%E9%A2%84%E8%B0%83%E6%95%B4"><span class="nav-number">3.</span> <span class="nav-text">instanceof增强(预调整)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E4%B8%80%E4%B8%AA%E6%89%93%E5%8C%85%E5%B7%A5%E5%85%B7"><span class="nav-number">4.</span> <span class="nav-text">新增一个打包工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#G1%E5%A2%9E%E5%BC%BA%EF%BC%9ANUMA-Aware-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D"><span class="nav-number">5.</span> <span class="nav-text">G1增强：NUMA-Aware 内存分配</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JFR%E5%A2%9E%E5%BC%BA%EF%BC%9A%E4%BA%8B%E4%BB%B6%E6%B5%81"><span class="nav-number">6.</span> <span class="nav-text">JFR增强：事件流</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RecordingStream"><span class="nav-number">6.1.</span> <span class="nav-text">RecordingStream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EventStream-openRepository"><span class="nav-number">6.2.</span> <span class="nav-text">EventStream::openRepository()</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E9%80%82%E9%85%8D%E5%A2%9E%E5%BC%BA%EF%BC%9ANon-Volatile-Mapped-Byte-Buffers"><span class="nav-number">7.</span> <span class="nav-text">硬件适配增强：Non-Volatile Mapped Byte Buffers</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A9%BA%E6%8C%87%E9%92%88%E5%BC%82%E5%B8%B8%E4%BF%A1%E6%81%AF%E5%A2%9E%E5%BC%BA"><span class="nav-number">8.</span> <span class="nav-text">空指针异常信息增强</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="nav-number">8.1.</span> <span class="nav-text">异常示例代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E4%BF%A1%E6%81%AF"><span class="nav-number">8.2.</span> <span class="nav-text">异常信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E5%89%8D"><span class="nav-number">8.2.1.</span> <span class="nav-text">开启前</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E5%90%8E"><span class="nav-number">8.2.2.</span> <span class="nav-text">开启后</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B0%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1%E6%96%B9%E5%BC%8F-%E9%A2%84%E8%B0%83%E6%95%B4"><span class="nav-number">9.</span> <span class="nav-text">新的数据建模方式(预调整)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Switch%E5%A2%9E%E5%BC%BA-%E6%AD%A3%E5%BC%8F%E5%BC%80%E5%8F%91%E4%BD%BF%E7%94%A8"><span class="nav-number">10.</span> <span class="nav-text">Switch增强(正式开发使用)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A2%9E%E5%BC%BA%E5%89%8D"><span class="nav-number">10.1.</span> <span class="nav-text">增强前</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A2%9E%E5%BC%BA%E5%90%8E"><span class="nav-number">10.2.</span> <span class="nav-text">增强后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#yield"><span class="nav-number">10.3.</span> <span class="nav-text">yield</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%83%E7%94%A8-Solaris-and-SPARC-Ports"><span class="nav-number">11.</span> <span class="nav-text">弃用 Solaris and SPARC Ports</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8-CMS-Concurrent-Mark-Sweep"><span class="nav-number">12.</span> <span class="nav-text">删除垃圾回收器: CMS(Concurrent Mark Sweep)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ZGC%E7%A7%BB%E6%A4%8D%EF%BC%9AmacOS%E3%80%81Windows-%E5%AE%9E%E9%AA%8C%E6%80%A7"><span class="nav-number">13.</span> <span class="nav-text">ZGC移植：macOS、Windows(实验性)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95%E5%BC%83%E7%94%A8%EF%BC%9AParallelScavenge-SerialOld"><span class="nav-number">14.</span> <span class="nav-text">垃圾回收算法弃用：ParallelScavenge + SerialOld</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A0%E9%99%A4Pack200%E5%8F%8A%E5%85%B6API"><span class="nav-number">15.</span> <span class="nav-text">删除Pack200及其API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E5%9D%97-%E7%AC%AC%E4%BA%8C%E6%AC%A1%E9%A2%84%E8%B0%83%E6%95%B4"><span class="nav-number">16.</span> <span class="nav-text">文本块(第二次预调整)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%93%E5%89%8D%E8%A1%8C%E6%9C%AB%E5%B0%BE%E6%B7%BB%E5%8A%A0-%E8%A1%A8%E7%A4%BA%E4%B8%8D%E6%8D%A2%E8%A1%8C"><span class="nav-number">16.1.</span> <span class="nav-text">当前行末尾添加\表示不换行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#s"><span class="nav-number">16.2.</span> <span class="nav-text">\s</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0API%E4%BB%A5%E4%BE%BFJava%E5%8F%AF%E4%BB%A5%E8%AE%BF%E9%97%AE%E5%A0%86%E5%A4%96%E5%A4%96%E9%83%A8%E5%86%85%E5%AD%98"><span class="nav-number">17.</span> <span class="nav-text">添加API以便Java可以访问堆外外部内存</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jan Warlen"
+      src="/images/1.jpg">
+  <p class="site-author-name" itemprop="name">Jan Warlen</p>
+  <div class="site-description" itemprop="description">道路艰辛，磨砺前行</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">皖ICP备17001898号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;">
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jan Warlen</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"SI59Lqfcn8LIDHNEYsVHaptm-MdYXbMMI","app_key":"KWyHSYm5WQz8vOKf1dP2mFNB","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e34aa1d9b02a537cdb2a',
+      clientSecret: 'b64710eb326d596165dac47ac5d00b82d5aac262',
+      repo        : 'BlogComments',
+      owner       : 'janwarlen',
+      admin       : ['janwarlen'],
+      id          : '483efad6131a7496ddf2323074237994',
+        language: '',
+      distractionFreeMode: false,
+      proxy: 'http://janwarlen.com/login/oauth/access_token'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'dMn5kVFlVpzDrSz89HFDTstl-9Nh9j0Va',
+      appKey     : 'irzXPD5LFMvmK94HNMlUOdIe',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

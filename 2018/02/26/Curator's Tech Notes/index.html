@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"janwarlen.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="测试代码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Curator&#39;s Tech Notes 翻译与部分验证">
+<meta property="og:url" content="http://janwarlen.com/2018/02/26/Curator's%20Tech%20Notes/index.html">
+<meta property="og:site_name" content="一帆磨砺">
+<meta property="og:description" content="测试代码">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-02-26T08:41:09.000Z">
+<meta property="article:modified_time" content="2022-07-26T16:59:01.181Z">
+<meta property="article:author" content="Jan Warlen">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Curator">
+<meta property="article:tag" content="ZooKeeper">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://janwarlen.com/2018/02/26/Curator's%20Tech%20Notes/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Curator's Tech Notes 翻译与部分验证 | 一帆磨砺</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-110997978-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-110997978-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2d6b785ef2d7969dc8b9db1bcd382bfa";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="一帆磨砺" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一帆磨砺</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">生活所迫，一叶孤舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2018/02/26/Curator's%20Tech%20Notes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpg">
+      <meta itemprop="name" content="Jan Warlen">
+      <meta itemprop="description" content="道路艰辛，磨砺前行">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一帆磨砺">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Curator's Tech Notes 翻译与部分验证
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-02-26 16:41:09" itemprop="dateCreated datePublished" datetime="2018-02-26T16:41:09+08:00">2018-02-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-27 00:59:01" itemprop="dateModified" datetime="2022-07-27T00:59:01+08:00">2022-07-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/02/26/Curator's%20Tech%20Notes/" class="post-meta-item leancloud_visitors" data-flag-title="Curator's Tech Notes 翻译与部分验证" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2018/02/26/Curator's%20Tech%20Notes/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2018/02/26/Curator's%20Tech%20Notes/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a target="_blank" rel="noopener" href="https://github.com/JanWarlen/JavaPractice/tree/master/ThirdPartyComponents/Curator">测试代码</a></p>
+<span id="more"></span>
+
+<h4 id="ZooKeeper-watches-are-single-threaded"><a href="#ZooKeeper-watches-are-single-threaded" class="headerlink" title="ZooKeeper watches are single threaded."></a>ZooKeeper watches are single threaded.</h4><p>ZooKeeper的观察器（个人更愿意称作触发器，后续叫做触发器）是单线程的。</p>
+<blockquote>
+<p>When your watcher is called, it should return as quickly as possible. All ZooKeeper watchers are serialized - processed by a single thread. Thus, no other watchers can be processed while your watcher is running. For example, a Curator user had a watcher handler something like this:</p>
+</blockquote>
+<p>当你的触发器被触发，建议尽快返回结果。所有的ZooKeeper（在同一启动实例里的同一zk客户端实例）的触发器都是被一个单线程串行处理的，所以当一个触发器正在执行内部逻辑时，其他触发器无法运行其内部逻辑。下面是一个触发器的简单例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">InterProcessMutex   lock = ...</span><br><span class="line"> </span><br><span class="line">public void process(WatchedEvent event)</span><br><span class="line">&#123;</span><br><span class="line">    lock.acquire();</span><br><span class="line">       ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>This cannot work. Curator’s InterProcessMutex relies on ZooKeeper watchers getting notified. The code above, however, is holding on to the ZooKeeper watcher processing thread. The way to fix this is to run the code that needs a lock in a separate thread. e.g.</p>
+</blockquote>
+<p>（非翻译）上面的做法是无效的，并且会影响其他的watcher。Curator的单个zk客户端实例的所有watcher都是单线程处理，所以锁的使用在单线程顺序执行时无意义的，并且因为锁的阻塞，会影响到后续watcher的执行时间。避免阻塞但是又想使用锁可以使用如下方法,将lock使用在watcher中另起的线程中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">InterProcessMutex   lock = ...</span><br><span class="line">ExecutorService    service = ...</span><br><span class="line"> </span><br><span class="line">public void process(WatchedEvent event)</span><br><span class="line">&#123;</span><br><span class="line">    service.submit(new Callable&lt;Void&gt;()&#123;</span><br><span class="line">        Void call() &#123;</span><br><span class="line">            lock.acquire();</span><br><span class="line">              ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="InterProcessMutex-acquire-can-be-used-to-return-immediately-if-lock-can’t-be-acquired"><a href="#InterProcessMutex-acquire-can-be-used-to-return-immediately-if-lock-can’t-be-acquired" class="headerlink" title="InterProcessMutex acquire() can be used to return immediately if lock can’t be acquired."></a>InterProcessMutex acquire() can be used to return immediately if lock can’t be acquired.</h4><blockquote>
+<p>It’s not obvious from the docs, but calling InterProcessMutex.acquire(0, unit) will return immediately (i.e. without any waiting) if the lock cannot be acquired.<br>e.g.</p>
+</blockquote>
+<p>(非翻译)InterProcessMutex acquire()不会受到阻塞影响，会立即返回，不会等待获取锁。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">InterProcessMutex lock = ...</span><br><span class="line">boolean didLock = lock.acquire(0, TimeUnit.any);</span><br><span class="line">if ( !didLock )</span><br><span class="line">&#123;</span><br><span class="line">    // comes back immediately</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Dealing-with-session-failure"><a href="#Dealing-with-session-failure" class="headerlink" title="Dealing with session failure"></a>Dealing with session failure</h4><blockquote>
+<p>ZooKeeper clients maintain a session with the server ensemble. Ephemeral nodes are tied to this session. When writing ZooKeeper-based applications you must deal with session expirations (due to network partitions, server crashes, etc.). This ZooKeeper FAQ discusses it: <a target="_blank" rel="noopener" href="http://wiki.apache.org/hadoop/ZooKeeper/FAQ#A3">http://wiki.apache.org/hadoop/ZooKeeper/FAQ#A3</a>  </p>
+</blockquote>
+<p>zk客户端实例需要维护和服务器的会话。临时节点是绑定在会话中的（连接和session断掉时被删除，已验证）。编写使用zk的应用程序必须要处理session的失效事件（比如网络分裂（network partition）、服务器故障等）</p>
+<blockquote>
+<p>For the most part, Curator shields you from the details of session management. However, Curator’s behavior can be modified. By default, Curator treats session failures the same way that it treats connection failures: i.e. the current retry policy is checked and, if permitted, operations are retried.  </p>
+</blockquote>
+<p>大多数情况下，Curator对用户屏蔽了session管理。但是，Curator的策略是可以被修改的。默认情况下，Curator会使用连接失效的处理方式处理session失效事件。—检查当前的重试策略，如果已授权，则重试操作。</p>
+<blockquote>
+<p>There are use-cases, though, where a series of operations must be tied to the ZooKeeper session. For example, an ephemeral node is created as a kind of marker then several other ZooKeeper operations are performed. If the session were to fail at any point, the entire operation should fail. Curator’s default behavior doesn’t do this. When you need this behavior, use:<code>SessionFailRetryLoop</code>  </p>
+</blockquote>
+<p>但是有些用户操作需要使用zk的session来保证一系列操作的完整性。比如说，先创建一个临时节点，然后执行其他几个zk的操作。如果在任何一个环节发生了session异常，那么整个（系列）操作应该是失败的。但是Curator的默认策略并没有采取这个措施。如果你也需要采取这个策略，请使用<code>SessionFailRetryLoop</code></p>
+<blockquote>
+<p>This is similar to the standard retry loop but if a session fails, any future Curator methods (in the same thread) will also fail.</p>
+</blockquote>
+<p>这和标准的循环重试非常相像，但是一旦session发生异常，所有的后续Curator的操作（同线程）都将失败。</p>
+<h4 id="ZooKeeper-makes-a-very-bad-Queue-source"><a href="#ZooKeeper-makes-a-very-bad-Queue-source" class="headerlink" title="ZooKeeper makes a very bad Queue source"></a>ZooKeeper makes a very bad Queue source</h4><blockquote>
+<p>The ZooKeeper recipes page lists Queues as a possible use-case for ZooKeeper. Curator includes several Queue recipes. In our experience, however, it is a bad idea to use ZooKeeper as a Queue:</p>
+</blockquote>
+<p><code>The ZooKeeper recipes page lists Queues</code>是zookeeper使用的一种方式。Curator包含大量的<code>Queue recipes</code>。但是，根据我们的经验，使用zookeeper作为队列是十分不建议的，理由如下：</p>
+<blockquote>
+<ul>
+<li>ZooKeeper has a 1MB transport limitation. In practice this means that ZNodes must be relatively small. Typically, queues can contain many thousands of messages.</li>
+</ul>
+</blockquote>
+<p>zookeeper通信有1MB的限制（每个节点大小限制）。因此这意味着在实践中ZNodes往往相对较小。一般情况下，队列可以保存数千条消息。</p>
+<blockquote>
+<ul>
+<li>ZooKeeper can slow down considerably on startup if there are many large ZNodes. This will be common if you are using ZooKeeper for queues. You will need to significantly increase initLimit and syncLimit.</li>
+</ul>
+</blockquote>
+<p>如果zookeeper中含有一定规模的大节点，zookeeper的启动速度将会明显降低。如果真的使用zookeeper作为队列使用这将会是非常常见的情况。使用者必须跨越式的增加<code>initLimit</code>和<code>syncLimit</code>。</p>
+<blockquote>
+<ul>
+<li>If a ZNode gets too big it can be extremely difficult to clean. getChildren() will fail on the node. At Netflix we had to create a special-purpose program that had a huge value for jute.maxbuffer in order to get the nodes and delete them.</li>
+</ul>
+</blockquote>
+<p>如果ZNode变得太大，清理将会更加艰难。<code>getChildren()</code>也会失败。在Netflix，我们必须创建含有大容量的<code>jute.maxbuffer</code>的特殊程序以获取节点并删除。</p>
+<blockquote>
+<ul>
+<li>ZooKeeper can start to perform badly if there are many nodes with thousands of children.</li>
+</ul>
+</blockquote>
+<p>如果有太多节点有数千的子节点，zookeeper的性能将会受到严重影响。</p>
+<blockquote>
+<ul>
+<li>The ZooKeeper database is kept entirely in memory. So, you can never have more messages than can fit in memory.</li>
+</ul>
+</blockquote>
+<p>因为zookeeper是保存在内存中的，所以内存大小会限制消息内容的多少。</p>
+<h4 id="Porting-Netflix-Curator-code-to-Apache-Curator"><a href="#Porting-Netflix-Curator-code-to-Apache-Curator" class="headerlink" title="Porting Netflix Curator code to Apache Curator"></a>Porting Netflix Curator code to Apache Curator</h4><blockquote>
+<p>The APIs in Apache Curator are exactly the same as Netflix Curator. The only difference is the package names. Simply replace com.netflix.* with org.apache.*.</p>
+</blockquote>
+<p><code>Netflix Curator</code>和<code>Apache Curator</code>是完全一致的，只需要修改包名就可以了。</p>
+<h4 id="Friends-don’t-let-friends-write-ZooKeeper-recipes"><a href="#Friends-don’t-let-friends-write-ZooKeeper-recipes" class="headerlink" title="Friends don’t let friends write ZooKeeper recipes"></a>Friends don’t let friends write ZooKeeper recipes</h4><blockquote>
+<p>Writing ZooKeeper code is on par with the difficulty in writing concurrent language code. As we all know Concurrency is Hard! For ZooKeeper in particular, there are numerous edge case and undocumented behaviors that you must know in order to write correct recipes. In light of this, we strongly suggest you use one of the existing Curator pre-built recipes instead of writing raw ZooKeeper code yourself. At minimum, use a Curator recipe as a base for your work.</p>
+</blockquote>
+<p>编写zookeeper的代码的难度和并发编程的难度基本一致。而并发编程是众所周知的困难！特别是对于zookeeper来说，要编写出正确的<code>recipe</code>，使用者必须知道非常繁多的边界情况和无文档的特性。因此，强烈建议使用Curator的预编译<code>recipes</code>而不是自己撰写zookeeper代码。至少，使用<code>Curator recipe</code>作为使用者的工作基础。</p>
+<h4 id="Curator-Recipes-Own-Their-ZNode-x2F-Paths"><a href="#Curator-Recipes-Own-Their-ZNode-x2F-Paths" class="headerlink" title="Curator Recipes Own Their ZNode&#x2F;Paths"></a>Curator Recipes Own Their ZNode&#x2F;Paths</h4><blockquote>
+<p>Do not use paths passed to Curator recipes. Curator recipes rely on owning those paths and the ZNodes in those paths. For example, do not add your own ZNodes to the path passed to LeaderSelector, etc.</p>
+</blockquote>
+<p>不要使用传递给<code>Curator recipes</code>的路径。<code>Curator recipes</code>依赖于这些路径及其子节点。比如，不要在传递给<code>LeaderSelector</code>的路径下添加使用者自己的节点，范例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">selector = <span class="keyword">new</span> <span class="title class_">LeaderSelector</span>(client, <span class="string">&quot;/leader&quot;</span>, listener);</span><br><span class="line">client.create().forPath(<span class="string">&quot;/leader/mynode&quot;</span>);   <span class="comment">// THIS IS NOT SUPPORTED!</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Also, do not delete nodes that have been “given” to a Curator recipe.</p>
+</blockquote>
+<p>同样的，也别删除。</p>
+<h4 id="Controlling-Curator-Logging"><a href="#Controlling-Curator-Logging" class="headerlink" title="Controlling Curator Logging"></a>Controlling Curator Logging</h4><blockquote>
+<p>Curator logging can be customized. Use the following switches via the command line (-D) or via System.setProperty()</p>
+</blockquote>
+<p>Curator日志可以自定义。通过命令行(-D)或者<code>System.setProperty()</code>使用如下配置：</p>
+<table>
+<thead>
+<tr>
+<th>Switch</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>curator-dont-log-connection-problems&#x3D;true</td>
+<td>Normally, connection issues are logged as the warning “Connection attempt unsuccessful…” or the error “Connection timed out…”. This switch turns these messages off.</td>
+</tr>
+<tr>
+<td>curator-log-events&#x3D;true</td>
+<td>All ZooKeeper events will be logged as DEBUG.</td>
+</tr>
+<tr>
+<td>curator-log-only-first-connection-issue-as-error-level&#x3D;true</td>
+<td>When this switch is enabled, the first connection issue is logged as ERROR. Additional connection issues are logged as DEBUG until the connection is restored.</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>curator-dont-log-connection-problems&#x3D;true</td>
+<td>正常情况下，连接问题会被记录为警告”Connection attempt unsuccessful…”或者错误”Connection timed out…”，该配置将会关闭这些信息</td>
+</tr>
+<tr>
+<td>curator-log-events&#x3D;true</td>
+<td>所有的zookeeper事件的记录都为DEBUG</td>
+</tr>
+<tr>
+<td>curator-log-only-first-connection-issue-as-error-level&#x3D;true</td>
+<td>当启用该配置，第一次连接问题会被记录为错误。额外的连接问题会被以DEBUG记录直到连接恢复</td>
+</tr>
+</tbody></table>
+<h4 id="PathChildrenCache-now-uses-getData-instead-of-checkExists"><a href="#PathChildrenCache-now-uses-getData-instead-of-checkExists" class="headerlink" title="PathChildrenCache now uses getData() instead of checkExists()."></a>PathChildrenCache now uses getData() instead of checkExists().</h4><blockquote>
+<p>Curator 2.5.0 changes internal behavior for PathChildrenCache. Now, regardless of whether or not “cacheData” is set to true, PathChildrenCache will always call getData on the nodes. This is due to <a target="_blank" rel="noopener" href="https://issues.apache.org/jira/browse/CURATOR-107">CURATOR-107</a>. It’s been shown that using checkExists() with watchers can cause a type of memory leak as watchers will be left dangling on non-existent ZNodes. Calling getData() works around this issue. However, it’s possible that this change will affect performance. If you would like the old behavior of using checkExists(), you can set a system property: add -Dcurator-path-children-cache-use-exists&#x3D;true to your command line or call System.setProperty(“curator-path-children-cache-use-exists”, “true”).</p>
+</blockquote>
+<p>Curator 2.5.0 改变了<code>PathChildrenCache</code>的内部行为。现在，不论是否设置<code>cacheData</code>为true，<code>PathChildrenCache</code>都将会在节点上调用方法<code>getData</code>。原因可以查看该文档<a target="_blank" rel="noopener" href="https://issues.apache.org/jira/browse/CURATOR-107">CURATOR-107</a>。该文档写明，在观察者中使用<code>checkExists()</code>将会导致某种类存泄露，因为观察者有可能会挂在不存在的节点上。调用<code>cacheData</code>可以解决此问题。但是，这种改变可能会影响性能。如果你更愿意使用旧方式处理<code>checkExists()</code>，你可以设置系统属性：<br>添加<code>-Dcurator-path-children-cache-use-exists=true</code>在命令行或者使用函数<code>System.setProperty(&quot;curator-path-children-cache-use-exists&quot;, &quot;true&quot;)</code></p>
+<h4 id="JVM-pauses-can-cause-unexpected-client-state-with-improperly-chosen-session-timeouts"><a href="#JVM-pauses-can-cause-unexpected-client-state-with-improperly-chosen-session-timeouts" class="headerlink" title="JVM pauses can cause unexpected client state with improperly chosen session timeouts"></a>JVM pauses can cause unexpected client state with improperly chosen session timeouts</h4><blockquote>
+<blockquote>
+<p>Background discussion: <a target="_blank" rel="noopener" href="http://qnalist.com/questions/6134306/locking-leader-election-and-dealing-with-session-loss">http://qnalist.com/questions/6134306/locking-leader-election-and-dealing-with-session-loss</a></p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>ZooKeeper&#x2F;Curator recipes rely on a consistent view of the state of the ensemble. ZooKeeper clients maintain a session with the server they are connected to. Clients maintain periodic heartbeats to the server to maintain this session. If a heartbeat is missed, the client goes into Disconnected state. When this happens, Curator goes into SUSPENDED via the ConnectionStateListener. Any locks, etc. must be considered temporarily lost while the connection is SUSPENDED (see <a target="_blank" rel="noopener" href="http://curator.apache.org/errors.html">http://curator.apache.org/errors.html</a> and the Error Handling section of each recipe’s documentation). </p>
+</blockquote>
+<p>(非翻译)zookeeper的客户端维护了当前连接的session。同时客户端还维护了定期的心跳来维持session。如果心跳因为种种原因漏过了，当前客户端将会进入<code>Disconnected</code>状态。如果发生这种情况，<code>Curator</code>将会通过<code>ConnectionStateListener</code>进入<code>SUSPENDED</code>状态。任何锁一类的情况必须考虑连接的短暂失连。</p>
+<blockquote>
+<p>The implication of this is that great care must be taken to tune your JVM and choose an appropriate session timeout. Here’s an example of what can happen if this is not done:</p>
+</blockquote>
+<p>这意味着必须小心的调整JVM参数并且设定恰当的session失效时间。以下罗列了一个未正确设置会发生的情况：</p>
+<blockquote>
+<ul>
+<li>A session timeout of 3 seconds is used</li>
+<li>Client A creates a Curator InterProcessMutex and acquires the lock</li>
+<li>Client B also creates a Curator InterProcessMutex for the same path and is blocked waiting for the lock to release</li>
+<li>Client A’s JVM has a stop-the-world GC for 10 seconds<ul>
+<li>Client A’s session will have lapsed due to missed heartbeats</li>
+<li>ZooKeeper will delete Client A’s EPHEMERAL node representing its InterProcessMutex lock</li>
+<li>Client B’s watcher will fire and it will successfully gain the lock</li>
+</ul>
+</li>
+<li>After the GC, Client A will un-pause</li>
+<li>For a short period of time, BOTH CLIENT A AND CLIENT B WILL BELIEVE THEY ARE THE LOCK HOLDER</li>
+</ul>
+</blockquote>
+<ul>
+<li>session超时3秒</li>
+<li>Client A 创建了一个<code>Curator InterProcessMutex</code>并且申请获取锁</li>
+<li>Client B 也创建了一个<code>Curator InterProcessMutex</code>在同样的路径下，并且等待A释放锁</li>
+<li>Client A 的JVM发生了全局GC，暂停了10s<ul>
+<li>Client A的session将会因为错过心跳而失效</li>
+<li>zookeeper将会删除Client A代表<code>InterProcessMutex lock</code>的临时节点</li>
+<li>Client B观察者将会触发，并且可以成功获取锁</li>
+</ul>
+</li>
+<li>完成GC后，client A会继续运行</li>
+<li>在很短的时间内，<strong>A和B都认定他们都是锁的拥有者</strong></li>
+</ul>
+<blockquote>
+<p>The remedy for this is tune your JVM so that GC pauses (or other kinds of pauses) do not exceed your session timeout. JVM tuning is beyond the scope of this Tech Note. The default Curator session timeout is 60 seconds. Very low session timeouts should be considered risky.</p>
+</blockquote>
+<p>针对这种情况的补救措施就是修改调整JVM参数，使得GC时间（或者任意一种能够导致全局暂停的）不会超过之前设定的session失效时间。JVM设置不在本篇范畴内讨论。默认的Curator的session失效时间是60s。如果失效时间过低，这就需要考虑该情况的风险控制。</p>
+<blockquote>
+<p>Summary: there is always an edge case where VM pauses might exceed your client heartbeat and cause a client misperception about it’s state for a short period of time once the VM un-pauses. In practice, a tuned VM that has been running within known bounds for a reasonable period will not exhibit this behavior. Session timeout must match this known bounds in order to have consistent client state. </p>
+</blockquote>
+<p>总结：如同“墨菲定律”，VM暂停一定会在某种情况下超过你的客户端心跳然后在VM结束暂停后很短的时间内使得客户端的状态陷入混乱。实际上，一个调整过的VM在已知边界下的合理时间内运行将不会发生这种情况。session失效时间必须适配已知的边界情况以保持客户端状态的一致。</p>
+<h4 id="Curator-internally-wraps-Watchers"><a href="#Curator-internally-wraps-Watchers" class="headerlink" title="Curator internally wraps Watchers"></a>Curator internally wraps Watchers</h4><blockquote>
+<p>When you set Watchers using Curator, your Watcher instance is not passed directly to ZooKeeper. Instead it is wrapped in a special-purpose Curator Watcher (the internal class, NamespaceWatcher). Normally, this is not an issue and is transparent to your client code. However, if you bypass Curator and set a Watcher directly with the ZooKeeper handle, ZooKeeper will not recognize it as the same Watcher set via Curator and that watcher will get called twice when it triggers.</p>
+</blockquote>
+<p>当你使用Curator设置Watcher的时候，Watcher的实例是不会直接连接zookeeper的。取而代之的是使用一个特殊的<code>Curator Watcher</code>（内部类，<code>NamespaceWatcher</code>）。一般而言，这不是错误，并且对于你的客户端代码，这部分是透明的。但是，如果你绕过Curator直接在<code>ZooKeeper handle</code>上设置Watcher，zookeeper将无法识别出是否是已经通过Curator设置的Watcher，因此该Watcher将会在触发的时候调用两次。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">...</span><br><span class="line"><span class="type">Watcher</span>   <span class="variable">myWatcher</span> <span class="operator">=</span> ...</span><br><span class="line">curator.getData().usingWatcher(myWatcher).forPath(path);</span><br><span class="line">curator.getZookeeperClient().getZooKeeper().getData(path, myWatcher, stat);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// myWatcher will get called twice when the data for path is changed</span></span><br></pre></td></tr></table></figure>
+<p>Tip：经验证</p>
+<table>
+<thead>
+<tr>
+<th>代码</th>
+<th>调用次数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>curator.getData().usingWatcher(myWatcher).forPath(path);<br> curator.getData().usingWatcher(myWatcher).forPath(path);</td>
+<td>1</td>
+</tr>
+<tr>
+<td>curator.getZookeeperClient().getZooKeeper().getData(path, myWatcher, stat);<br>curator.getZookeeperClient().getZooKeeper().getData(path, myWatcher, stat);</td>
+<td>1</td>
+</tr>
+<tr>
+<td>curator.getData().usingWatcher(myWatcher).forPath(path);<br>    curator.getZookeeperClient().getZooKeeper().getData(path, myWatcher, stat);</td>
+<td>2</td>
+</tr>
+<tr>
+<td>总结，zookeeper会认定通过Curator和Zookeeper Handle绑定的watcher是不同的，但是同一方式重复绑定会被zookeeper识别从而避免多次触发。</td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="Curator-connection-semantics"><a href="#Curator-connection-semantics" class="headerlink" title="Curator connection semantics"></a>Curator connection semantics</h4><blockquote>
+<p>The following events occur in the life cycle of a connection between Curator and Zookeeper.<br>CONNECTED: This occurs when Curator initially connects to Zookeeper. It will only ever be seen once per Curator instance.<br>SUSPENDED: This occurs as soon as Curator determines that it has lost its connection to Zookeeper  </p>
+</blockquote>
+<p>以下事件发生在Curator和zookeeper连接的生命周期中（即在连接中）：<br>已连接：当Curator初始化时连接zookeeper时发生。每个Curator实例只会发生一次。<br>挂起：一旦Curator确定与zookeeper的连接丢失，立即发生</p>
+<blockquote>
+<p>LOST: The meaning of a LOST even varies between Curator 2.X and Curator 3.X.<br>In all versions of Curator, a LOST event may be explicitly received from Zookeeper if Curator attempts to use a session that has been timed out by Zookeeper.<br>In Curator 2.X a LOST event will occur when Curator gives up retrying an operation. The number of retries is determined by the specified retry policy. A LOST event of this type does not necessarily mean that the session on the server has been lost, but it must be assumed to be so.</p>
+</blockquote>
+<p>丢失：在Curator 2.X版本与3.X版本有多种释义。<br>无论什么版本，只要Curator尝试使用已经被zookeeper超时的session时，zookeeper就<code>may be explicitly</code>发出一个<code>LOST</code>事件。<br>在2.X的版本中，<code>LOST</code>将会在Curator客户端放弃重试操作时发生。重试次数由明确的重试策略决定。发生这类的<code>LOST</code>事件并不等同于session超时丢失，但我们必须假设已经超时丢失。</p>
+<blockquote>
+<p>In Curator 3.x, Curator attempts to simulate server side session loss, by starting a timer (set to the negotiated session timeout length) upon receiving the SUSPENDED event. If the timer expires before Curator re-establishes a connection to Zookeeper then Curator will publish a LOST event. It can be assumed that if this LOST event is received that the session has timed out on the server (though this is not guaranteed as Curator has no connection to the server at this point to confirm this).  </p>
+</blockquote>
+<p>在3.X的版本中，Curator会通过启用一个监听<code>SUSPENDED</code>事件的计时器（设置为session的超时时间）尝试模拟服务器端的session丢失。如果计时器在Curator重新建立起与zookeeper的连接前失效，Curator就将会发布<code>LOST</code>事件。可以假设，如果接收到该<code>LOST</code>事件，就认定在服务器的session已经超时（尽管因为Curator已经丢失了与服务器的连接无法确认这一点）</p>
+<blockquote>
+<p>RECONNECTED: This occurs once a connection has been reestablished to Zookeeper.</p>
+</blockquote>
+<p>重连：当与zookeeper的连接重新建立时发生。</p>
+<h4 id="Guava-usage-in-Curator"><a href="#Guava-usage-in-Curator" class="headerlink" title="Guava usage in Curator"></a>Guava usage in Curator</h4><h5 id="Details"><a href="#Details" class="headerlink" title="Details"></a>Details</h5><blockquote>
+<p>Since Curator was created at Netflix it has used Google’s popular Guava library. Due to the many versions of Guava used in projects that also use Curator there has always been the potential for conflicts. Recent versions of Guava removed some APIs that Curator uses internally and Curator users were getting ClassNotFoundException, etc. <a target="_blank" rel="noopener" href="https://issues.apache.org/jira/browse/CURATOR-200">CURATOR-200</a> addresses these issues by shading Guava into Curator.</p>
+</blockquote>
+<p>因为Curator是由Netflix创建的组件，所以该组件使用了很多谷歌的<code>Guava</code>类库。由于多版本的Guava和Curator在同一项目中使用，这将可能会导致潜在的冲突。最近的Guava版本移除了部分Curator内部使用的API，然后使用者就会收到<code>ClassNotFoundException</code>异常，etc。<a target="_blank" rel="noopener" href="https://issues.apache.org/jira/browse/CURATOR-200">CURATOR-200</a>在Curator的包引用中屏蔽Guava就可以解决这类问题。</p>
+<h5 id="Shaded-But-Not-Gone"><a href="#Shaded-But-Not-Gone" class="headerlink" title="Shaded But Not Gone"></a>Shaded But Not Gone</h5><blockquote>
+<p>Unfortunately, a few of Curator’s public APIs use Guava classes (e.g. ListenerContainer’s use of Guava’s Function). Breaking public APIs would cause as much harm as solving the Guava problem. So, it was decided to to shade all of Guava except for these three classes:</p>
+</blockquote>
+<p>不幸的是，少部分Curator的公共API使用了Guava的类（ListenerContainer使用了Guava的<code>Function</code>）。当解决Guava版本冲突问题的时候会导致开放的API被破坏。因此，以下三个类将移除屏蔽：</p>
+<blockquote>
+<ul>
+<li>com.google.common.base.Function</li>
+<li>com.google.common.base.Predicate</li>
+<li>com.google.common.reflect.TypeToken</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>The implication of this is that Curator still has a hard dependency on Guava but only for these three classes. What this means for Curator users is that you can use whatever version of Guava your project needs without concern about ClassNotFoundException, NoSuchMethodException, etc.</p>
+</blockquote>
+<h5 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h5><blockquote>
+<ul>
+<li>All but three Guava classes are completed shaded into Curator</li>
+<li>Curator still has a hard dependency on Guava but you should be able to use whatever version of Guava your project needs</li>
+</ul>
+</blockquote>
+<ul>
+<li>除了三个类，其他Guava都被屏蔽</li>
+<li>Curator依然对于Guava有强依赖，但使用者不用再担心Guava的版本，可自由选择</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/Randgalt/curator-guava-example">https://github.com/Randgalt/curator-guava-example</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/Curator/" rel="tag"># Curator</a>
+              <a href="/tags/ZooKeeper/" rel="tag"># ZooKeeper</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/01/08/MongoTemplate/" rel="prev" title="MongoTemplate_SpringBoot">
+      <i class="fa fa-chevron-left"></i> MongoTemplate_SpringBoot
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/02/27/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E6%8E%A2%E7%A9%B6/" rel="next" title="基础语法探究">
+      基础语法探究 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-valine">valine</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane valine" id="comment-valine">
+              <div class="comments" id="valine-comments"></div>
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#ZooKeeper-watches-are-single-threaded"><span class="nav-number">1.</span> <span class="nav-text">ZooKeeper watches are single threaded.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InterProcessMutex-acquire-can-be-used-to-return-immediately-if-lock-can%E2%80%99t-be-acquired"><span class="nav-number">2.</span> <span class="nav-text">InterProcessMutex acquire() can be used to return immediately if lock can’t be acquired.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dealing-with-session-failure"><span class="nav-number">3.</span> <span class="nav-text">Dealing with session failure</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ZooKeeper-makes-a-very-bad-Queue-source"><span class="nav-number">4.</span> <span class="nav-text">ZooKeeper makes a very bad Queue source</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Porting-Netflix-Curator-code-to-Apache-Curator"><span class="nav-number">5.</span> <span class="nav-text">Porting Netflix Curator code to Apache Curator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Friends-don%E2%80%99t-let-friends-write-ZooKeeper-recipes"><span class="nav-number">6.</span> <span class="nav-text">Friends don’t let friends write ZooKeeper recipes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Curator-Recipes-Own-Their-ZNode-x2F-Paths"><span class="nav-number">7.</span> <span class="nav-text">Curator Recipes Own Their ZNode&#x2F;Paths</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Controlling-Curator-Logging"><span class="nav-number">8.</span> <span class="nav-text">Controlling Curator Logging</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PathChildrenCache-now-uses-getData-instead-of-checkExists"><span class="nav-number">9.</span> <span class="nav-text">PathChildrenCache now uses getData() instead of checkExists().</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JVM-pauses-can-cause-unexpected-client-state-with-improperly-chosen-session-timeouts"><span class="nav-number">10.</span> <span class="nav-text">JVM pauses can cause unexpected client state with improperly chosen session timeouts</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Curator-internally-wraps-Watchers"><span class="nav-number">11.</span> <span class="nav-text">Curator internally wraps Watchers</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Curator-connection-semantics"><span class="nav-number">12.</span> <span class="nav-text">Curator connection semantics</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Guava-usage-in-Curator"><span class="nav-number">13.</span> <span class="nav-text">Guava usage in Curator</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Details"><span class="nav-number">13.1.</span> <span class="nav-text">Details</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Shaded-But-Not-Gone"><span class="nav-number">13.2.</span> <span class="nav-text">Shaded But Not Gone</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Summary"><span class="nav-number">13.3.</span> <span class="nav-text">Summary</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jan Warlen"
+      src="/images/1.jpg">
+  <p class="site-author-name" itemprop="name">Jan Warlen</p>
+  <div class="site-description" itemprop="description">道路艰辛，磨砺前行</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">皖ICP备17001898号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;">
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jan Warlen</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"SI59Lqfcn8LIDHNEYsVHaptm-MdYXbMMI","app_key":"KWyHSYm5WQz8vOKf1dP2mFNB","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e34aa1d9b02a537cdb2a',
+      clientSecret: 'b64710eb326d596165dac47ac5d00b82d5aac262',
+      repo        : 'BlogComments',
+      owner       : 'janwarlen',
+      admin       : ['janwarlen'],
+      id          : '77ed115ff877d36f119ab1fb1907b06b',
+        language: '',
+      distractionFreeMode: false,
+      proxy: 'http://janwarlen.com/login/oauth/access_token'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'dMn5kVFlVpzDrSz89HFDTstl-9Nh9j0Va',
+      appKey     : 'irzXPD5LFMvmK94HNMlUOdIe',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
