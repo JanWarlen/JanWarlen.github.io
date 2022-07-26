@@ -735,6 +735,35 @@
       </tags>
   </entry>
   <entry>
+    <title>一书一图-《RocketMQ技术内幕》第2版</title>
+    <url>/2022/07/26/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-%E3%80%8ARocketMQ%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E3%80%8B%E7%AC%AC2%E7%89%88/</url>
+    <content><![CDATA[<h4 id="引用链接"><a href="#引用链接" class="headerlink" title="引用链接"></a>引用链接</h4><ol>
+<li><a href="https://blog.csdn.net/qq_32099833/article/details/120247549">RocketMQ定时消息实现原理分析</a>:时序图</li>
+<li><a href="https://developer.aliyun.com/article/827385">RocketMQ 实战(四) - 订阅机制和定时消息</a>:关于correctDeliverTimestamp的理解</li>
+<li><a href="https://xie.infoq.cn/article/cd087fb325ac2ceb0bf0ccf2d">深入了解 RocketMQ 之过滤器</a>:BloomFilter</li>
+<li><a href="https://blog.csdn.net/jiaomeng/article/details/1495500">Bloom Filter概念和原理</a>:BloomFilter</li>
+<li><a href="https://rocketmq.apache.org/rocketmq/filter-messages-by-sql92-in-rocketmq/">Filter Messages By SQL92 In RocketMQ</a></li>
+<li><a href="https://www.cnblogs.com/sunshine-2015/p/8998549.html">RocketMQ源码 — 七、 RocketMQ高可用（2）</a>:主从同步时序图<h4 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h4></li>
+<li>本书存在较多的错误，主要问题是代码片段与文字描述的衔接对不上，并且存在少量的代码注释错误(可能是我看的代码分支与作者看的分支版本不同导致理解产生偏差)，但是不能否认这本书的价值，尤其是一些关键地方的逻辑描述，能够帮助减少很多源码阅读理解的时间</li>
+<li>建议以源码阅读为主，如果已经买了，可以同步对照书籍中的文字描述确认自己理解是否正确</li>
+<li>个人已上传<a href="https://github.com/JanWarlen/rocketmq/tree/release-4.9.4">RocketMQ(release-4.9.4)</a>与<a href="https://github.com/JanWarlen/dledger/tree/0.2.6">DLedger(tag:dledger-0.2.6)</a>带注释版本，部分核心入口已在工程的 ReadME 文档中标注</li>
+<li>建议提前熟悉多线程编码以及<strong>异步编码</strong>（如<code>Future</code>），其中异步编码建议多练习，在RocketMQ和Dledger中使用较多，如果未能掌握该知识点，则会较难理解整体的流程</li>
+<li>需要提前学习Netty相关知识，最少也要熟悉Socket编码，未开启DLedger时的主从同步主要依靠Socket解决，真应该提前学下Netty的，HAService那块的主从同步，大体流程懂了，可通信的代码没看懂（因为没用过….2333）,估计后面学了Netty就懂了</li>
+<li>关键点：NameServer路由管理、消息发送（客户端、Broker端）、消息存储（刷盘、主从同步）、消息消费（客户端、Broker端）、ACL控制、消息轨迹、主从切换（DLedger）</li>
+<li>下方思维导图仅可用作个人回顾，无法作为学习材料（不成系统，仅仅是记录了源码阅读总结，其中DLedger部分的流程图主要参考书中对应流程图）</li>
+<li>发现源码阅读不适合弄思维导图，流程图和时序图时非常合适作为源码阅读的总结，以后不再把代码的细节放到思维导图里了，以后估计是概述+一些关键点描述，然后加上流程图和时序图（本质上是最近几本书的阅读体验产生的总结，阅读源码有个大致的概念，知道大体的框架就可以开始阅读了，把源码的细节展示出来反而会增加理解难度）<span id="more"></span></li>
+</ol>
+<p><img src="http://img.janwarlen.com/blog%2FRocketMQ.svg"></p>
+]]></content>
+      <categories>
+        <category>中间件</category>
+      </categories>
+      <tags>
+        <tag>读书笔记</tag>
+        <tag>RocketMQ</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>一书一图-深入理解Java虚拟机</title>
     <url>/2022/06/01/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/</url>
     <content><![CDATA[<h4 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h4><ol>
