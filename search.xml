@@ -703,7 +703,7 @@
       </tags>
   </entry>
   <entry>
-    <title>一书一图-《RocketMQ技术内幕》第2版</title>
+    <title>一书一图-Netty实战</title>
     <url>/2022/08/12/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-Netty%E5%AE%9E%E6%88%98/</url>
     <content><![CDATA[<h4 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h4><ol>
 <li>建议先学习不使用Netty的网络编程(即Java内置的Socket&#x2F;IO&#x2F;NIO)，这样才能更好的学习Netty</li>
