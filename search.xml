@@ -703,6 +703,29 @@
       </tags>
   </entry>
   <entry>
+    <title>一书一图-《RocketMQ技术内幕》第2版</title>
+    <url>/2022/08/12/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-Netty%E5%AE%9E%E6%88%98/</url>
+    <content><![CDATA[<h4 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h4><ol>
+<li>建议先学习不使用Netty的网络编程(即Java内置的Socket&#x2F;IO&#x2F;NIO)，这样才能更好的学习Netty</li>
+<li>NIO学习推荐<a href="https://ifeve.com/java-nio-all/">java-nio-all</a>，不过有几篇还没有人翻译，需要看原文学习</li>
+<li>代码可以从GitHub上直接下载<a href="https://github.com/normanmaurer/netty-in-action">netty-in-action</a></li>
+<li>整本书的内容是针对Netty的学习，不同的业务场景中Netty的用法未涉及，最后两个章节的案例研究更多的是讨论选择Netty的业务背景，对于Netty的使用细节基本不涉及</li>
+<li>可以的话建议是手动跟着敲一遍，可以加深一些映像</li>
+<li>本书虽然是说实战，但是局限比较大，基本上是相关组件的基本使用，推荐项目<a href="https://github.com/jwpttcg66/NettyGameServer">NettyGameServer</a>&#x2F;<a href="https://github.com/eclipse-vertx/vert.x">vert.x</a>&#x2F;<a href="https://github.com/crossoverJie/cim">cim</a></li>
+</ol>
+<span id="more"></span>
+
+<p><img src="http://img.janwarlen.com/blog/Netty%E5%AE%9E%E6%88%98.png"></p>
+]]></content>
+      <categories>
+        <category>中间件</category>
+      </categories>
+      <tags>
+        <tag>读书笔记</tag>
+        <tag>RocketMQ</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>一书一图-《Effective Java》第三版</title>
     <url>/2022/07/09/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-%E3%80%8AEffective%20Java%E3%80%8B%E7%AC%AC%E4%B8%89%E7%89%88/</url>
     <content><![CDATA[<h4 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h4><ol>
@@ -750,10 +773,12 @@
 <li>建议以源码阅读为主，如果已经买了，可以同步对照书籍中的文字描述确认自己理解是否正确</li>
 <li>个人已上传<a href="https://github.com/JanWarlen/rocketmq/tree/release-4.9.4">RocketMQ(release-4.9.4)</a>与<a href="https://github.com/JanWarlen/dledger/tree/0.2.6">DLedger(tag:dledger-0.2.6)</a>带注释版本，部分核心入口已在工程的 ReadME 文档中标注</li>
 <li>建议提前熟悉多线程编码以及<strong>异步编码</strong>（如<code>Future</code>），其中异步编码建议多练习，在RocketMQ和Dledger中使用较多，如果未能掌握该知识点，则会较难理解整体的流程</li>
-<li>需要提前学习Netty相关知识，最少也要熟悉Socket编码，未开启DLedger时的主从同步主要依靠Socket解决，真应该提前学下Netty的，HAService那块的主从同步，大体流程懂了，可通信的代码没看懂（因为没用过….2333）,估计后面学了Netty就懂了</li>
+<li>需要提前学习网络编程相关知识，最少也要熟悉Socket NIO编码，未开启DLedger时的主从同步主要依靠 NIO解决</li>
 <li>关键点：NameServer路由管理、消息发送（客户端、Broker端）、消息存储（刷盘、主从同步）、消息消费（客户端、Broker端）、ACL控制、消息轨迹、主从切换（DLedger）</li>
 <li>下方思维导图仅可用作个人回顾，无法作为学习材料（不成系统，仅仅是记录了源码阅读总结，其中DLedger部分的流程图主要参考书中对应流程图）</li>
-<li>发现源码阅读不适合弄思维导图，流程图和时序图时非常合适作为源码阅读的总结，以后不再把代码的细节放到思维导图里了，以后估计是概述+一些关键点描述，然后加上流程图和时序图（本质上是最近几本书的阅读体验产生的总结，阅读源码有个大致的概念，知道大体的框架就可以开始阅读了，把源码的细节展示出来反而会增加理解难度）<span id="more"></span></li>
+<li>发现源码阅读不适合弄思维导图，流程图和时序图时非常合适作为源码阅读的总结，以后不再把代码的细节放到思维导图里了，以后估计是概述+一些关键点描述，然后加上流程图和时序图（本质上是最近几本书的阅读体验产生的总结，阅读源码有个大致的概念，知道大体的框架就可以开始阅读了，把源码的细节展示出来反而会增加理解难度）<span id="more"></span>
+<h4 id="疑问集中营"><a href="#疑问集中营" class="headerlink" title="疑问集中营"></a>疑问集中营</h4></li>
+<li>使用DLedger模式的MQ，集群状态：A(120)、B(120)、C(100)、D(90)、E(90)，此时主节点是A，100-120之间的数据追加请求还在ACK确认中，如果此时节点A进入了选举状态，并且重新选举后，节点B当选Leader，那么因为之前的请求在节点A上，会导致超时返回失败，那么客户端必然会重试，在此中场景中如何保证数据不重复<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. 主节点的ack逻辑是将存储实现的 committedIndex 更新为集群水位，从节点是每次数据追加则更新 committedIndex 为追加请求中的 commitIndex</span><br><span class="line">2. 节点当选Leader时，会发起 Compare，而发起请求中的 commitIndex 正是集群水位，此时可保证从节点不会有多余数据（即节点A会100）</span><br><span class="line">3. 疑问是此时的节点B，如何保证数据不会多余</span><br></pre></td></tr></table></figure></li>
 </ol>
 <p><img src="http://img.janwarlen.com/blog%2FRocketMQ.svg"></p>
 ]]></content>
