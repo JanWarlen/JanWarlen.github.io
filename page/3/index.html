@@ -205,6 +205,113 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2018/08/16/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB-HashMap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpg">
+      <meta itemprop="name" content="Jan Warlen">
+      <meta itemprop="description" content="道路艰辛，磨砺前行">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一帆磨砺">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/08/16/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB-HashMap/" class="post-title-link" itemprop="url">源码阅读-HashMap</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-08-16 00:34:42" itemprop="dateCreated datePublished" datetime="2018-08-16T00:34:42+08:00">2018-08-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-12 09:46:16" itemprop="dateModified" datetime="2022-08-12T09:46:16+08:00">2022-08-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/08/16/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB-HashMap/" class="post-meta-item leancloud_visitors" data-flag-title="源码阅读-HashMap" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2018/08/16/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB-HashMap/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2018/08/16/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB-HashMap/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h4><ol>
+<li>扩容是一个特别耗性能的操作，因此建议使用HashMap时，尽量指定一定大小的初始容量</li>
+<li><code>HashMap</code>是线程不安全的，并发环境中建议使用<code>ConcurrentHashMap</code></li>
+<li>JDK8中引入的红黑树优化了大量hash碰撞时的性能</li>
+<li>HashMap中的红黑树代码作者实在没力气看了，因此这篇文章不涉及内部红黑树分析</li>
+<li>该篇文章纯粹是作者个人观点，并非官方权威，阅读请勿迷信
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/08/16/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB-HashMap/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2018/07/12/%E4%B8%80%E6%AD%A5%E4%B8%80%E6%AD%A5%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E7%BA%A2%E9%BB%91%E6%A0%91/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -236,7 +343,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-12 06:19:58" itemprop="dateModified" datetime="2022-08-12T06:19:58+08:00">2022-08-12</time>
+                <time title="修改时间：2022-08-12 09:46:16" itemprop="dateModified" datetime="2022-08-12T09:46:16+08:00">2022-08-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -345,7 +452,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-12 06:19:58" itemprop="dateModified" datetime="2022-08-12T06:19:58+08:00">2022-08-12</time>
+                <time title="修改时间：2022-08-12 09:46:16" itemprop="dateModified" datetime="2022-08-12T09:46:16+08:00">2022-08-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -453,7 +560,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-12 06:19:58" itemprop="dateModified" datetime="2022-08-12T06:19:58+08:00">2022-08-12</time>
+                <time title="修改时间：2022-08-12 09:46:16" itemprop="dateModified" datetime="2022-08-12T09:46:16+08:00">2022-08-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -561,7 +668,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-12 06:19:58" itemprop="dateModified" datetime="2022-08-12T06:19:58+08:00">2022-08-12</time>
+                <time title="修改时间：2022-08-12 09:46:16" itemprop="dateModified" datetime="2022-08-12T09:46:16+08:00">2022-08-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -668,7 +775,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-12 06:19:58" itemprop="dateModified" datetime="2022-08-12T06:19:58+08:00">2022-08-12</time>
+                <time title="修改时间：2022-08-12 09:46:16" itemprop="dateModified" datetime="2022-08-12T09:46:16+08:00">2022-08-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -770,7 +877,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-12 06:19:57" itemprop="dateModified" datetime="2022-08-12T06:19:57+08:00">2022-08-12</time>
+                <time title="修改时间：2022-08-12 09:46:16" itemprop="dateModified" datetime="2022-08-12T09:46:16+08:00">2022-08-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -872,7 +979,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-12 06:19:57" itemprop="dateModified" datetime="2022-08-12T06:19:57+08:00">2022-08-12</time>
+                <time title="修改时间：2022-08-12 09:46:16" itemprop="dateModified" datetime="2022-08-12T09:46:16+08:00">2022-08-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1110,20 +1217,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
