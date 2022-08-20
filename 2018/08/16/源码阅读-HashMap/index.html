@@ -597,7 +597,7 @@ JDK8中增加特性：当链表长度超过8时（等于也会触发），会转
         });
       };
       if (CONFIG.page.isPost) {
-        if (CONFIG.hostname !== location.hostname) return;
+        // if (CONFIG.hostname !== location.hostname) return;
         addCount(Counter);
       } else if (document.querySelectorAll('.post-title-link').length >= 1) {
         showTime(Counter);
