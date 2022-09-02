@@ -246,7 +246,7 @@
 <p>没变动，纯粹属于提个醒，想收集更多的反馈…..</p>
 <h1 id="ZGC可正式投产"><a href="#ZGC可正式投产" class="headerlink" title="ZGC可正式投产"></a>ZGC可正式投产</h1><p>默认仍是G1，通过启动参数<code>-XX:+UnlockExperimentalVMOptions -XX:+UseZGC</code>启用</p>
 <h1 id="文本块"><a href="#文本块" class="headerlink" title="文本块"></a>文本块</h1><p>无新增调整，正式开放使用。</p>
-<h1 id="Shenandoah-可正式投产"><a href="#Shenandoah-可正式投产" class="headerlink" title="Shenandoah 可正式投产"></a>Shenandoah 可正式投产</h1><p>默认仍是G1，通过启动参数<code>-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC</code>启用。<br>本次无新增功能，并且JDK8于JDK11同步可正式投产使用。</p>
+<h1 id="Shenandoah-可正式投产"><a href="#Shenandoah-可正式投产" class="headerlink" title="Shenandoah 可正式投产"></a>Shenandoah 可正式投产</h1><p>默认仍是G1，通过启动参数<code>-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC</code>启用。<br>本次无新增功能，并且Red Hat 8u与Red Hat 11u同步可正式投产使用。</p>
 <h1 id="删除-Solaris-和-SPARC-端口"><a href="#删除-Solaris-和-SPARC-端口" class="headerlink" title="删除 Solaris 和 SPARC 端口"></a>删除 Solaris 和 SPARC 端口</h1><p>JDK14标记弃用，本次迭代彻底删除。</p>
 <ul>
 <li>删除所有特定于 Solaris 操作系统的源代码</li>
