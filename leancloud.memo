@@ -8,6 +8,8 @@
 {"title":"一步一步数据结构-AVLTree","url":"/2018/04/12/一步一步数据结构-AVLTree/"},
 {"title":"一步一步数据结构-红黑树","url":"/2018/07/12/一步一步数据结构-红黑树/"},
 {"title":"源码阅读-HashMap","url":"/2018/08/16/源码阅读-HashMap/"},
+{"title":"记一次文件句柄大量占用(泄露)排查","url":"/2018/12/18/记一次文件句柄大量占用(泄露)排查/"},
+{"title":"Mockito与PowerMock基础使用说明","url":"/2018/12/26/Mockito与PowerMock使用说明/"},
 {"title":"一书一图-深入理解Java虚拟机","url":"/2022/06/01/一书一图-深入理解Java虚拟机/"},
 {"title":"一书一图-Head First设计模式","url":"/2022/06/05/一书一图-Head First设计模式/"},
 {"title":"Java版本特性-Lambda","url":"/2022/06/07/Java版本特性-Lambda/"},
