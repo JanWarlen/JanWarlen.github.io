@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://img.janwarlen.com/blog%2FRocketMQ.svg">
 <meta property="article:published_time" content="2022-07-26T15:22:55.000Z">
-<meta property="article:modified_time" content="2022-08-20T22:23:46.193Z">
+<meta property="article:modified_time" content="2022-09-02T02:47:29.777Z">
 <meta property="article:author" content="Jan Warlen">
 <meta property="article:tag" content="读书笔记">
 <meta property="article:tag" content="RocketMQ">
@@ -242,7 +242,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-21 06:23:46" itemprop="dateModified" datetime="2022-08-21T06:23:46+08:00">2022-08-21</time>
+                <time title="修改时间：2022-09-02 10:47:29" itemprop="dateModified" datetime="2022-09-02T10:47:29+08:00">2022-09-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -295,18 +295,31 @@
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sunshine-2015/p/8998549.html">RocketMQ源码 — 七、 RocketMQ高可用（2）</a>:主从同步时序图</li>
 </ol>
 <h4 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h4><ol>
-<li>本书存在较多的错误，主要问题是代码片段与文字描述的衔接对不上，并且存在少量的代码注释错误(可能是我看的代码分支与作者看的分支版本不同导致理解产生偏差)，但是不能否认这本书的价值，尤其是一些关键地方的逻辑描述，能够帮助减少很多源码阅读理解的时间</li>
-<li>建议以源码阅读为主，如果已经买了，可以同步对照书籍中的文字描述确认自己理解是否正确</li>
-<li>个人已上传<a target="_blank" rel="noopener" href="https://github.com/JanWarlen/rocketmq/tree/release-4.9.4">RocketMQ(release-4.9.4)</a>与<a target="_blank" rel="noopener" href="https://github.com/JanWarlen/dledger/tree/0.2.6">DLedger(tag:dledger-0.2.6)</a>带注释版本，部分核心入口已在工程的 ReadME 文档中标注</li>
-<li>建议提前熟悉多线程编码以及<strong>异步编码</strong>（如<code>Future</code>），其中异步编码建议多练习，在RocketMQ和Dledger中使用较多，如果未能掌握该知识点，则会较难理解整体的流程</li>
-<li>需要提前学习网络编程相关知识，最少也要熟悉Socket NIO编码，未开启DLedger时的主从同步主要依靠 NIO解决</li>
-<li>关键点：NameServer路由管理、消息发送（客户端、Broker端）、消息存储（刷盘、主从同步）、消息消费（客户端、Broker端）、ACL控制、消息轨迹、主从切换（DLedger）</li>
-<li>下方思维导图仅可用作个人回顾，无法作为学习材料（不成系统，仅仅是记录了源码阅读总结，其中DLedger部分的流程图主要参考书中对应流程图）</li>
-<li>发现源码阅读不适合弄思维导图，流程图和时序图时非常合适作为源码阅读的总结，以后不再把代码的细节放到思维导图里了，以后估计是概述+一些关键点描述，然后加上流程图和时序图（本质上是最近几本书的阅读体验产生的总结，阅读源码有个大致的概念，知道大体的框架就可以开始阅读了，把源码的细节展示出来反而会增加理解难度）<span id="more"></span>
+<li><p>本书存在较多的错误，主要问题是代码片段与文字描述的衔接对不上，并且存在少量的代码注释错误(可能是我看的代码分支与作者看的分支版本不同导致理解产生偏差)，但是不能否认这本书的价值，尤其是一些关键地方的逻辑描述，能够帮助减少很多源码阅读理解的时间</p>
+</li>
+<li><p>建议以源码阅读为主，如果已经买了，可以同步对照书籍中的文字描述确认自己理解是否正确</p>
+</li>
+<li><p>个人已上传<a target="_blank" rel="noopener" href="https://github.com/JanWarlen/rocketmq/tree/release-4.9.4">RocketMQ(release-4.9.4)</a>与<a target="_blank" rel="noopener" href="https://github.com/JanWarlen/dledger/tree/0.2.6">DLedger(tag:dledger-0.2.6)</a>带注释版本，部分核心入口已在工程的 ReadME 文档中标注</p>
+</li>
+<li><p>建议提前熟悉多线程编码以及<strong>异步编码</strong>（如<code>Future</code>），其中异步编码建议多练习，在RocketMQ和Dledger中使用较多，如果未能掌握该知识点，则会较难理解整体的流程</p>
+</li>
+<li><p>需要提前学习网络编程相关知识，最少也要熟悉Socket NIO编码，未开启DLedger时的主从同步主要依靠 NIO解决</p>
+</li>
+<li><p>关键点：NameServer路由管理、消息发送（客户端、Broker端）、消息存储（刷盘、主从同步）、消息消费（客户端、Broker端）、ACL控制、消息轨迹、主从切换（DLedger）</p>
+</li>
+<li><p>下方思维导图仅可用作个人回顾，无法作为学习材料（不成系统，仅仅是记录了源码阅读总结，其中DLedger部分的流程图主要参考书中对应流程图）</p>
+</li>
+<li><p>发现源码阅读不适合弄思维导图，流程图和时序图时非常合适作为源码阅读的总结，以后不再把代码的细节放到思维导图里了，以后估计是概述+一些关键点描述，然后加上流程图和时序图（本质上是最近几本书的阅读体验产生的总结，阅读源码有个大致的概念，知道大体的框架就可以开始阅读了，把源码的细节展示出来反而会增加理解难度）</p>
+<span id="more"></span>
 <h4 id="疑问集中营"><a href="#疑问集中营" class="headerlink" title="疑问集中营"></a>疑问集中营</h4></li>
-<li>使用DLedger模式的MQ，集群状态：A(120)、B(120)、C(100)、D(90)、E(90)，此时主节点是A，100-120之间的数据追加请求还在ACK确认中，如果此时节点A进入了选举状态，并且重新选举后，节点B当选Leader，那么因为之前的请求在节点A上，会导致超时返回失败，那么客户端必然会重试，在此中场景中如何保证数据不重复<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 主节点的ack逻辑是将存储实现的 committedIndex 更新为集群水位，从节点是每次数据追加则更新 committedIndex 为追加请求中的 commitIndex</span><br><span class="line">2. 节点当选Leader时，会发起 Compare，而发起请求中的 commitIndex 正是集群水位，此时可保证从节点不会有多余数据（即节点A会100）</span><br><span class="line">3. 疑问是此时的节点B，如何保证数据不会多余</span><br></pre></td></tr></table></figure></li>
+<li><p>使用DLedger模式的MQ，集群状态：A(120)、B(120)、C(100)、D(90)、E(90)，此时主节点是A，100-120之间的数据追加请求还在ACK确认中，如果此时节点A进入了选举状态，并且重新选举后，节点B当选Leader，那么因为之前的请求在节点A上，会导致超时返回失败，那么客户端必然会重试，在此中场景中如何保证数据不重复</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 主节点的ack逻辑是将存储实现的 committedIndex 更新为集群水位，从节点是每次数据追加则更新 committedIndex 为追加请求中的 commitIndex</span><br><span class="line">2. 节点当选Leader时，会发起 Compare，而发起请求中的 commitIndex 正是集群水位，此时可保证从节点不会有多余数据（即节点A会100）</span><br><span class="line">3. 疑问是此时的节点B，如何保证数据不会多余</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>消息发送客户端发送消息后，在接受ACK时因网络问题未成功接收导致重试，RocketMQ如何保证不会出现重复消息？<br>看了RocketMQ的接收处理存储代码，发现并未做去重处理，如果出现此种情况，只能业务上做幂等的额外处理了。通过业务的id或者MQ的msgId。</p>
+</li>
+<li><p><img src="http://img.janwarlen.com/blog%2FRocketMQ.svg"></p>
+</li>
 </ol>
-<p><img src="http://img.janwarlen.com/blog%2FRocketMQ.svg"></p>
 
     </div>
 
@@ -440,20 +453,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-count">42</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
