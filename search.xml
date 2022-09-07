@@ -1256,26 +1256,6 @@
       </tags>
   </entry>
   <entry>
-    <title>疑难杂症集中营</title>
-    <url>/2022/08/12/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87%E9%9B%86%E4%B8%AD%E8%90%A5/</url>
-    <content><![CDATA[<h4 id="引用参考文档链接"><a href="#引用参考文档链接" class="headerlink" title="引用参考文档链接"></a>引用参考文档链接</h4><h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><ol>
-<li>本文是积攒恶心问题及其解决方案或现象原因</li>
-</ol>
-<span id="more"></span>
-
-<h3 id="建站"><a href="#建站" class="headerlink" title="建站"></a>建站</h3><h4 id="hexo"><a href="#hexo" class="headerlink" title="hexo"></a>hexo</h4><h5 id="leancloud"><a href="#leancloud" class="headerlink" title="leancloud"></a>leancloud</h5><ol>
-<li>leancloud的访问计数首页一直报错，请求的url是<code>https://....api.lncldglobal.com</code>，但是之前已经修复了（配置文件设置<code>server_url</code>），并且发现只有首页会出现该问题，其他所有页面均正常，尝试直接修改首页代码，发现无论怎么刷新，页面均无变化，尝试chrome的<code>disable cache</code>也无变化，更换浏览器问题也在，察觉可能是运行商缓存导致，于是使用手机流量访问验证，页面正常</li>
-</ol>
-<p><strong>答</strong>：涉及网页等静态资源，如果确认修改后访问还是无变化的，优先清除浏览器缓存，如果还是不行，就要考虑运营商缓存了（网络运行商为了减少带宽，会在局部服务器对部分资源进行缓存，并且更新频率低），或者是开启的CDN缓存导致。能联想到该原因还是很久以前看过别人分享的因为网络运营商缓存导致BUG的经历。</p>
-]]></content>
-      <categories>
-        <category>疑难杂症</category>
-      </categories>
-      <tags>
-        <tag>问题修复</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>记一次文件句柄大量占用(泄露)排查</title>
     <url>/2018/12/18/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%96%87%E4%BB%B6%E5%8F%A5%E6%9F%84%E5%A4%A7%E9%87%8F%E5%8D%A0%E7%94%A8(%E6%B3%84%E9%9C%B2)%E6%8E%92%E6%9F%A5/</url>
     <content><![CDATA[<h4 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h4><ol>
