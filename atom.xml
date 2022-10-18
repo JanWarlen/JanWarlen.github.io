@@ -6,7 +6,7 @@
   <link href="http://janwarlen.com/atom.xml" rel="self"/>
   
   <link href="http://janwarlen.com/"/>
-  <updated>2022-10-18T17:50:58.681Z</updated>
+  <updated>2022-10-18T18:14:45.086Z</updated>
   <id>http://janwarlen.com/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="http://janwarlen.com/2022/10/18/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90Apache%20Dubbo%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95/"/>
     <id>http://janwarlen.com/2022/10/18/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90Apache%20Dubbo%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95/</id>
     <published>2022-10-18T10:22:55.000Z</published>
-    <updated>2022-10-18T17:50:58.681Z</updated>
+    <updated>2022-10-18T18:14:45.086Z</updated>
     
-    <content type="html"><![CDATA[<h4 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h4><ol><li>需要重点理解的点是增强SPI和适配器(所有@SPI注解会生成Adaptive适配类)，这两点关乎于核心的protocol和invoker的加载和多态控制</li><li>主要关心服务发布流程与消费端启动和调用流程，服务降级、集群容错、负载均衡、线程模型和线程池策略等可以之后单独了解，它们内容多但是代码结构和调用并不复杂</li><li>Dubbo自封装的netty模块可以不用深究，主要分 handler 和 Dubbo自定义的数据协议</li><li>zookeeper主要扮演配置中心和注册中心使用，服务提供者的变动会触发zk节点变动，从而通知到消费者及时变更内存缓存的服务提供者</li><li><a href="https://github.com/JanWarlen/dubbo/tree/comment-2.7.1">注释代码</a></li></ol><span id="more"></span><p><img src="http://img.janwarlen.com/blog/%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90Apache%20Dubbo%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF.svg"></p>]]></content>
+    <content type="html"><![CDATA[<h4 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h4><ol><li>需要重点理解的点是增强SPI和适配器(所有@SPI注解会生成Adaptive适配类)，这两点关乎于核心的protocol和invoker的加载和多态控制</li><li>主要关心服务发布流程与消费端启动和调用流程，服务降级、集群容错、负载均衡、线程模型和线程池策略等可以之后单独了解，它们内容多但是代码结构和调用并不复杂</li><li>Dubbo自封装的netty模块可以不用深究，主要分 handler 和 Dubbo自定义的数据协议</li><li>zookeeper主要扮演配置中心和注册中心使用，服务提供者的变动会触发zk节点变动，从而通知到消费者及时变更内存缓存的服务提供者</li><li><a href="https://github.com/JanWarlen/dubbo/tree/comment-2.7.1">注释代码</a></li><li>设计模式多用装饰模式、代理模式、责任链模式、策略模式</li><li>书中有部分内容在阅读时产生了理解歧义，可惜没有联系书籍作者的途径，此处作保留，希望有读者可以交流理解</li></ol><span id="more"></span><h4 id="细节疑问"><a href="#细节疑问" class="headerlink" title="细节疑问"></a>细节疑问</h4><h5 id="图3-6"><a href="#图3-6" class="headerlink" title="图3.6"></a>图3.6</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">invoke</span><span class="params">(Channel channel, String methodKey)</span> &#123;</span><br><span class="line">    <span class="type">Invocation</span> <span class="variable">invocation</span> <span class="operator">=</span> createInvocation(channel, channel.getUrl(), methodKey);</span><br><span class="line">    <span class="comment">// connected 与 disconnected 均不会创建 invocation 实例，因此后续代码不会执行</span></span><br><span class="line">    <span class="keyword">if</span> (invocation != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            received(channel, invocation);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">            logger.warn(<span class="string">&quot;Failed to invoke event method &quot;</span> + invocation.getMethodName() + <span class="string">&quot;(), cause: &quot;</span> + t.getMessage(), t);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>关于步骤11，在Debug的过程中发现，对于onconnected事件，此时<code>invocation</code>应该是null，因此不会执行<code>received</code></p><h5 id="P96"><a href="#P96" class="headerlink" title="P96"></a>P96</h5><blockquote><p>从上面的代码可知，MockClusterWrapper 类把 FailoverClusterInvoker 包装成了MockClusterInvoker 实例，所以整个调用链最终调用返回的是 MockClusterInvoker对象。也就是说，本节第一个时序图(见图3.8)中的步骤4返回的是 MockClusterWrapper，然后执行图3.9中的步骤14以获取 MockClusterInvoker 的代理，实现 invoker 到客户端接口的转换…</p></blockquote><p>疑惑点在于在debug过程中，发现<code>org.apache.dubbo.registry.integration.RegistryProtocol#cluster</code>的确是在3.8的步骤4通过IOC注入，但此时并不是返回结果，尚在执行过程中，执行到3-9的步骤14时，通过在<code>org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper#buildInvokerChain</code>断点确认 invoker 还是 DubboInvoker，此时只有继续执行，等到3-8的步骤12（org.apache.dubbo.registry.integration.RegistryProtocol#doRefer）时，才会通过之前注入的 MockClusterWrapper 返回 MockClusterInvoker。然后层层返回，最终返回到3-8的步骤4，再通过proxyFactory.getProxy(invoker) 获取代理。</p><h5 id="P230"><a href="#P230" class="headerlink" title="P230"></a>P230</h5><blockquote><p>先看看 DubboCodec 的子类 ExchangeCodec 的 encode() 方法</p></blockquote><p><code>ExchangeCodec</code>应该是<code>DubboCodec</code>的父类</p><p><img src="http://img.janwarlen.com/blog/%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90Apache%20Dubbo%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF.svg"></p>]]></content>
     
     
     <summary type="html">&lt;h4 id=&quot;写在开头&quot;&gt;&lt;a href=&quot;#写在开头&quot; class=&quot;headerlink&quot; title=&quot;写在开头&quot;&gt;&lt;/a&gt;写在开头&lt;/h4&gt;&lt;ol&gt;
@@ -32,6 +32,8 @@
 &lt;li&gt;Dubbo自封装的netty模块可以不用深究，主要分 handler 和 Dubbo自定义的数据协议&lt;/li&gt;
 &lt;li&gt;zookeeper主要扮演配置中心和注册中心使用，服务提供者的变动会触发zk节点变动，从而通知到消费者及时变更内存缓存的服务提供者&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://github.com/JanWarlen/dubbo/tree/comment-2.7.1&quot;&gt;注释代码&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;设计模式多用装饰模式、代理模式、责任链模式、策略模式&lt;/li&gt;
+&lt;li&gt;书中有部分内容在阅读时产生了理解歧义，可惜没有联系书籍作者的途径，此处作保留，希望有读者可以交流理解&lt;/li&gt;
 &lt;/ol&gt;</summary>
     
     
