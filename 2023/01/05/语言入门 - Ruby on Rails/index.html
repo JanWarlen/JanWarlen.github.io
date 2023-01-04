@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"janwarlen.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-1}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="写在开头 本文基于《Ruby on Rails最强教科书》中第7章 Rails的最佳实践，其中有部分因为版本迭代问题有所改动 图片上传组件paperclip已过期不再维护，选择了rails新版本自带的Active Storage   学习资源 练习网站 系统学习教程-全栈   Ruby on Rails 似乎是通过大量的组件库，来减少开发的周期（DRY(Don’t Repeat Yourself)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="语言入门 - Ruby on Rails">
+<meta property="og:url" content="http://janwarlen.com/2023/01/05/%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8%20-%20Ruby%20on%20Rails/index.html">
+<meta property="og:site_name" content="一帆磨砺">
+<meta property="og:description" content="写在开头 本文基于《Ruby on Rails最强教科书》中第7章 Rails的最佳实践，其中有部分因为版本迭代问题有所改动 图片上传组件paperclip已过期不再维护，选择了rails新版本自带的Active Storage   学习资源 练习网站 系统学习教程-全栈   Ruby on Rails 似乎是通过大量的组件库，来减少开发的周期（DRY(Don’t Repeat Yourself)">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/Snipaste_2022-12-26_00-28-47.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/20230103230914.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/20230104000132.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/20230104234352.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/20230104235459.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/20230105000718.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/20230105002831.png">
+<meta property="article:published_time" content="2023-01-04T17:03:33.000Z">
+<meta property="article:modified_time" content="2023-01-04T17:09:44.311Z">
+<meta property="article:author" content="Jan Warlen">
+<meta property="article:tag" content="Ruby">
+<meta property="article:tag" content="Rails">
+<meta property="article:tag" content="编程入门">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/Snipaste_2022-12-26_00-28-47.png">
+
+<link rel="canonical" href="http://janwarlen.com/2023/01/05/%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8%20-%20Ruby%20on%20Rails/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>语言入门 - Ruby on Rails | 一帆磨砺</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-110997978-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-110997978-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2d6b785ef2d7969dc8b9db1bcd382bfa";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="一帆磨砺" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一帆磨砺</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">生活所迫，一叶孤舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://janwarlen.com/2023/01/05/%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8%20-%20Ruby%20on%20Rails/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpg">
+      <meta itemprop="name" content="Jan Warlen">
+      <meta itemprop="description" content="道路艰辛，磨砺前行">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一帆磨砺">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          语言入门 - Ruby on Rails
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-01-05 01:03:33 / 修改时间：01:09:44" itemprop="dateCreated datePublished" datetime="2023-01-05T01:03:33+08:00">2023-01-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Ruby/" itemprop="url" rel="index"><span itemprop="name">Ruby</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2023/01/05/%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8%20-%20Ruby%20on%20Rails/" class="post-meta-item leancloud_visitors" data-flag-title="语言入门 - Ruby on Rails" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/01/05/%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8%20-%20Ruby%20on%20Rails/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/01/05/%E8%AF%AD%E8%A8%80%E5%85%A5%E9%97%A8%20-%20Ruby%20on%20Rails/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h4><ol>
+<li>本文基于《Ruby on Rails最强教科书》中第7章 Rails的最佳实践，其中有部分因为版本迭代问题有所改动<ul>
+<li>图片上传组件<code>paperclip</code>已过期不再维护，选择了rails新版本自带的<code>Active Storage</code></li>
+</ul>
+</li>
+<li>学习资源<ul>
+<li><a target="_blank" rel="noopener" href="https://exercism.org/tracks/ruby">练习网站</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.theodinproject.com/paths/full-stack-ruby-on-rails">系统学习教程-全栈</a></li>
+</ul>
+</li>
+<li>Ruby on Rails 似乎是通过大量的组件库，来减少开发的周期（DRY(Don’t Repeat Yourself)不重复造轮子），但是开放通用的组件必然会与定制化的业务有冲突（这样也导致了一定的学习门槛），可能深入学习后，可以较为轻松的定制化</li>
+<li>基于个人入门学习的一些经验，感觉 Ruby on Rails 像是乐高，有丰富的零部件，你可以按照自己的想法快速的搭建出你需要的东西，但是如果没有足够的经验的话，你的成品就仅仅只是玩具</li>
+<li>本文最终产物甚至于连玩具都算不上，仅仅是浅尝辄止的初步了解</li>
+<li>环境安装参考<a target="_blank" rel="noopener" href="https://ruby-china.org/wiki/rvm-guide">RVM 实用指南</a></li>
+<li>需要注意的是rails是充血模型，与Java的贫血模型是完全相反的设计理念</li>
+<li>环境依赖数据库:PostgreSQL、缓存:Redis，个人推荐使用docker安装，其他方式也可，只要可以使用</li>
+<li><code>ruby</code>国内官网<a target="_blank" rel="noopener" href="https://ruby-china.org/">ruby-china.org</a></li>
+<li>如果是找工作不推荐学习<code>ruby</code>，个人兴趣多学一门语言是推荐的，<code>ruby</code>的一些设计理念还是很不错的</li>
+</ol>
+<h4 id="引用博文"><a href="#引用博文" class="headerlink" title="引用博文"></a>引用博文</h4><ol>
+<li><a target="_blank" rel="noopener" href="https://dev.to/eclecticcoding/part-1-rails-active-storage-1ikh">part-1-rails-active-storage-1ikh</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/576500762">Ruby学习指南</a></li>
+<li><a target="_blank" rel="noopener" href="https://ruby-china.github.io/rails-guides/getting_started.html">Rails 入门-官方指导手册</a></li>
+</ol>
+<span id="more"></span>
+
+<h4 id="创建新的Project"><a href="#创建新的Project" class="headerlink" title="创建新的Project"></a>创建新的Project</h4><ol>
+<li>在指定的工程目录，执行<code>rails new ProjectName</code>，等待命令执行结束，执行结束后，将会在当前目录下创建新的目录，目录名为指定的<code>ProjectName</code>，内容是一个基础的Rails工程</li>
+<li>进入工程目录，执行<code>rails s</code>(<code>rails server</code>的简写版)启动服务，然后浏览器访问<code>http://127.0.0.1:3000/</code>就可以看到欢迎界面了，恭喜你，踏出了在Rails上的第一步</li>
+</ol>
+<h4 id="调整Gemfile"><a href="#调整Gemfile" class="headerlink" title="调整Gemfile"></a>调整Gemfile</h4><h5 id="数据库gem，不调整也可，只是后续数据库操作使用sqlite3"><a href="#数据库gem，不调整也可，只是后续数据库操作使用sqlite3" class="headerlink" title="数据库gem，不调整也可，只是后续数据库操作使用sqlite3"></a>数据库gem，不调整也可，只是后续数据库操作使用sqlite3</h5><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将</span></span><br><span class="line"><span class="comment"># Use sqlite3 as the database for Active Record</span></span><br><span class="line">gem <span class="string">&#x27;sqlite3&#x27;</span>, <span class="string">&#x27;~&gt; 1.4&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 替换为</span></span><br><span class="line"><span class="comment"># Use postgresql as the database for Active Record</span></span><br><span class="line">gem <span class="string">&#x27;pg&#x27;</span>, <span class="string">&#x27;~&gt; 1.1&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>注：还需额外工作才能完成数据库的切换操作</p>
+<ol>
+<li>在工程根目录执行命令<code>bundle update</code>, 执行命令<code>bundle install</code></li>
+<li>修改数据库配置文件<code>config/database.yml</code><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="attr">default:</span> <span class="meta">&amp;default</span></span><br><span class="line">  <span class="attr">adapter:</span> <span class="string">postgresql</span></span><br><span class="line">  <span class="attr">encoding:</span> <span class="string">unicode</span></span><br><span class="line">  <span class="attr">pool:</span> &lt;%=<span class="language-ruby"> <span class="variable constant_">ENV</span>.fetch(<span class="string">&quot;RAILS_MAX_THREADS&quot;</span>) &#123; <span class="number">5</span> &#125; </span>%&gt;</span><br><span class="line">  <span class="attr">username:</span> <span class="string">postgres</span></span><br><span class="line">  <span class="attr">password:</span> <span class="number">123456</span></span><br><span class="line">  <span class="attr">host:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">5432</span></span><br><span class="line"></span><br><span class="line"><span class="attr">development:</span></span><br><span class="line">  <span class="string">&lt;&lt;:</span> <span class="meta">*default</span></span><br><span class="line">  <span class="attr">database:</span> <span class="string">RailsCombineDemo_development</span></span><br><span class="line"></span><br><span class="line"><span class="attr">test:</span></span><br><span class="line">  <span class="string">&lt;&lt;:</span> <span class="meta">*default</span></span><br><span class="line">  <span class="attr">database:</span> <span class="string">RailsCombineDemo_test</span></span><br><span class="line"></span><br><span class="line"><span class="attr">production:</span></span><br><span class="line">  <span class="string">&lt;&lt;:</span> <span class="meta">*default</span></span><br><span class="line">  <span class="attr">database:</span> <span class="string">RailsCombineDemo_production</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录执行命令<code>rails db:create</code></li>
+</ol>
+<h5 id="development环境添加调试辅助组件"><a href="#development环境添加调试辅助组件" class="headerlink" title="development环境添加调试辅助组件"></a>development环境添加调试辅助组件</h5><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">group <span class="symbol">:development</span> <span class="keyword">do</span></span><br><span class="line">  gem <span class="string">&#x27;better_errors&#x27;</span></span><br><span class="line">  gem <span class="string">&#x27;binding_of_caller&#x27;</span></span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h5 id="代码风格纠错工具（也可以帮助进行代码简化）"><a href="#代码风格纠错工具（也可以帮助进行代码简化）" class="headerlink" title="代码风格纠错工具（也可以帮助进行代码简化）"></a>代码风格纠错工具（也可以帮助进行代码简化）</h5><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">group <span class="symbol">:development</span> <span class="keyword">do</span></span><br><span class="line">  ...</span><br><span class="line">  gem <span class="string">&#x27;rubocop&#x27;</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>注：需要额外工作完成相关配置</p>
+<ol>
+<li>在工程根目录执行命令<code>bundle install</code></li>
+<li>在工程根目录下，执行命令<code>bundle exec rubocop --auto-gen-config</code>，生成文件<code>.rubocop_todo.yml</code></li>
+<li>在工程根目录下，创建文件<code>.rubocop.yml</code>，填充内容为<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">inherit_from:</span> <span class="string">.rubocop_todo.yml</span></span><br><span class="line"></span><br><span class="line"><span class="attr">AllCops:</span></span><br><span class="line">  <span class="attr">NewCops:</span> <span class="string">enable</span></span><br><span class="line">  <span class="attr">Exclude:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;bin/**/*&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;db/*&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Documentation:</span></span><br><span class="line">  <span class="attr">Enabled:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Metrics/LineLength:</span></span><br><span class="line">  <span class="attr">Max:</span> <span class="number">120</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Metrics/BlockLength:</span></span><br><span class="line">  <span class="attr">Exclude:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">spec/**/*</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">config/**/*</span></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录，执行命令<code>bundle exec rubocop</code>，检查代码风格问题<ul>
+<li>推荐使用IDE - <a target="_blank" rel="noopener" href="https://www.jetbrains.com/ruby/">RubyMine</a>，配置好<code>rubocop</code>后，在开发过程中会自动提示优化项</li>
+</ul>
+</li>
+</ol>
+<h5 id="模型表结构注释组件"><a href="#模型表结构注释组件" class="headerlink" title="模型表结构注释组件"></a>模型表结构注释组件</h5><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">group <span class="symbol">:development</span> <span class="keyword">do</span></span><br><span class="line">  ...</span><br><span class="line">  gem <span class="string">&#x27;annotate&#x27;</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>在工程根目录执行命令<code>bundle install</code></li>
+<li>在工程根目录执行命令<code>rails g annotate:install</code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Running via Spring preloader in process 71811</span><br><span class="line">      create  lib/tasks/auto_annotate_models.rake</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h5 id="环境变量管理组件"><a href="#环境变量管理组件" class="headerlink" title="环境变量管理组件"></a>环境变量管理组件</h5><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gem <span class="string">&#x27;dotenv-rails&#x27;</span>, <span class="symbol">groups:</span> [<span class="symbol">:development</span>, <span class="symbol">:test</span>]</span><br></pre></td></tr></table></figure>
+<ol>
+<li>在工程根目录执行命令<code>bundle install</code></li>
+<li>在工程根目录执行命令<code>touch .env</code>创建环境变量管理文件</li>
+<li>在文件<code>.gitignore</code>中添加 <code>.env</code> 不提交环境变量信息到git中</li>
+</ol>
+<p>至此，初步的组件以来就都装好了，接下来将会学习<code>devise</code>、<code>mail</code>、<code>sidekiq</code>、<code>image_processing</code>、<code>kaminari</code>、<code>counter_culture</code>、<code>activeadmin</code>组件的入门使用</p>
+<h4 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h4><ol>
+<li>在工程根目录执行命令<code>rails g controller home</code> 生成首页<code>controller</code></li>
+<li>修改路由配置文件<code>.../config/routes.rb</code> ，添加路由配置<code>root &#39;home#index&#39;</code></li>
+<li>修改对应的<code>controller</code> -&gt; <code>.../app/controllers/home_controller.rb</code>，添加对应方法函数定义<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">HomeController</span> &lt; <span class="title class_ inherited__">ApplicationController</span></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">index</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>制作首页视图，创建文件<code>.../app/views/home/index.html.erb</code>，添加内容<code>&lt;h1&gt;Hello World!&lt;/h1&gt;</code></li>
+<li>在项目根目录执行命令<code>rails s</code>启动服务，并访问<code>http://127.0.0.1:3000/</code>即可看到首页内容</li>
+</ol>
+<h4 id="用户登录认证（devise）"><a href="#用户登录认证（devise）" class="headerlink" title="用户登录认证（devise）"></a>用户登录认证（devise）</h4><ol>
+<li>在<code>Gemfile</code>中添加对应<code>gem &#39;devise&#39;</code></li>
+<li>在工程根目录执行命令<code>bundle install</code></li>
+<li>在工程根目录执行命令<code>rails g devise:install</code>，控制台输出为<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">Running via Spring preloader in process 49687</span><br><span class="line">      create  config/initializers/devise.rb</span><br><span class="line">      create  config/locales/devise.en.yml</span><br><span class="line">===============================================================================</span><br><span class="line"></span><br><span class="line">Depending on your application&#x27;s configuration some manual setup may be required:</span><br><span class="line"></span><br><span class="line">  1. Ensure you have defined default url options in your environments files. Here</span><br><span class="line">     is an example of default_url_options appropriate for a development environment</span><br><span class="line">     in config/environments/development.rb:</span><br><span class="line"></span><br><span class="line">       config.action_mailer.default_url_options = &#123; host: &#x27;localhost&#x27;, port: 3000 &#125;</span><br><span class="line"></span><br><span class="line">     In production, :host should be set to the actual host of your application.</span><br><span class="line"></span><br><span class="line">     * Required for all applications. *</span><br><span class="line"></span><br><span class="line">  2. Ensure you have defined root_url to *something* in your config/routes.rb.</span><br><span class="line">     For example:</span><br><span class="line"></span><br><span class="line">       root to: &quot;home#index&quot;</span><br><span class="line">     </span><br><span class="line">     * Not required for API-only Applications *</span><br><span class="line"></span><br><span class="line">  3. Ensure you have flash messages in app/views/layouts/application.html.erb.</span><br><span class="line">     For example:</span><br><span class="line"></span><br><span class="line">       &lt;p class=&quot;notice&quot;&gt;&lt;%= notice %&gt;&lt;/p&gt;</span><br><span class="line">       &lt;p class=&quot;alert&quot;&gt;&lt;%= alert %&gt;&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">     * Not required for API-only Applications *</span><br><span class="line"></span><br><span class="line">  4. You can copy Devise views (for customization) to your app by running:</span><br><span class="line"></span><br><span class="line">       rails g devise:views</span><br><span class="line">       </span><br><span class="line">     * Not required *</span><br><span class="line"></span><br><span class="line">===============================================================================</span><br></pre></td></tr></table></figure></li>
+<li>修改配置文件<code>.../config/environments/development.rb</code>，添加配置<code>config.action_mailer.default_url_options = &#123; host: &#39;localhost&#39;, port: 3000 &#125;</code></li>
+<li>添加辅助信息打印，在<code>.../app/helpers/application_helper.rb</code>中添加<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">flash_message</span>(<span class="params">message, klass</span>)</span><br><span class="line">  content_tag(<span class="symbol">:div</span>, <span class="symbol">class:</span> <span class="string">&quot;alert alert-<span class="subst">#&#123;klass&#125;</span>&quot;</span>) <span class="keyword">do</span></span><br><span class="line">    concat content_tag(<span class="symbol">:button</span>, <span class="string">&#x27;x&#x27;</span>, <span class="symbol">class:</span> <span class="string">&#x27;close&#x27;</span>, <span class="symbol">data:</span> &#123; <span class="symbol">dismiss:</span> <span class="string">&#x27;alert&#x27;</span> &#125;)</span><br><span class="line">    concat raw(message)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在<code>.../app/views/layouts/application.html.erb</code>中添加<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  ...</span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    &lt;%= flash_message(flash[:success], :success) if flash[:success] %&gt;</span><br><span class="line">    &lt;%= flash_message(flash[:error], :error) if flash[:error] %&gt;</span><br><span class="line">    &lt;%= flash_message(flash[:alert], :alert) if flash[:alert] %&gt;</span><br><span class="line">    &lt;%= flash_message(flash[:notice], :notice) if flash[:notice] %&gt;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录执行命令<code>rails g devise:views</code>生成视图</li>
+<li>在工程根目录执行命令<code>rails secret</code>发行密钥</li>
+<li>在环境变量配置文件<code>.../.env</code>中添加配置<code>SECRET_TOKEN=</code>，并将上一步生成的密钥配置在其中</li>
+<li>在配置文件<code>.../config/initializers/devise.rb</code>添加配置<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Devise.setup <span class="keyword">do</span> |<span class="params">config</span>|</span><br><span class="line">...</span><br><span class="line">  config.secret_key = <span class="variable constant_">ENV</span>.fetch(<span class="string">&quot;DEVISE_SECRET_TOKEN&quot;</span>)</span><br><span class="line">...</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录执行命令<code>rails g devise user</code>生成用户模型</li>
+<li>修改数据库迁移文件<code>.../db/migrate/20221225161206_devise_create_users.rb</code>，将<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">      <span class="comment">## Confirmable</span></span><br><span class="line">      t.string   <span class="symbol">:confirmation_token</span></span><br><span class="line">      t.datetime <span class="symbol">:confirmed_at</span></span><br><span class="line">      t.datetime <span class="symbol">:confirmation_sent_at</span></span><br><span class="line">      t.string   <span class="symbol">:unconfirmed_email</span> <span class="comment"># Only if using reconfirmable</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">## Lockable</span></span><br><span class="line">      t.integer  <span class="symbol">:failed_attempts</span>, <span class="symbol">default:</span> <span class="number">0</span>, <span class="symbol">null:</span> <span class="literal">false</span> <span class="comment"># Only if lock strategy is :failed_attempts</span></span><br><span class="line">      t.string   <span class="symbol">:unlock_token</span> <span class="comment"># Only if unlock strategy is :email or :both</span></span><br><span class="line">      t.datetime <span class="symbol">:locked_at</span></span><br><span class="line">...</span><br><span class="line">    add_index <span class="symbol">:users</span>, <span class="symbol">:confirmation_token</span>,   <span class="symbol">unique:</span> <span class="literal">true</span></span><br><span class="line">    add_index <span class="symbol">:users</span>, <span class="symbol">:unlock_token</span>,         <span class="symbol">unique:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+取消注释</li>
+<li>在模型文件<code>.../app/models/user.rb</code>，添加devise配置<code>:confirmable, :lockable, :timeoutable</code><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &lt; <span class="title class_ inherited__">ApplicationRecord</span></span><br><span class="line">  devise <span class="symbol">:database_authenticatable</span>, <span class="symbol">:registerable</span>,</span><br><span class="line">         <span class="symbol">:recoverable</span>, <span class="symbol">:rememberable</span>, <span class="symbol">:validatable</span>,</span><br><span class="line">         <span class="symbol">:confirmable</span>, <span class="symbol">:lockable</span>, <span class="symbol">:timeoutable</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录执行命令<code>rails db:migrate</code>完成数据库表结构升级</li>
+<li>在<code>.../app/helpers/application_helper.rb</code>中添加字符串常量<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> ApplicationHelper</span><br><span class="line">  <span class="variable constant_">APP_NAME</span> = <span class="string">&#x27;RailsCombineDemo&#x27;</span>.freeze</span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>创建文件<code>.../app/views/layouts/_header.html.erb</code>，并填充代码<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">nav</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;/&quot;</span>&gt;</span>&lt;%= ApplicationHelper::APP_NAME %&gt;<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  &lt;% if user_signed_in? %&gt;</span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">        &lt;%= link_to &quot;个人信息编辑&quot;, edit_user_registration_path %&gt;</span><br><span class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">        &lt;%= link_to &quot;退出&quot;, destroy_user_session_path, method: :delete %&gt;</span><br><span class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">  &lt;% end %&gt;</span><br><span class="line"><span class="tag">&lt;/<span class="name">nav</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>在<code>.../app/views/layouts/application.html.erb</code>中的<code>&lt;body&gt;</code>中添加<code>&lt;%= render &quot;layouts/header&quot; %&gt;</code>将header文件渲染</li>
+<li>在<code>.../app/controllers/application_controller.rb</code>中添加拦截action<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ApplicationController</span> &lt; <span class="title class_ inherited__">ActionController::Base</span></span><br><span class="line">  before_action <span class="symbol">:authenticate_user!</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录执行命令<code>rails s</code>启动服务，并访问<code>http://127.0.0.1:3000/</code>，将会看到登录界面<br><img src="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/Snipaste_2022-12-26_00-28-47.png" alt="登录界面"></li>
+</ol>
+<h4 id="用户注册发送确认邮件（Action-Mailer、SideKiq）"><a href="#用户注册发送确认邮件（Action-Mailer、SideKiq）" class="headerlink" title="用户注册发送确认邮件（Action Mailer、SideKiq）"></a>用户注册发送确认邮件（Action Mailer、SideKiq）</h4><ol>
+<li>大部分的邮件服务提供商都可以开启SMTP服务，可以先将自己的某个邮件开启SMTP服务后再继续</li>
+<li>在配置文件<code>.../config/environments/development.rb</code>中添加配置<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Rails.application.configure <span class="keyword">do</span></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">  config.action_mailer.delivery_method = <span class="symbol">:smtp</span></span><br><span class="line">  config.action_mailer.smtp_settings = &#123;</span><br><span class="line">    <span class="symbol">address:</span> <span class="variable constant_">ENV</span>.fetch(<span class="string">&#x27;MAILER_SMTP_ADDRESS&#x27;</span>),</span><br><span class="line">    <span class="symbol">port:</span> <span class="variable constant_">ENV</span>.fetch(<span class="string">&#x27;MAILER_SMTP_PORT&#x27;</span>),</span><br><span class="line">    <span class="symbol">authentication:</span> <span class="variable constant_">ENV</span>.fetch(<span class="string">&#x27;MAILER_SMTP_AUTHENTICATION&#x27;</span>),</span><br><span class="line">    <span class="symbol">user_name:</span> <span class="variable constant_">ENV</span>.fetch(<span class="string">&#x27;MAILER_SMTP_USER_NAME&#x27;</span>),</span><br><span class="line">    <span class="symbol">password:</span> <span class="variable constant_">ENV</span>.fetch(<span class="string">&#x27;MAILER_SMTP_PASSWORD&#x27;</span>),</span><br><span class="line">    <span class="symbol">enable_starttls_auto:</span> ActiveModel::Type::Boolean.new.cast(<span class="variable constant_">ENV</span>.fetch(<span class="string">&#x27;MAILER_SMTP_ENABLE_STARTTLS_AUTO&#x27;</span>, <span class="literal">true</span>))</span><br><span class="line">  &#125;</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在环境变量配置文件<code>.../.env</code>中添加配置<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MAILER_SMTP_ADDRESS=smtp.qq.com</span><br><span class="line">MAILER_SMTP_PORT=587</span><br><span class="line">MAILER_SMTP_AUTHENTICATION=plain</span><br><span class="line">MAILER_SMTP_USER_NAME=</span><br><span class="line">MAILER_SMTP_PASSWORD=</span><br><span class="line">MAILER_SMTP_ENABLE_STARTTLS_AUTO=true</span><br></pre></td></tr></table></figure></li>
+<li>修改配置文件<code>.../config/initializers/devise.rb</code>中<code>  config.mailer_sender = ENV.fetch(&quot;MAILER_SMTP_USER_NAME&quot;)</code>，确保权限控制组件可以使用指定的邮件服务发送邮件</li>
+<li>安装redis，推荐使用docker安装，方便管理</li>
+<li>在<code>.../Gemfile</code>中添加配置<code>gem &#39;sidekiq&#39;</code></li>
+<li>在工程根目录执行命令<code>bundle install</code>安装gem</li>
+<li>在配置文件<code>.../config/application.rb</code>中添加配置<code>config.active_job.queue_adapter = :Sidekiq</code></li>
+<li>添加配置文件<code>.../config/initializers/sidekiq.rb</code>，添加配置<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Sidekiq.configure_client <span class="keyword">do</span> |<span class="params">config</span>|</span><br><span class="line">  config.redis = &#123;</span><br><span class="line">    <span class="symbol">url:</span> <span class="variable constant_">ENV</span>.fetch(<span class="string">&#x27;REDIS_URL&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">Sidekiq.configure_server <span class="keyword">do</span> |<span class="params">config</span>|</span><br><span class="line">  config.redis = &#123;</span><br><span class="line">    <span class="symbol">url:</span> <span class="variable constant_">ENV</span>.fetch(<span class="string">&#x27;REDIS_URL&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  config.logger.level = Logger.const_get(<span class="variable constant_">ENV</span>.fetch(<span class="string">&#x27;LOG_LEVEL&#x27;</span>, <span class="string">&#x27;info&#x27;</span>).upcase.to_s)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在环境变量配置文件<code>.../.env</code>中配置redis</li>
+<li>创建配置文件<code>.../config/sidekiq.yml</code>，添加配置<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">:concurrency:</span> <span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="string">:queues:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">default</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">mailers</span></span><br></pre></td></tr></table></figure></li>
+<li>在模型<code>.../app/models/user.rb</code>中添加任务转发异步任务代码<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &lt; <span class="title class_ inherited__">ApplicationRecord</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">send_devise_notification</span>(<span class="params">notification, *args</span>)</span><br><span class="line">    devise_mailer.send(notification, <span class="variable language_">self</span>, *args).deliver_later</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>额外打开一个终端terminal窗口，在工程根目录执行命令<code>bundle exec sidekiq -C config/sidekiq.yml -e development</code>，该进程为异步任务处理进程</li>
+<li>在工程根目录执行命令<code>rails s</code>启动服务，并访问<code>http://127.0.0.1:3000/</code>，尝试注册账号，成功注册将会收到确认邮件</li>
+</ol>
+<h4 id="个人信息"><a href="#个人信息" class="headerlink" title="个人信息"></a>个人信息</h4><ol>
+<li>添加用户名，在工程根目录执行命令<code>rails g migration add_name_to_users name:string:uniq</code>，生成文件<code>db/migrate/20221218065737_add_name_to_users.rb</code>，确认文件内容<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AddNameToUsers</span> &lt; <span class="title class_ inherited__">ActiveRecord::Migration</span>[<span class="number">6.1</span>]</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">change</span></span><br><span class="line">    add_column <span class="symbol">:users</span>, <span class="symbol">:name</span>, <span class="symbol">:string</span></span><br><span class="line">    add_index <span class="symbol">:users</span>, <span class="symbol">:name</span>, <span class="symbol">unique:</span> <span class="literal">true</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录执行命令<code>rails db:migrate</code>，完成数据库表结构变更</li>
+<li>在<code>.../app/controllers/application_controller.rb</code>中添加参数过滤<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ApplicationController</span> &lt; <span class="title class_ inherited__">ActionController::Base</span></span><br><span class="line">...</span><br><span class="line">  before_action <span class="symbol">:configure_permitted_parameters</span>, <span class="symbol">if:</span> <span class="symbol">:devise_controller?</span></span><br><span class="line"></span><br><span class="line">  protected</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">configure_permitted_parameters</span></span><br><span class="line">    added_attrs = [<span class="symbol">:name</span>, <span class="symbol">:email</span>, <span class="symbol">:password</span>, <span class="symbol">:password_confirmation</span>, <span class="symbol">:remember_me</span>]</span><br><span class="line">    devise_parameter_sanitizer.permit <span class="symbol">:sign_up</span>, <span class="symbol">keys:</span> added_attrs</span><br><span class="line">    devise_parameter_sanitizer.permit <span class="symbol">:account_update</span>, <span class="symbol">keys:</span> added_attrs</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在模型<code>.../app/models/user.rb</code>中添加虚拟的login属性<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &lt; <span class="title class_ inherited__">ApplicationRecord</span></span><br><span class="line">...</span><br><span class="line">  <span class="keyword">attr_accessor</span> <span class="symbol">:login</span></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">login=</span>(<span class="params">login</span>)</span><br><span class="line">    <span class="variable">@login</span> = login</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">login</span></span><br><span class="line">    <span class="variable">@login</span> |<span class="params"></span>| <span class="variable language_">self</span>.name |<span class="params"></span>| <span class="variable language_">self</span>.email</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">...</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>修改devise配置文件<code>..../config/initializers/devise.rb</code>，将配置<code>config.authentication_keys</code>取消注释，并且修改为<code>config.authentication_keys = [:login]</code></li>
+<li>重写模型<code>.../app/models/user.rb</code>的<code>find_for_database_authentication</code><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &lt; <span class="title class_ inherited__">ApplicationRecord</span></span><br><span class="line">...</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">self</span>.find_for_database_authentication(warden_conditions)</span><br><span class="line">    conditions = warden_conditions.dup</span><br><span class="line">    conditions[<span class="symbol">:email</span>]&amp;.downcase!</span><br><span class="line">    login = conditions.delete(<span class="symbol">:login</span>)</span><br><span class="line">    where(conditions.to_hash).where(</span><br><span class="line">      [<span class="string">&quot;lower(name) = :value or lower(email) = :value&quot;</span>,</span><br><span class="line">       &#123; <span class="symbol">value:</span> login.downcase &#125;]</span><br><span class="line">    ).first</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在模型<code>.../app/models/user.rb</code>中添加校验<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &lt; <span class="title class_ inherited__">ApplicationRecord</span></span><br><span class="line">...</span><br><span class="line">  validates <span class="symbol">:name</span>,</span><br><span class="line">            <span class="symbol">presence:</span> <span class="literal">true</span>,</span><br><span class="line">            <span class="symbol">uniqueness:</span> &#123; <span class="symbol">case_sensitive:</span> <span class="literal">false</span>&#125;</span><br><span class="line">  validates_format_of <span class="symbol">:name</span>, <span class="symbol">with:</span> /^[a-zA-<span class="variable constant_">Z0</span>-9_¥.]*<span class="variable">$/</span>, <span class="symbol">multiline:</span> <span class="literal">true</span></span><br><span class="line">  validate <span class="symbol">:validate_name</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">validate_name</span></span><br><span class="line">    errors.add(<span class="symbol">:name</span>, <span class="symbol">:invalid</span>) <span class="keyword">if</span> User.where(<span class="symbol">email:</span> name).exists?</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">...</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>修改登录界面<code>.../app/views/devise/sessions/new.html.erb</code>，将登录的凭证调整为<code>login</code>属性<figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml"><span class="comment">&lt;!-- 将 --&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;field&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> f.label <span class="symbol">:email</span> </span><span class="language-xml">%&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> f.email_field <span class="symbol">:email</span>, <span class="symbol">autofocus:</span> <span class="literal">true</span>, <span class="symbol">autocomplete:</span> <span class="string">&quot;email&quot;</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="comment">&lt;!-- 修改为 --&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;field&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> f.label <span class="string">&quot;email or username&quot;</span> </span><span class="language-xml">%&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> f.text_field <span class="symbol">:login</span>, <span class="symbol">autofocus:</span> <span class="literal">true</span>, <span class="symbol">placeholder:</span> <span class="string">&quot;Enter email or username&quot;</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure></li>
+<li>修改注册页面<code>.../app/views/devise/registrations/new.html.erb</code>，添加属性<code>name</code><figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;field&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> f.label <span class="symbol">:email</span> </span><span class="language-xml">%&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> f.email_field <span class="symbol">:email</span>, <span class="symbol">autofocus:</span> <span class="literal">true</span>, <span class="symbol">autocomplete:</span> <span class="string">&quot;email&quot;</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="comment">&lt;!-- 在email下方添加name --&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;field&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> f.label <span class="symbol">:name</span> </span><span class="language-xml">%&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> f.text_field <span class="symbol">:name</span>, <span class="symbol">placeholder:</span> <span class="string">&quot;Username&quot;</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure></li>
+<li>修改用户信息编辑页面<code>.../app/views/devise/registrations/edit.html.erb</code>，添加属性<code>name</code><figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;field&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> f.label <span class="symbol">:email</span> </span><span class="language-xml">%&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> f.email_field <span class="symbol">:email</span>, <span class="symbol">autofocus:</span> <span class="literal">true</span>, <span class="symbol">autocomplete:</span> <span class="string">&quot;email&quot;</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="comment">&lt;!-- 同样是在email下方添加name --&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;field&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> f.label <span class="symbol">:name</span> </span><span class="language-xml">%&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> f.text_field <span class="symbol">:name</span>, <span class="symbol">placeholder:</span> <span class="string">&quot;Username&quot;</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure></li>
+<li>修改首页<code>.../app/views/home/index.html.erb</code>，打印当前登录人<code>name</code><figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>&lt;%=</span><span class="language-ruby"> <span class="variable">@user</span>.name </span><span class="language-xml">%&gt;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br></pre></td></tr></table></figure></li>
+<li>修改首页对应的<code>controller</code> <code>.../app/controllers/home_controller.rb</code>，在<code>index</code>中返回当前登录用户<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">HomeController</span> &lt; <span class="title class_ inherited__">ApplicationController</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">index</span></span><br><span class="line">    <span class="variable">@user</span> = current_user</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录执行命令<code>rails db:reset</code>，清理数据库（该步骤需要停止异步任务sidekiq和服务进程，避免数据库占用导致无法清理数据库）</li>
+<li>额外打开一个终端terminal窗口，在工程根目录执行命令<code>bundle exec sidekiq -C config/sidekiq.yml -e development</code>，启动异步任务</li>
+<li>在工程根目录执行命令<code>rails s</code>启动服务，并访问<a target="_blank" rel="noopener" href="http://0.0.0.0:3000/">http://0.0.0.0:3000/</a> 完成新用户注册</li>
+<li>使用注册时填写的用户名登录<br><img src="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/20230103230914.png"></li>
+</ol>
+<h4 id="头像（image-processing、Active-Storage）"><a href="#头像（image-processing、Active-Storage）" class="headerlink" title="头像（image_processing、Active Storage）"></a>头像（image_processing、Active Storage）</h4><ol>
+<li>书中使用组件<code>paperclip</code>已经deprecated，切换为<a target="_blank" rel="noopener" href="https://guides.rubyonrails.org/active_storage_overview.html">ActiveStorage</a></li>
+<li>在配置文件<code>Gemfile</code>中添加依赖<code>gem &quot;image_processing&quot;, &quot;&gt;= 1.2&quot;</code>，并在工程根目录执行<code>bundle install</code></li>
+<li>在工程根目录执行<code>rails active_storage:install</code>创建表结构迁移脚本，再执行<code>rails db:migrate</code>完成表创建</li>
+<li>在模型<code>.../app/models/user.rb</code>中添加头像属性<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &lt; <span class="title class_ inherited__">ApplicationRecord</span></span><br><span class="line">...</span><br><span class="line">  has_one_attached <span class="symbol">:avatar</span></span><br><span class="line">...</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>修改个人信息编辑页面<code>.../app/views/devise/registrations/edit.html.erb</code>，在<code>email</code>上方添加<figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;field&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%</span><span class="language-ruby"> <span class="keyword">if</span> current_user.avatar.attached? </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">      &lt;%=</span><span class="language-ruby">  image_tag current_user.avatar.variant(<span class="symbol">resize:</span> <span class="string">&quot;128x128!&quot;</span>), <span class="symbol">class:</span> <span class="string">&quot;rounded-circle m-4&quot;</span>  </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">    &lt;%</span><span class="language-ruby"> <span class="keyword">end</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &lt;%=</span><span class="language-ruby"> f.label <span class="symbol">:avatar</span> </span><span class="language-xml">%&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      &lt;%=</span><span class="language-ruby"> f.file_field <span class="symbol">:avatar</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure></li>
+<li>在首页<code>.../app/views/home/index.html.erb</code>中添加<figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &lt;%</span><span class="language-ruby"> <span class="keyword">if</span> current_user.avatar.attached? </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">        &lt;%=</span><span class="language-ruby"> image_tag current_user.avatar.variant(<span class="symbol">resize:</span> <span class="string">&quot;128x128!&quot;</span>), <span class="symbol">class:</span> <span class="string">&quot;rounded-circle m-4&quot;</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">      &lt;%</span><span class="language-ruby"> <span class="keyword">end</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">      </span><span class="comment">&lt;%#= image_tag current_user.avatar.url, class: &#x27;card-img-top rounded-circle&#x27; %&gt;</span><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">h4</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span>&lt;%=</span><span class="language-ruby"> <span class="string">&quot;@<span class="subst">#&#123;<span class="variable">@user</span>.name&#125;</span>&quot;</span> </span><span class="language-xml">%&gt;<span class="tag">&lt;/<span class="name">h4</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure></li>
+<li>在<code>.../app/controllers/application_controller.rb</code>中的属性过滤添加头像<code>added_attrs = [:name, :email, :password, :password_confirmation, :remember_me, :avatar]</code></li>
+<li>在工程根目录执行命令<code>rails s</code>启动服务，并访问<a target="_blank" rel="noopener" href="http://0.0.0.0:3000/">http://0.0.0.0:3000/</a></li>
+<li>登录后进入个人信息编辑界面，上传头像，保存更新（<code>Current password (we need your current password to confirm your changes)</code>需要最下方的输入框输入密码以通过更新拦截）</li>
+<li>更新成功后，首页即可出现头像<img src="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/20230104000132.png"></li>
+</ol>
+<h4 id="个人投稿（关联表）"><a href="#个人投稿（关联表）" class="headerlink" title="个人投稿（关联表）"></a>个人投稿（关联表）</h4><ol>
+<li>在工程根目录执行命令<code>rails g model post user_id:integer body:text</code>创建投稿模型</li>
+<li>在工程根目录执行命令<code>rails db:migrate</code>完成表创建</li>
+<li>在模型<code>.../app/models/user.rb</code>中添加投稿关联<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &lt; <span class="title class_ inherited__">ApplicationRecord</span></span><br><span class="line">...</span><br><span class="line">  has_many <span class="symbol">:posts</span>, <span class="symbol">inverse_of:</span> <span class="symbol">:user</span></span><br><span class="line">...</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在模型<code>.../app/models/post.rb</code>中添加用户关联关系<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Post</span> &lt; <span class="title class_ inherited__">ApplicationRecord</span></span><br><span class="line">  belongs_to <span class="symbol">:user</span>, <span class="symbol">inverse_of:</span> <span class="symbol">:posts</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在首页<code>.../app/controllers/home_controller.rb</code>中添加参数<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">HomeController</span> &lt; <span class="title class_ inherited__">ApplicationController</span></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">index</span></span><br><span class="line">    <span class="variable">@user</span> = current_user</span><br><span class="line">    <span class="variable">@post</span> = Post.order(<span class="string">&#x27;created_at desc&#x27;</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在首页<code>.../app/views/home/index.html.erb</code>中添加投稿展示<figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">...</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> render <span class="symbol">partial:</span> <span class="string">&quot;post&quot;</span>, <span class="symbol">collection:</span> <span class="variable">@posts</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure></li>
+<li>添加投稿展示页面<code>.../app/views/home/_post.html.erb</code><figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;border:2px solid black;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> image_tag post.user.avatar.variant(<span class="symbol">resize:</span> <span class="string">&quot;128x128!&quot;</span>), <span class="symbol">class:</span> <span class="string">&quot;rounded-circle m-4&quot;</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">strong</span>&gt;</span>&lt;%=</span><span class="language-ruby"> <span class="string">&quot;@<span class="subst">#&#123;post.user.name&#125;</span>&quot;</span> </span><span class="language-xml">%&gt;<span class="tag">&lt;/<span class="name">strong</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span>&lt;%=</span><span class="language-ruby"> time_ago_in_words(post.created_at) </span><span class="language-xml">%&gt; ago<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt;%=</span><span class="language-ruby"> post.body </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录执行命令<code>rails c</code>,并在控制台执行<code>User.last.posts.create(&#123;body: &quot;First Post!&quot;&#125;)</code>创建第一个投稿(<code>exit</code>即可退出控制台)</li>
+<li>在工程根目录执行命令<code>rails s</code>启动服务，登录后即可看到投稿展示<img src="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/20230104234352.png"></li>
+</ol>
+<h5 id="个人投稿-新增"><a href="#个人投稿-新增" class="headerlink" title="个人投稿 - 新增"></a>个人投稿 - 新增</h5><ol>
+<li>在工程根目录执行命令<code>rails g controller posts create</code></li>
+<li>修改路由配置<code>.../config/routes.rb</code>，删除<code>get &#39;posts/create&#39;</code>，添加路由配置<code>resources :posts, only: [:create]</code></li>
+<li>在首页<code>.../app/views/home/index.html.erb</code>添加投稿表单和按钮(在投稿展示上方)<figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  &lt;%=</span><span class="language-ruby"> form_with <span class="symbol">model:</span> <span class="title class_">Post</span>.new <span class="keyword">do</span> |<span class="params">f</span>| </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &lt;%=</span><span class="language-ruby"> f.text_field <span class="symbol">:body</span>, <span class="symbol">class:</span> <span class="string">&quot;&quot;</span>, <span class="symbol">placeholder:</span> <span class="string">&quot;What do we do now?&quot;</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &lt;%=</span><span class="language-ruby"> f.submit <span class="string">&quot;投稿&quot;</span>, <span class="symbol">class:</span> <span class="string">&quot;&quot;</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  &lt;%</span><span class="language-ruby"> <span class="keyword">end</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">  &lt;%=</span><span class="language-ruby"> render <span class="symbol">partial:</span> <span class="string">&quot;post&quot;</span>, <span class="symbol">collection:</span> <span class="variable">@posts</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure></li>
+<li>在对应<code>.../app/controllers/posts_controller.rb</code>中完善投稿保存代码<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PostsController</span> &lt; <span class="title class_ inherited__">ApplicationController</span></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">create</span></span><br><span class="line">    <span class="keyword">if</span> current_user.posts.create(post_params)</span><br><span class="line">      flash[<span class="symbol">:notice</span>] = <span class="string">&#x27;Post was successfully created.&#x27;</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      flash[<span class="symbol">:error</span>] = <span class="string">&#x27;Something went wrong.&#x27;</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    redirect_to <span class="symbol">:root</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  protected</span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">post_params</span></span><br><span class="line">    params.<span class="keyword">require</span>(<span class="symbol">:post</span>).permit(<span class="symbol">:body</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录执行命令<code>rails s</code>启动服务，登录后可以在输入框内输入文本并点击<code>投稿</code>按钮提交保存<img src="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/20230104235459.png"></li>
+</ol>
+<h5 id="个人投稿-分页查询-kaminari"><a href="#个人投稿-分页查询-kaminari" class="headerlink" title="个人投稿 - 分页查询(kaminari)"></a>个人投稿 - 分页查询(kaminari)</h5><ol>
+<li>在<code>Gemfile</code>中添加gem依赖<code>gem &#39;kaminari&#39;</code></li>
+<li>在工程根目录执行命令<code>bundle install</code>安装gem依赖</li>
+<li>在工程根目录执行命令<code>rails g kaminari:config</code>生成分页组件配置</li>
+<li>修改分页配置<code>.../config/initializers/kaminari_config.rb</code>，取消配置<code>config.default_per_page</code>注释，并修改值为3（改小是为了方便体现分页功能）</li>
+<li>修改首页处理器<code>.../app/controllers/home_controller.rb</code>，修改投稿查询代码为<code>@posts = Post.order(&#39;created_at desc&#39;).page params[:page]</code></li>
+<li>修改首页<code>.../app/views/home/index.html.erb</code>添加分页<figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml">&lt;%=</span><span class="language-ruby"> render <span class="symbol">partial:</span> <span class="string">&quot;post&quot;</span>, <span class="symbol">collection:</span> <span class="variable">@posts</span> </span><span class="language-xml">%&gt;</span></span><br><span class="line"><span class="language-xml">&lt;%=</span><span class="language-ruby"> paginate <span class="variable">@posts</span> </span><span class="language-xml">%&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录执行命令<code>rails g kaminari:views bootstrap4</code>生成分页前端视图文件</li>
+<li>在工程根目录执行命令<code>rails s</code>启动服务，并人工添加几条投稿，即可看到分页效果<img src="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/20230105000718.png"></li>
+</ol>
+<h4 id="投稿统计-counter-culture-和登录时间"><a href="#投稿统计-counter-culture-和登录时间" class="headerlink" title="投稿统计(counter_culture)和登录时间"></a>投稿统计(counter_culture)和登录时间</h4><ol>
+<li>在<code>Gemfile</code>中添加统计计数gem依赖<code>gem &#39;counter_culture&#39;</code></li>
+<li>在工程根目录执行命令<code>bundle install</code>安装gem依赖</li>
+<li>在工程根目录执行命令<code>rails g counter_culture User posts_count</code>生成表结构迁移文件</li>
+<li>在模型<code>.../app/models/post.rb</code>添加统计数据更新配置<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Post</span> &lt; <span class="title class_ inherited__">ApplicationRecord</span></span><br><span class="line">...</span><br><span class="line">  counter_culture <span class="symbol">:user</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录执行命令<code>rails db:migrate</code>完成表结构升级</li>
+<li>在工程根目录执行命令<code>rails c</code>,并在控制台执行<code>Post.counter_culture_fix_counts</code>更新统计数据（之前新增的投稿）</li>
+<li>在模型<code>.../app/models/user.rb</code>中添加自定义方法<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &lt; <span class="title class_ inherited__">ApplicationRecord</span></span><br><span class="line">...</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">created_month</span></span><br><span class="line">    created_at.strftime(<span class="string">&#x27;%Y年%m月&#x27;</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>修改首页<code>.../app/views/home/index.html.erb</code>添加登录信息和投稿统计<figure class="highlight erb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">h4</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span>&lt;%=</span><span class="language-ruby"> <span class="string">&quot;@<span class="subst">#&#123;<span class="variable">@user</span>.name&#125;</span>&quot;</span> </span><span class="language-xml">%&gt;<span class="tag">&lt;/<span class="name">h4</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>&lt;%=</span><span class="language-ruby"> <span class="string">&quot;<span class="subst">#&#123;<span class="variable">@user</span>.created_month&#125;</span>登录&quot;</span> </span><span class="language-xml">%&gt;<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>&lt;%=</span><span class="language-ruby"> <span class="variable">@user</span>.posts_count </span><span class="language-xml">%&gt;稿件<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录执行命令<code>rails s</code>启动服务，登录后即可看到信息<img src="https://cdn.jsdelivr.net/gh/JanWarlen/PictureBed@dev/blog/20230105002831.png"></li>
+</ol>
+<h4 id="权限管理-activeadmin"><a href="#权限管理-activeadmin" class="headerlink" title="权限管理(activeadmin)"></a>权限管理(activeadmin)</h4><ol>
+<li>在<code>Gemfile</code>中添加权限管理gem依赖<code>gem &#39;activeadmin&#39;</code></li>
+<li>在工程根目录执行命令<code>bundle install</code>安装gem依赖</li>
+<li>在工程根目录执行命令<code>rails g active_admin:install --skip-users</code>生成表结构迁移文件</li>
+<li>在工程根目录执行命令<code>rails db:migrate</code>完成表结构升级</li>
+<li>修改配置文件<code>.../config/initializers/active_admin.rb</code>，将配置<code>config.comments_menu</code>取消注释</li>
+<li>在工程根目录执行命令<code>rails s</code>启动服务，访问<a target="_blank" rel="noopener" href="http://0.0.0.0:3000/admin">http://0.0.0.0:3000/admin</a>即可查看dashboard界面</li>
+<li>在工程根目录执行命令<code>rails g active_admin:resource User</code>，即可将用户添加到dashboard界面</li>
+<li>在工程根目录执行命令<code>rails g active_admin:resource Post</code>，即可将投稿添加到dashboard界面</li>
+<li>在工程根目录执行命令<code>rails g migration AddRoleToUser role:integer</code>为模型<code>User</code>添加角色属性</li>
+<li>在工程根目录执行命令<code>rails db:migrate</code>完成表结构升级</li>
+<li>在模型<code>.../app/models/user.rb</code>中添加角色枚举<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">User</span> &lt; <span class="title class_ inherited__">ApplicationRecord</span></span><br><span class="line">...</span><br><span class="line">  enum <span class="symbol">role:</span> &#123; <span class="symbol">user:</span> <span class="number">0</span>, <span class="symbol">admin:</span> <span class="number">1</span> &#125;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录执行命令<code>rails c</code>进入控制台界面，并执行命令<code>User.last.role</code>和<code>User.last.admin?</code>确认角色</li>
+<li>修改权限配置文件<code>.../config/initializers/active_admin.rb</code>将配置<code>config.authentication_method</code>取消注释</li>
+<li>在处理器<code>.../app/controllers/application_controller.rb</code>中添加权限验证方法<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ApplicationController</span> &lt; <span class="title class_ inherited__">ActionController::Base</span></span><br><span class="line">...</span><br><span class="line">  rescue_from SecurityError <span class="keyword">do</span> |<span class="params">e</span>|</span><br><span class="line">    redirect_to root_url, <span class="symbol">notice:</span> <span class="string">&#x27;no admin right&#x27;</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">...</span><br><span class="line">  protected</span><br><span class="line">...</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">authenticate_admin_user!</span></span><br><span class="line">    raise SecurityError <span class="keyword">unless</span> current_user.try(<span class="symbol">:admin?</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+<li>在工程根目录执行命令<code>rails s</code>启动服务，访问<a target="_blank" rel="noopener" href="http://0.0.0.0:3000/admin">http://0.0.0.0:3000/admin</a>确认无法进入dashboard界面（无admin角色权限）</li>
+<li>在控制台界面执行<code>User.last.update_attribute(:role, :admin)</code>，并再次执行步骤12的<code>User.last.role</code>和<code>User.last.admin?</code>确认角色</li>
+<li>再次访问<a target="_blank" rel="noopener" href="http://0.0.0.0:3000/admin">http://0.0.0.0:3000/admin</a>即可查看dashboard界面</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Ruby/" rel="tag"># Ruby</a>
+              <a href="/tags/Rails/" rel="tag"># Rails</a>
+              <a href="/tags/%E7%BC%96%E7%A8%8B%E5%85%A5%E9%97%A8/" rel="tag"># 编程入门</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/10/18/%E4%B8%80%E4%B9%A6%E4%B8%80%E5%9B%BE-%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90Apache%20Dubbo%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95/" rel="prev" title="一书一图-深度剖析Apache Dubbo核心技术内幕">
+      <i class="fa fa-chevron-left"></i> 一书一图-深度剖析Apache Dubbo核心技术内幕
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-valine">valine</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane valine" id="comment-valine">
+              <div class="comments" id="valine-comments"></div>
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%BC%80%E5%A4%B4"><span class="nav-number">1.</span> <span class="nav-text">写在开头</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E5%8D%9A%E6%96%87"><span class="nav-number">2.</span> <span class="nav-text">引用博文</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84Project"><span class="nav-number">3.</span> <span class="nav-text">创建新的Project</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E6%95%B4Gemfile"><span class="nav-number">4.</span> <span class="nav-text">调整Gemfile</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93gem%EF%BC%8C%E4%B8%8D%E8%B0%83%E6%95%B4%E4%B9%9F%E5%8F%AF%EF%BC%8C%E5%8F%AA%E6%98%AF%E5%90%8E%E7%BB%AD%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C%E4%BD%BF%E7%94%A8sqlite3"><span class="nav-number">4.1.</span> <span class="nav-text">数据库gem，不调整也可，只是后续数据库操作使用sqlite3</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#development%E7%8E%AF%E5%A2%83%E6%B7%BB%E5%8A%A0%E8%B0%83%E8%AF%95%E8%BE%85%E5%8A%A9%E7%BB%84%E4%BB%B6"><span class="nav-number">4.2.</span> <span class="nav-text">development环境添加调试辅助组件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E7%BA%A0%E9%94%99%E5%B7%A5%E5%85%B7%EF%BC%88%E4%B9%9F%E5%8F%AF%E4%BB%A5%E5%B8%AE%E5%8A%A9%E8%BF%9B%E8%A1%8C%E4%BB%A3%E7%A0%81%E7%AE%80%E5%8C%96%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">代码风格纠错工具（也可以帮助进行代码简化）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%A1%A8%E7%BB%93%E6%9E%84%E6%B3%A8%E9%87%8A%E7%BB%84%E4%BB%B6"><span class="nav-number">4.4.</span> <span class="nav-text">模型表结构注释组件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%AE%A1%E7%90%86%E7%BB%84%E4%BB%B6"><span class="nav-number">4.5.</span> <span class="nav-text">环境变量管理组件</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hello-World"><span class="nav-number">5.</span> <span class="nav-text">Hello World</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81%EF%BC%88devise%EF%BC%89"><span class="nav-number">6.</span> <span class="nav-text">用户登录认证（devise）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E6%B3%A8%E5%86%8C%E5%8F%91%E9%80%81%E7%A1%AE%E8%AE%A4%E9%82%AE%E4%BB%B6%EF%BC%88Action-Mailer%E3%80%81SideKiq%EF%BC%89"><span class="nav-number">7.</span> <span class="nav-text">用户注册发送确认邮件（Action Mailer、SideKiq）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF"><span class="nav-number">8.</span> <span class="nav-text">个人信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%B4%E5%83%8F%EF%BC%88image-processing%E3%80%81Active-Storage%EF%BC%89"><span class="nav-number">9.</span> <span class="nav-text">头像（image_processing、Active Storage）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E6%8A%95%E7%A8%BF%EF%BC%88%E5%85%B3%E8%81%94%E8%A1%A8%EF%BC%89"><span class="nav-number">10.</span> <span class="nav-text">个人投稿（关联表）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E6%8A%95%E7%A8%BF-%E6%96%B0%E5%A2%9E"><span class="nav-number">10.1.</span> <span class="nav-text">个人投稿 - 新增</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E6%8A%95%E7%A8%BF-%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2-kaminari"><span class="nav-number">10.2.</span> <span class="nav-text">个人投稿 - 分页查询(kaminari)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%95%E7%A8%BF%E7%BB%9F%E8%AE%A1-counter-culture-%E5%92%8C%E7%99%BB%E5%BD%95%E6%97%B6%E9%97%B4"><span class="nav-number">11.</span> <span class="nav-text">投稿统计(counter_culture)和登录时间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86-activeadmin"><span class="nav-number">12.</span> <span class="nav-text">权限管理(activeadmin)</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jan Warlen"
+      src="/images/1.jpg">
+  <p class="site-author-name" itemprop="name">Jan Warlen</p>
+  <div class="site-description" itemprop="description">道路艰辛，磨砺前行</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">皖ICP备17001898号-1 </a>
+      <img src="/images/beian.png" style="display: inline-block;">
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jan Warlen</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"SI59Lqfcn8LIDHNEYsVHaptm-MdYXbMMI","app_key":"KWyHSYm5WQz8vOKf1dP2mFNB","server_url":"http://api.janwarlen.com","security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        // if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = `http://api.janwarlen.com`;
+// app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e34aa1d9b02a537cdb2a',
+      clientSecret: 'b64710eb326d596165dac47ac5d00b82d5aac262',
+      repo        : 'BlogComments',
+      owner       : 'janwarlen',
+      admin       : ['janwarlen'],
+      id          : 'ceda840842e14165fbbd24a51f60c9b0',
+        language: '',
+      distractionFreeMode: false,
+      proxy: 'http://janwarlen.com/login/oauth/access_token'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'SI59Lqfcn8LIDHNEYsVHaptm-MdYXbMMI',
+      appKey     : 'KWyHSYm5WQz8vOKf1dP2mFNB',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : 'http://api.janwarlen.com'
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
